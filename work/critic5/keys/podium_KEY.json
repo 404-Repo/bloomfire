@@ -1,0 +1,42 @@
+{
+ "pair_01.png": {
+  "build": "left",
+  "build_file": "f0.jpg",
+  "ref_file": "bk05.jpg"
+ },
+ "pair_02.png": {
+  "build": "right",
+  "build_file": "f1.jpg",
+  "ref_file": "fs03.jpg"
+ },
+ "pair_03.png": {
+  "build": "right",
+  "build_file": "f2.jpg",
+  "ref_file": "sd05.jpg"
+ },
+ "pair_04.png": {
+  "build": "right",
+  "build_file": "f3.jpg",
+  "ref_file": "e27desk05.jpg"
+ },
+ "pair_05.png": {
+  "build": "left",
+  "build_file": "f4.jpg",
+  "ref_file": "bk07.jpg"
+ },
+ "pair_06.png": {
+  "build": "right",
+  "build_file": "f5.jpg",
+  "ref_file": "fs07.jpg"
+ },
+ "pair_07.png": {
+  "build": "left",
+  "build_file": "f6.jpg",
+  "ref_file": "sd06.jpg"
+ },
+ "pair_08.png": {
+  "build": "left",
+  "build_file": "f0.jpg",
+  "ref_file": "bk13.jpg"
+ }
+}

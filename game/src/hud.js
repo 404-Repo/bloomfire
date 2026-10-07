@@ -37,7 +37,9 @@ let hitT = 0;
 export function hitMarker(kill) { el.hitm.className = kill ? 'k' : ''; el.hitm.style.opacity = 1; el.hitm.style.transform = `rotate(45deg) scale(${kill ? 1.25 : 1})`; hitT = kill ? 0.22 : 0.12; }
 export function updateHud(dt) { if (hitT > 0) { hitT -= dt; if (hitT <= 0) el.hitm.style.opacity = 0; } }
 
+const recentFl = new Map();
 export function floater(pos, text, cls = '') {
+  const now = performance.now(); if (now - (recentFl.get(text) || 0) < 350) return; recentFl.set(text, now);   // no doubled popups
   _v.copy(pos).project(camera); if (_v.z > 1) return;
   const d = document.createElement('div'); d.className = 'fl ' + cls; d.textContent = text;
   d.style.left = ((_v.x * 0.5 + 0.5) * 100) + '%'; d.style.top = ((-_v.y * 0.5 + 0.5) * 100) + '%';

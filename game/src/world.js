@@ -73,7 +73,7 @@ async function growSpecies(name, cast = true) {
   });
   if (!geos.length) return;
   const geo = mergeGeometries(geos, false);
-  const mat = new THREE.MeshStandardMaterial({ vertexColors: true, roughness: rough / n, metalness: 0 }); mat.name = 'foliage';
+  const mat = new THREE.MeshStandardMaterial({ vertexColors: true, roughness: rough / n, metalness: 0 }); mat.name = name === 'boulder' ? 'stone' : 'foliage';
   patchMaterial(mat);
   const chunks = new Map();
   for (const p of list) { const k = Math.floor((p.x + 320) / 128) + ',' + Math.floor((p.z + 320) / 128); if (!chunks.has(k)) chunks.set(k, []); chunks.get(k).push(p); }
@@ -256,7 +256,7 @@ async function makeRing() {
       for (const k of Object.keys(g.attributes)) if (k !== 'position' && k !== 'normal') g.deleteAttribute(k);
       const c = o.material.color, cnt = g.attributes.position.count, arr = new Float32Array(cnt * 3); for (let i = 0; i < cnt; i++) { arr[i * 3] = c.r; arr[i * 3 + 1] = c.g; arr[i * 3 + 2] = c.b; }
       g.setAttribute('color', new THREE.BufferAttribute(arr, 3)); geos.push(g); rough += o.material.roughness ?? 0.9; n++; });
-    const mat = new THREE.MeshStandardMaterial({ vertexColors: true, roughness: rough / n }); mat.name = 'foliage'; patchMaterial(mat);
+    const mat = new THREE.MeshStandardMaterial({ vertexColors: true, roughness: rough / n }); mat.name = name === 'boulder' ? 'stone' : 'foliage'; patchMaterial(mat);
     const im = new THREE.InstancedMesh(mergeGeometries(geos, false), mat, RING.n * RING.n); im.frustumCulled = false; im.receiveShadow = true;
     im.userData.per = per; im.userData.seed = RING.mesh.length * 977; scene.add(im); RING.mesh.push(im);
   }

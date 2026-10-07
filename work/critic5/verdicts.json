@@ -1,0 +1,23 @@
+{"podium":{
+"pair_01.png":["right","slight","right is a tiny portrait but one coherent warm palette and a character; left mixes ink-line grey world with flat untextured lowpoly rocks"],
+"pair_02.png":["left","clear","left is one coherent sandstone palette with a hero; right is sketchy grey houses with doubled '+300 CORE' text overprinting a 'BRILLIANT x3' banner"],
+"pair_03.png":["left","clear","left is a fully art-directed sunset palette; right is mostly grey with flat magenta triangles and black smoke, reads unfinished"],
+"pair_04.png":["left","decisive","left is a dense, lit, fully coloured town; right is a sparse mound against a grey ink plain"],
+"pair_05.png":["left","clear","left is a fully coloured village with depth and dressing; right is mostly UI panel and a cropped character"],
+"pair_06.png":["left","slight","left is cohesive; right has nice depth but a hard colour/grey seam across the frame reads like a missing LOD"],
+"pair_07.png":["right","clear","right is a cohesive synthwave palette; left is a grey band over yellow grass with overlapping score text"],
+"pair_08.png":["right","slight","same left frame as pair 1; right is plain but uniform, left's black flat rocks and dark trees break the look"]},
+"floor":{
+"pair_01.png":["left","decisive","left has a designed palette, silhouettes, props; right is a lilac void with a wooden block gun"],
+"pair_02.png":["right","clear","right has buildings and texture; left is empty dunes and primitive gun"],
+"pair_03.png":["right","clear","left has some colour but primitives and placeholder enemy; right is dressed"],
+"pair_04.png":["right","clear","right has a mill, enemy, skyline; left is a plain with two blob trees"],
+"pair_05.png":["left","decisive","left is a coloured village; right is an empty plain"],
+"pair_06.png":["right","decisive","right is a layered landscape; left is an empty wall and plain"]},
+"bar":{
+"pair_01.png":["right","decisive","concept painting vs a cluttered half-grey frame"],
+"pair_02.png":["left","decisive","illustrated ink plus watercolour vs flat grey geometry"],
+"pair_03.png":["left","decisive","painted bridge scene vs sparse mound"],
+"pair_04.png":["left","clear","painted piazza vs our coloured village, the closest one"],
+"pair_05.png":["right","decisive","windmill painting vs grey band over grass"],
+"pair_06.png":["left","decisive","chapel and brute vs bloomstorm text over a plain"]}}
