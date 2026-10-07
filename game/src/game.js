@@ -101,14 +101,14 @@ function updateWells(dt) {
     if (wasShield && !w.shield) { callout('NODES OPEN'); sfx.tier(1); }
     for (const nd of w.nodes) if (nd.alive) { const k = w.shield ? 0.45 : 1 + Math.sin(S.t * 6) * 0.08; nd.n.scale.setScalar(nd.n.scale.x + (k - nd.n.scale.x) * Math.min(1, dt * 6)); }
     if (w.waveT > 0) { w.waveT -= dt; if (w.waveT <= 0) spawnWave(w); }
-    else if (!w.shield) { w.trickle = (w.trickle || 0) + dt; if (w.trickle > 16) { w.trickle = 0; spawnWave(w, true); } }
+    else if (!w.shield && !w.nest) { w.trickle = (w.trickle || 0) + dt; if (w.trickle > 16) { w.trickle = 0; spawnWave(w, true); } }
   }
 }
 
 function spawnWave(w, small = false) {
   const tier = wellTier(), k = small ? Math.max(0, w.wave - 2) : w.wave++;
   const comp = [];
-  if (w.nest) { if (k > 0) return; comp.push('blotling', 'blotling', 'blotling', 'blotling', tier >= 1 ? 'smear' : 'blotling', tier >= 2 ? 'quill' : 'blotling'); }
+  if (w.nest) { if (small || w.spawnedOnce) return; w.spawnedOnce = true; comp.push('blotling', 'blotling', 'blotling', 'blotling', tier >= 1 ? 'smear' : 'blotling', tier >= 2 ? 'quill' : 'blotling'); }
   else {
   // the first inkwell teaches: small waves; later ones escalate
   comp.push(...Array(tier === 0 ? 3 + Math.min(1, k) : 3 + Math.min(4, k) + tier).fill('blotling'));
