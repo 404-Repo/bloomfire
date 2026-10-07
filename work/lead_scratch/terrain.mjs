@@ -64,7 +64,8 @@ function rawHeight(x, z) {
   pad(-160, -140, 22, 14, 33.0);                 // ridge saddle with the inkwell
   // quarry pit: cut into the hill, two ledges and a floor
   { const d = Math.hypot(x - 166, z - 162 * -1); const m = sstep(50, 40, d);
-    if (m > 0) { const ledge = d > 33 ? 20 : d > 24 ? 13 : 7; h = lerp(h, Math.min(h, ledge), m); } }
+    // stepped benches you can walk up: an amphitheatre of chalk, not a well
+    if (m > 0) { const k = Math.max(0, d - 22) * 0.62, q = 1.6, fl = Math.floor(k / q), fr = k / q - fl; const ledge = 7 + (fl + sstep(0.55, 1.0, fr)) * q; h = lerp(h, Math.min(h, ledge), m); } }
   // river channel and lake basin
   { const [d, s] = polyDist(x, z, RIVER.pts); const wl = riverLevel(s);
     const bank = Math.max(wl + 1.4, h);
@@ -94,14 +95,17 @@ export function buildTerrain() {
     for (let i = prof.length - 2; i >= 0; i--) prof[i] = Math.max(prof[i + 1] - maxRise, Math.min(prof[i + 1] + maxRise, prof[i]));
     p.profile = { pts, h: prof };
     // carve the grid near the path
-    const reach = p.w + 7;
+    const reach = p.w + (p.steep ? 12 : 7);
     let minx = 1e9, maxx = -1e9, minz = 1e9, maxz = -1e9; for (const [x, z] of pts) { minx = Math.min(minx, x); maxx = Math.max(maxx, x); minz = Math.min(minz, z); maxz = Math.max(maxz, z); }
     const i0 = Math.max(0, Math.floor((minx - reach + HALF) / STEP)), i1 = Math.min(N - 1, Math.ceil((maxx + reach + HALF) / STEP));
     const j0 = Math.max(0, Math.floor((minz - reach + HALF) / STEP)), j1 = Math.min(N - 1, Math.ceil((maxz + reach + HALF) / STEP));
     for (let j = j0; j <= j1; j++) for (let i = i0; i <= i1; i++) {
       const x = -HALF + i * STEP, z = -HALF + j * STEP;
-      let best = 1e9, bh = 0;
-      for (let k = 1; k < pts.length; k++) { const [d, t] = segDist(x, z, pts[k - 1][0], pts[k - 1][1], pts[k][0], pts[k][1]); if (d < best) { best = d; bh = lerp(prof[k - 1], prof[k], t); } }
+      // blend the road heights of every nearby stretch, weighted by distance: where two switchback legs
+      // meet, taking only the nearest one leaves a cliff along the line where "nearest" changes
+      let best = 1e9, sw = 0, sh = 0;
+      for (let k = 1; k < pts.length; k++) { const [d, t] = segDist(x, z, pts[k - 1][0], pts[k - 1][1], pts[k][0], pts[k][1]); if (d < best) best = d; if (d < reach * 2) { const w = 1 / Math.pow(d + 1.5, 4); sw += w; sh += w * lerp(prof[k - 1], prof[k], t); } }
+      const bh = sw > 0 ? sh / sw : 0;
       if (best > reach) continue;
       const idx = j * N + i, m = sstep(reach, p.w * 0.5, best);
       H[idx] = lerp(H[idx], bh, m);

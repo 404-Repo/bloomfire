@@ -28,13 +28,14 @@ export const PATHS = [
   { id: 'mill_ridge', kind: 'dirt', w: 4.5, pts: [[-36, -30], [-62, -58], [-96, -92], [-128, -118], [-156, -134], [-176, -140]] },
   { id: 'market_quarry', kind: 'dirt', w: 5, pts: [[112, 0], [122, -40], [124, -84], [136, -118], [152, -146], [162, -160]] },
   { id: 'mill_stair', kind: 'dirt', w: 4.5, pts: [[-2, -34], [6, -84], [22, -140], [40, -188]] },
-  { id: 'stair', kind: 'cobble', w: 5, steep: true, pts: [[40, -188], [76, -204], [78, -218], [14, -230], [10, -244], [70, -256], [72, -268], [40, -280], [40, -290]] },
+  { id: 'stair', kind: 'cobble', w: 8, steep: true, pts: [[40, -188], [92, -206], [108, -246], [98, -284], [70, -302], [46, -296], [40, -290]] },
+  { id: 'quarry_back', kind: 'dirt', w: 4, pts: [[166, -166], [178, -186], [200, -200], [226, -198]] },
   { id: 'market_lake', kind: 'dirt', w: 4, pts: [[112, 40], [116, 90], [104, 140], [96, 168]] },
 ];
 
 export const BRIDGES = [
-  { at: [-20, -6], yaw: Math.PI / 2 + 0.12, len: 18 },   // Millbrook, on the mill-market road
-  { at: [8, 76], yaw: Math.PI / 2 - 0.3, len: 18 },      // south footbridge
+  { at: [-20, -6], yaw: 0.14, len: 18 },   // Millbrook, on the mill-market road
+  { at: [8, 76], yaw: 0.56, len: 18 },      // south footbridge
 ];
 
 // The inkwells: the five hearts. `order` is only the teaching order; the middle four can be done in any order.
@@ -50,7 +51,12 @@ export const INKWELLS = [
 export const LANTERNS = [
   { id: 'rise', at: [-186, 156] }, { id: 'terraces', at: [-98, 74] }, { id: 'mill', at: [-30, -22] },
   { id: 'market', at: [98, 30] }, { id: 'ridge', at: [-146, -126] }, { id: 'quarry', at: [146, -144] },
-  { id: 'stair', at: [40, -192] }, { id: 'chapel', at: [40, -276] },
+  { id: 'stair', at: [40, -192] }, { id: 'chapel', at: [48, -280] },
 ];
 
-export const SPAWN = { at: [-198, 176], yaw: -0.7 };   // yaw 0 looks north (-z); this looks north-east, over the valley
+// Ink nests: optional, off the roads, each a small spire with one node. The reason to explore and replay.
+export const NESTS = [
+  [-232, 110], [-60, 150], [58, 118], [196, 70], [-238, -30], [-96, -206], [92, -122], [214, -96],
+];
+
+export const SPAWN = { at: [-192, 168], yaw: -0.82 };   // yaw 0 looks north (-z); this looks north-east, over the valley

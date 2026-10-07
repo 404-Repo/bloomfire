@@ -95,14 +95,17 @@ export function buildTerrain() {
     for (let i = prof.length - 2; i >= 0; i--) prof[i] = Math.max(prof[i + 1] - maxRise, Math.min(prof[i + 1] + maxRise, prof[i]));
     p.profile = { pts, h: prof };
     // carve the grid near the path
-    const reach = p.w + 7;
+    const reach = p.w + (p.steep ? 12 : 7);
     let minx = 1e9, maxx = -1e9, minz = 1e9, maxz = -1e9; for (const [x, z] of pts) { minx = Math.min(minx, x); maxx = Math.max(maxx, x); minz = Math.min(minz, z); maxz = Math.max(maxz, z); }
     const i0 = Math.max(0, Math.floor((minx - reach + HALF) / STEP)), i1 = Math.min(N - 1, Math.ceil((maxx + reach + HALF) / STEP));
     const j0 = Math.max(0, Math.floor((minz - reach + HALF) / STEP)), j1 = Math.min(N - 1, Math.ceil((maxz + reach + HALF) / STEP));
     for (let j = j0; j <= j1; j++) for (let i = i0; i <= i1; i++) {
       const x = -HALF + i * STEP, z = -HALF + j * STEP;
-      let best = 1e9, bh = 0;
-      for (let k = 1; k < pts.length; k++) { const [d, t] = segDist(x, z, pts[k - 1][0], pts[k - 1][1], pts[k][0], pts[k][1]); if (d < best) { best = d; bh = lerp(prof[k - 1], prof[k], t); } }
+      // blend the road heights of every nearby stretch, weighted by distance: where two switchback legs
+      // meet, taking only the nearest one leaves a cliff along the line where "nearest" changes
+      let best = 1e9, sw = 0, sh = 0;
+      for (let k = 1; k < pts.length; k++) { const [d, t] = segDist(x, z, pts[k - 1][0], pts[k - 1][1], pts[k][0], pts[k][1]); if (d < best) best = d; if (d < reach * 2) { const w = 1 / Math.pow(d + 1.5, 4); sw += w; sh += w * lerp(prof[k - 1], prof[k], t); } }
+      const bh = sw > 0 ? sh / sw : 0;
       if (best > reach) continue;
       const idx = j * N + i, m = sstep(reach, p.w * 0.5, best);
       H[idx] = lerp(H[idx], bh, m);

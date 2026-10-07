@@ -167,12 +167,12 @@ function cleanse(w) {
 // ---- the boss ----------------------------------------------------------------------------------------
 const ARENA = [40, -286];
 async function makeBoss() {
-  const y = T.height(ARENA[0], ARENA[1] - 8);
+  const y = T.height(ARENA[0], ARENA[1] + 12);
   let obj;
   if (have.has('old_inkhorn')) { obj = await ASSET('./assets/old_inkhorn.js', { height: 14, keepHierarchy: true }); bakeJoints(obj); }
   else { obj = new THREE.Group(); const b = new THREE.Mesh(new THREE.CapsuleGeometry(3, 8, 4, 12), new THREE.MeshStandardMaterial({ color: 0x15131f, roughness: 0.25 })); b.position.y = 7; obj.add(b); }
   obj.traverse((o) => { if (o.material) (Array.isArray(o.material) ? o.material : [o.material]).forEach((m) => m.userData.noPaint = true); if (o.isMesh) o.castShadow = true; });
-  obj.visible = false; obj.position.set(ARENA[0], y, ARENA[1] - 10); scene.add(obj);
+  obj.visible = false; obj.position.set(ARENA[0], y, ARENA[1] + 12); scene.add(obj);
   const ring = new THREE.Mesh(new THREE.TorusGeometry(1, 0.35, 6, 48), new THREE.MeshBasicMaterial({ color: 0xff3d8b, transparent: true, opacity: 0.85, toneMapped: false }));
   ring.material.userData.noPaint = true; ring.rotation.x = -Math.PI / 2; ring.visible = false; scene.add(ring);
   const j = {}; for (const [k, v] of Object.entries(obj.userData.joints || {})) if (v && v.isObject3D) j[k] = { node: v, rx: v.rotation.x, rz: v.rotation.z };
@@ -352,9 +352,9 @@ function director(dt) {
   const nearWell = WELLS.some((w) => w.alive && w.awake);
   S.roamT -= dt;
   const alive = ENEMIES.filter((e) => e.alive && !e.owner).length;
-  if (alive === 0 && S.roamT > 3.5) S.roamT = 3.5;   // a cleared pack calls the next one soon
   const grey = maskAt(pp.x, pp.z) < 0.5;
   const climbing = S.stage === 3, nearArena = Math.hypot(pp.x - ARENA[0], pp.z - ARENA[1]) < 60;
+  if (!climbing && alive === 0 && S.roamT > 3.5) S.roamT = 3.5;   // a cleared pack calls the next one soon (not on the last climb)
   if (climbing) { const st = PATHS.find((p) => p.id === 'stair').pts; if (st.some((q) => Math.hypot(q[0] - pp.x, q[1] - pp.z) < 22)) return; }   // the climb itself is quiet
   if (!nearWell && !nearArena && S.roamT <= 0 && alive < (climbing ? 4 : 5 + wellTier())) {
     S.roamT = climbing ? 18 + Math.random() * 6 : grey ? 5 + Math.random() * 3 : 10 + Math.random() * 4;
@@ -616,7 +616,7 @@ export const Game = {
     g.score = S.score; g.over = S.mode === 'over'; g.hp = Math.round(P.hp); g.shots = WPN.shots; g.kills = S.kills; g.alive = P.alive;
     g.combo = S.combo; g.mult = S.mult; g.stage = S.stage; g.cleansed = S.cleansed.length; g.restored = +(restoredFraction() * 100).toFixed(2);
     g.enemies = ENEMIES.length; g.lock = !!WPN.lock; g.mode = S.mode; g.picking = !!S.picking; g.bloom = +WPN.bloom.toFixed(2); g.lenses = WPN.lenses.length;
-    g.boss = BOSS ? Math.round(BOSS.hp) : null; g.deaths = S.deaths; g.nests = S.nests;
+    g.boss = BOSS ? Math.round(BOSS.hp) : null; g.bossPos = BOSS && BOSS.alive ? [+BOSS.pos.x.toFixed(1), +BOSS.pos.z.toFixed(1)] : null; g.deaths = S.deaths; g.nests = S.nests;
     // the screen position of the nearest visible target, for a gate that wants to aim
     const tg = WPN.lock; if (tg) { const v = tg.pos.clone().project(camera); g.aim = [+(v.x * 0.5 + 0.5).toFixed(3), +(-v.y * 0.5 + 0.5).toFixed(3), 1]; } else g.aim = null;
     // where the nearest ink is relative to the view (yaw and pitch deltas), for a gate that wants to aim like a thumb would

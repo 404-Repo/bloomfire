@@ -35,7 +35,14 @@ try {
   const send = (type) => cdp.send('Input.dispatchTouchEvent', { type, touchPoints: [...fingers.entries()].map(([id, p]) => ({ x: p[0], y: p[1], id, radiusX: 6, radiusY: 6, force: 1 })) });
   const down = async (id, x, y) => { fingers.set(id, [x, y]); await send('touchStart'); };
   const move = async (id, x, y) => { fingers.set(id, [x, y]); await send('touchMove'); };
-  const up = async (id) => { fingers.delete(id); await cdp.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] }); if (fingers.size) await send('touchStart'); };
+  // lift ONE finger. CDP has no single-finger release that Chrome honours reliably, so: release all, then press the
+  // others again; the stick thumb re-lands on the stick's centre first and slides back out, as a real thumb would
+  const up = async (id) => {
+    fingers.delete(id); await cdp.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] });
+    if (!fingers.size) return;
+    const stick = fingers.get(1); if (stick) { const cur = stick; fingers.set(1, [SX, SY]); await send('touchStart'); fingers.set(1, cur); await send('touchMove'); }
+    else await send('touchStart');
+  };
   const stickBox = await page.$eval('#stickb', (e) => { const r = e.getBoundingClientRect(); return [r.x + r.width / 2, r.y + r.height / 2]; });
   const SX = stickBox[0], SY = stickBox[1];
   const LX0 = W * (H > W ? 0.55 : 0.62), LY0 = H * (H > W ? 0.42 : 0.42);
@@ -54,8 +61,12 @@ try {
     const fx = -Math.sin(g.yaw), fz = -Math.cos(g.yaw), rx = Math.cos(g.yaw), rz = -Math.sin(g.yaw);
     let my = (dx * fx + dz * fz) / d, mx = (dx * rx + dz * rz) / d;
     const fighting = g.aim && g.near && g.near[2] < 30 && g.enemies > 0;   // only strafe when something is actually in the sights
-    if (fighting) { my *= 0.25; mx = Math.sin(Date.now() / 700) * 0.6; }   // strafe while fighting
+    if (fighting) { my *= 0.6; mx = mx * 0.6 + Math.sin(Date.now() / 700) * 0.4; }   // keep advancing while fighting, with a little strafe
     if (d < 6 && !fighting) { my = 0.2; }
+    // against the boss, keep a fighting distance: its core is out of reach of the look when you stand at its feet
+    if (g.bossPos) { const bx = g.bossPos[0] - g.pos[0], bz = g.bossPos[1] - g.pos[1], bd2 = Math.hypot(bx, bz) || 1;
+      if (bd2 < 14) { my = -((bx * fx + bz * fz) / bd2); mx = -((bx * rx + bz * rz) / bd2) + Math.sin(Date.now() / 900) * 0.5; } }
+    if (process.env.TRACE && Math.random() < 0.05) console.log('trace', g.pos, tgt, mx.toFixed(2), my.toFixed(2), fighting, g.yaw);
     await move(1, SX + mx * 48, SY - my * 48);
     // look: toward the target on screen, else toward the walking direction with a level pitch
     // a thumb moves in small steps toward where it wants to look (the game's look speed is ~0.0058 rad/px plus a little acceleration)
