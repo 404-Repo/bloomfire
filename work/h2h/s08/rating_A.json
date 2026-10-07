@@ -1,0 +1,22 @@
+{
+ "label": "Game A",
+ "persona": "indie",
+ "play_seconds": 542,
+ "fun": 5,
+ "nuance": 5,
+ "nuance_found": "One verb (catch a gust, carry it, give it to a machine) with a real constraint: the bell holds only one gust, so you choose what to spend it on. I saw two small order puzzles: at the first windmill the tail sail has to be pushed before the cap will turn, and a gust spent on the hanging bridge cannot also lift you up. But every spend was gated by a prompt telling you the right target, so there was one obvious line each time and no real trade-off.",
+ "pace": 4,
+ "pace_word": "a bit slow",
+ "feedback_juice": 7,
+ "looks": 8,
+ "audio": "Ambient wind drone from the title onward, a layered chord and noise whoosh when a mill turned or a fragment was taken, soft bell notes on ringing; nice, but the effects were sparse between payoffs.",
+ "would_replay": "maybe",
+ "would_quit_at_s": 330,
+ "understood_goal_by_s": 40,
+ "furthest_progress": "Prologue, morning bell, Mara's gust, seed wheel, grille updraft to the Lantern Loft, then Bellhollow: pushed the hanging bridge, turned the Mill of Sails cap with the tail sail, woke windmill 1/3, took bell fragment 1/3. Never woke windmill 2 (pipe wheel needs a gust) by 542 s.",
+ "used_movement_assist": "yes, about 9 times in the final run, all on the terrace in the first 70 s; none after that because the assist hung in the branches",
+ "control_trouble": "Large. Steering by hand around railings, planters and mill balconies kept pinning me; the camera repeatedly clipped into the character or sat behind walls so I could not see myself. I fell off the deck three times and was carried back. Some of that is the coarse harness, but a real thumb would also hit the camera clipping.",
+ "best_moment": "Pushing the hanging bridge with a held gust, watching it swing across, then the Mill of Sails turning with a chord and a lit lantern chain.",
+ "worst_moment": "Camera jammed against a mill wall with the character hidden or filling the screen, while the objective text pointed somewhere I could not tell how to reach.",
+ "verdict": "It is a very nice looking storybook and the gust-as-carried-resource idea is clean: catch it, hold one, spend it on a bridge, a sail, or a lift. The mill sequence has a small order puzzle and the payoff chord is satisfying. But in nine minutes I had one windmill out of three, and most of the time went on walking and fighting the camera, not on decisions. The prompts tell you the target each time so the play is follow-the-marker with a button, and I never changed how I played. Pretty and calm, but I would delete it after a session unless the third act opens up."
+}

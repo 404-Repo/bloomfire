@@ -1,0 +1,22 @@
+{
+  "label": "Game B",
+  "persona": "competitive",
+  "play_seconds": 541.9,
+  "fun": 6,
+  "nuance": 6,
+  "nuance_found": "Score comes from three places: drift (angle and speed, banked with a combo), roadside smashes that chain (a x6 'FLATTENED' chain paid +1,010 and a JACKPOT paid +3,010 once), and near-miss CLIPs on guardrails (+250). A 70 degree drift paid +320. The time of day also ticks and each banked drift is said to bring dawn closer. The real trade-off is clean drifting versus ploughing into roadside objects for chains. I mostly found the smash route by accident and never chained drifts at all.",
+  "pace": 6,
+  "pace_word": "right",
+  "feedback_juice": 9,
+  "looks": 9,
+  "audio": "An ambience loop plus a sequenced synth jingle when scoring, a low engine-like sine, a thump on crashes, and phone vibration on the handbrake. Rain and night changes add atmosphere.",
+  "would_replay": "maybe",
+  "would_quit_at_s": 330,
+  "understood_goal_by_s": 60,
+  "furthest_progress": "Yozakura Pass, Easy. Reached in-game 01:47 at night and rain (dawn at 06:00 not reached), 45 mi, score 11,793, combo only ever x1.",
+  "used_movement_assist": "not offered",
+  "control_trouble": "Steering with the gas thumb was far too sensitive for my 0.5 s look rate: tiny offsets sent the car into trees, and I could not hold a drift. I count about a quarter of my time as crashed or stuck. A real thumb on a live screen would do much better, but the sharp bends also seem to come up fast.",
+  "best_moment": "Smashing a roadside cabinet in a x5 chain for a JACKPOT, with the score jumping by about 2,000 in a second and the car sliding on.",
+  "worst_moment": "Hitting a pole or tree at speed and sitting at 0 mph for 4 s before the magnet rescue, again and again at the same bends.",
+  "verdict": "It looks like a finished game and it feels great: golden hour fading to night and rain, the car squashing signs, big yellow chain text, the magnet putting me back on the road. I understood driving in seconds but only worked out how scoring really works after about a minute. The crash rescue is nice but it wastes 4 to 5 s each time, and my combo never got above x1 because I could not hold drifts. Smash chains pay far more than clean driving, which feels backwards for a drift game. The potential is there, with drift combos for the expert line. It is more of a 6, and I would try to learn the drift line again."
+}

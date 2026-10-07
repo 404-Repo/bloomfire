@@ -11,7 +11,7 @@ import { emit, updateParticles, updateTracers, updateBlooms, bloomAt, setBloomPr
 import { HUD, compass, hitMarker, updateHud, floater, callout, banner, caption, hurtFrom, waypoint } from './hud.js';
 import { sfx, unlockAudio, setSound, soundOn, loadMusic, playMusic, musicIntensity } from './audio.js';
 import { addCircle } from './collide.js';
-import { INKWELLS, PLACES, LANTERNS, SPAWN, NESTS } from './layout.js';
+import { INKWELLS, PLACES, LANTERNS, SPAWN, NESTS, PATHS } from './layout.js';
 import { litLantern, W } from './world.js';
 
 const $ = (id) => document.getElementById(id);
@@ -49,7 +49,7 @@ async function makeWells() {
     obj.position.set(w.at[0], y - 0.2, w.at[1]); scene.add(obj);
     addCircle(w.at[0], w.at[1], w.nest ? 0.9 : 1.6, y, y + (w.nest ? 3.6 : 7), { noRay: true });
     const light = new THREE.PointLight(0xff3d8b, w.nest ? 3 : 6, w.nest ? 9 : 16, 1.5); light.position.set(w.at[0], y + 4, w.at[1]); scene.add(light);
-    WELLS.push({ ...w, obj, y, light, nodes: nodes.map((n) => ({ n, hp: w.nest ? 80 : 120, alive: true, pos: new THREE.Vector3() })), awake: false, alive: true, wave: 0, waveT: 0, owned: 0, sinkT: 0, plumeT: 0 });
+    WELLS.push({ ...w, obj, y, light, nodes: nodes.map((n) => ({ n, hp: w.nest ? 80 : w.id === 'terraces' ? 70 : 120, alive: true, pos: new THREE.Vector3() })), awake: false, alive: true, wave: 0, waveT: 0, owned: 0, sinkT: 0, plumeT: 0 });
   }
 }
 
@@ -65,7 +65,7 @@ function offerLens(left) {
   $('lenspick').classList.add('on'); if (document.pointerLockElement) document.exitPointerLock();
   // touchend as well as click: with a thumb still on the stick, a tap produces no click
   const pick = (b) => { if (!S.picking) return; $('lenspick').classList.remove('on'); Game.paused = false; S.picking = false; takeLens(b.dataset.l); };
-  $('lensopts').querySelectorAll('.lensb').forEach((b) => { b.addEventListener('click', () => pick(b)); b.addEventListener('touchend', (e) => { e.preventDefault(); pick(b); }); });
+  $('lensopts').querySelectorAll('.lensb').forEach((b) => { b.addEventListener('click', () => pick(b)); b.addEventListener('touchend', (e) => { if (e.cancelable) e.preventDefault(); pick(b); }); });
 }
 function takeLens(l) { WPN.lenses.push(l); banner(LENS_TEXT[l][0], LENS_TEXT[l][1], 3); sfx.lantern(); }
 
@@ -110,8 +110,9 @@ function spawnWave(w, small = false) {
   const comp = [];
   if (w.nest) { if (k > 0) return; comp.push('blotling', 'blotling', 'blotling', 'blotling', tier >= 1 ? 'smear' : 'blotling', tier >= 2 ? 'quill' : 'blotling'); }
   else {
-  comp.push(...Array(3 + Math.min(4, k) + tier).fill('blotling'));
-  if (k >= 1 || tier >= 1) comp.push('smear');
+  // the first inkwell teaches: small waves; later ones escalate
+  comp.push(...Array(tier === 0 ? 3 + Math.min(1, k) : 3 + Math.min(4, k) + tier).fill('blotling'));
+  if ((k >= 2 && tier === 0) || tier >= 1) comp.push('smear');
   if (tier >= 1 && k >= 1) comp.push('quill', 'quill');
   if (tier >= 2 && k >= 1) comp.push('spitter');
   if (tier >= 3 && k >= 2) comp.push('inkhorn');
@@ -353,10 +354,11 @@ function director(dt) {
   const alive = ENEMIES.filter((e) => e.alive && !e.owner).length;
   if (alive === 0 && S.roamT > 3.5) S.roamT = 3.5;   // a cleared pack calls the next one soon
   const grey = maskAt(pp.x, pp.z) < 0.5;
-  if (!nearWell && S.roamT <= 0 && alive < 5 + wellTier()) {
-    S.roamT = grey ? 5 + Math.random() * 3 : 10 + Math.random() * 4;
+  const climbing = S.stage === 3, nearArena = Math.hypot(pp.x - ARENA[0], pp.z - ARENA[1]) < 60;
+  if (!nearWell && !nearArena && S.roamT <= 0 && alive < (climbing ? 4 : 5 + wellTier())) {
+    S.roamT = climbing ? 9 + Math.random() * 3 : grey ? 5 + Math.random() * 3 : 10 + Math.random() * 4;
     const tier = wellTier(), comp = [];
-    const n = 3 + Math.floor(Math.random() * 3) + tier;
+    const n = climbing ? 3 + Math.floor(Math.random() * 2) : 3 + Math.floor(Math.random() * 3) + tier;
     for (let i = 0; i < n; i++) comp.push('blotling');
     if (tier >= 1 && Math.random() < 0.7) comp.push('smear');
     if (tier >= 1 && Math.random() < 0.6) comp.push('quill', 'quill');
@@ -411,7 +413,12 @@ function objectiveTarget() {
   if (S.stage === 0 || S.rush) return null;
   if (S.stage === 1) return INKWELLS[0].at;
   if (S.stage === 2) { const w = nearestWell(); return w ? w.at : null; }
-  if (S.stage === 3) return ARENA;
+  if (S.stage === 3) {   // lead along the Pilgrim Stair, not straight at a cliff
+    const st = PATHS.find((p) => p.id === 'stair').pts, px = P.pos.x, pz = P.pos.z;
+    let bi = 0, bd = 1e9; st.forEach((q, i) => { const d = Math.hypot(q[0] - px, q[1] - pz); if (d < bd) { bd = d; bi = i; } });
+    if (bd > 18) return st[0];
+    return bi >= st.length - 2 ? ARENA : st[bi + 1];
+  }
   if (S.stage === 4 && BOSS) return [BOSS.pos.x, BOSS.pos.z];
   return null;
 }
@@ -599,7 +606,7 @@ export const Game = {
     let nn = null, nnd = 80; for (const t of targets()) if (t.kind === 'node' || (t.kind === 'boss' && t.core)) { const d = t.pos.distanceTo(camera.position); if (d < nnd) { nnd = d; nn = t; } }
     if (nn) { const v = nn.pos.clone().sub(camera.position).normalize(); let dyaw = Math.atan2(-v.x, -v.z) - P.yaw; dyaw = Math.atan2(Math.sin(dyaw), Math.cos(dyaw)); g.nearNode = [+dyaw.toFixed(3), +(Math.asin(v.y) - P.pitch).toFixed(3), +nnd.toFixed(1)]; } else g.nearNode = null;
     if (nb) { const v = nb.pos.clone().sub(camera.position).normalize(); let dyaw = Math.atan2(-v.x, -v.z) - P.yaw; dyaw = Math.atan2(Math.sin(dyaw), Math.cos(dyaw)); g.near = [+dyaw.toFixed(3), +(Math.asin(v.y) - P.pitch).toFixed(3), +nd.toFixed(1)]; } else g.near = null;
-    const near = nearestWell(); g.well = near ? [near.at[0], near.at[1]] : null;
+    const near = nearestWell(); g.well = near ? [near.at[0], near.at[1]] : null; g.objective = objectiveTarget();
   },
 };
 

@@ -48,7 +48,7 @@ try {
     peakD = Math.max(peakD, g.draws); peakT = Math.max(peakT, g.tris);
     path += Math.hypot(g.pos[0] - last[0], g.pos[1] - last[1]); last = g.pos;
     // where to walk: the route, else the nearest inkwell, else the summit
-    let tgt = route.length ? route[0] : (g.well || [40, -286]);
+    let tgt = route.length ? route[0] : (g.well || g.objective || [40, -286]);
     if (route.length && Math.hypot(tgt[0] - g.pos[0], tgt[1] - g.pos[1]) < 4) route.shift();
     const dx = tgt[0] - g.pos[0], dz = tgt[1] - g.pos[1], d = Math.hypot(dx, dz) || 1;
     const fx = -Math.sin(g.yaw), fz = -Math.cos(g.yaw), rx = Math.cos(g.yaw), rz = -Math.sin(g.yaw);

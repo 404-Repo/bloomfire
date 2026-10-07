@@ -1,0 +1,31 @@
+{
+ "url": "http://localhost:8797/",
+ "viewport": "844x390",
+ "gpu": "ANGLE (Apple, ANGLE Metal Renderer: Apple M4, Unspecified Version)",
+ "readyS": 0.731,
+ "secs": 538,
+ "path_m": 1913.3,
+ "moved_m": 269.6,
+ "shots": 2787,
+ "kills": 685,
+ "score": 498430,
+ "restored": 24.91,
+ "stage": 4,
+ "cleansed": 5,
+ "hp": 70,
+ "deaths": 0,
+ "bloomsUsed": 25,
+ "dashes": 1,
+ "lensPicks": 1,
+ "lenses": 6,
+ "bestCombo": null,
+ "peakDraws": 512,
+ "peakTris": 1079014,
+ "fps": 60,
+ "notes": [
+  "reached over true at 537 s"
+ ],
+ "fails": [
+  "1 console errors: Ignored attempt to cancel a touchend event with cancelable=false, for example because scrolling is in progress and cannot be interrupted."
+ ]
+}

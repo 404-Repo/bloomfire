@@ -28,7 +28,7 @@ function placeStick(x, y) {
 function resetStick() { stickB.style.left = ''; stickB.style.bottom = ''; stickK.style.transform = ''; }
 
 touchEl.addEventListener('touchstart', (e) => {
-  e.preventDefault(); IN.touched = true;
+  if (e.cancelable) e.preventDefault(); IN.touched = true;
   for (const t of e.changedTouches) {
     const el = document.elementFromPoint(t.clientX, t.clientY);
     const btn = el && el.closest && el.closest('.tb');
@@ -49,7 +49,7 @@ touchEl.addEventListener('touchstart', (e) => {
   }
 }, { passive: false });
 touchEl.addEventListener('touchmove', (e) => {
-  e.preventDefault();
+  if (e.cancelable) e.preventDefault();
   for (const t of e.changedTouches) {
     const o = owners.get(t.identifier); if (!o) continue;
     if (o.kind === 'stick') {
@@ -67,7 +67,7 @@ touchEl.addEventListener('touchmove', (e) => {
   }
 }, { passive: false });
 function endTouch(e) {
-  e.preventDefault();
+  if (e.cancelable) e.preventDefault();
   for (const t of e.changedTouches) {
     const o = owners.get(t.identifier); if (!o) continue;
     owners.delete(t.identifier);
