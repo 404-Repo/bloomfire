@@ -1,0 +1,1 @@
+{"utc": "2026-10-07T14:45:14Z", "game": "game5", "what": "artref object r01_prism_rifle", "kind": "image-fast", "api_id": "61e0ef8f-3405-4006-9337-c44b3e42dfa4", "credits_max_hold": 46, "ok": true, "result_id": "2fa4371a-f8d6-4fc6-868e-9857dd739c59", "file": "/Users/atlas/astrocade-game5/ref/objects/r01_prism_rifle.png", "bytes": 849049, "sha16": "ba10e949fc27c5d7", "secs": 11.0}

@@ -1,0 +1,1 @@
+{"utc": "2026-10-07T14:44:20Z", "game": "game5", "what": "artref object c04_old_inkhorn", "kind": "image-fast", "api_id": "61e0ef8f-3405-4006-9337-c44b3e42dfa4", "credits_max_hold": 46, "ok": true, "result_id": "29b7c537-8494-4383-84d0-60018228a0c2", "file": "/Users/atlas/astrocade-game5/ref/objects/c04_old_inkhorn.png", "bytes": 863642, "sha16": "0c2d3bfd8597f3fd", "secs": 10.7}

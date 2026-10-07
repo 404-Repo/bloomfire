@@ -1,0 +1,1 @@
+{"utc": "2026-10-07T14:41:10Z", "game": "game5", "what": "artref concept 04_vell_market", "kind": "image-std", "api_id": "bfbeea76-8673-492e-8401-975940109276", "credits_max_hold": 77, "ok": true, "result_id": "da658ef7-4d01-49e7-8188-9b0f72755f07", "file": "/Users/atlas/astrocade-game5/ref/concept/04_vell_market.png", "bytes": 7923972, "sha16": "02a2ec6275ed2250", "secs": 46.3}

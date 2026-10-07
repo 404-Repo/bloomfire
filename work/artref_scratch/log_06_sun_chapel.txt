@@ -1,0 +1,1 @@
+{"utc": "2026-10-07T14:42:17Z", "game": "game5", "what": "artref concept 06_sun_chapel", "kind": "image-std", "api_id": "bfbeea76-8673-492e-8401-975940109276", "credits_max_hold": 77, "ok": true, "result_id": "d0f121ef-9109-492b-b430-70a45f0ab2f9", "file": "/Users/atlas/astrocade-game5/ref/concept/06_sun_chapel.png", "bytes": 7135878, "sha16": "69fa2386a63e1aae", "secs": 33.5}

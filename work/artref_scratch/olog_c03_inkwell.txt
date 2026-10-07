@@ -1,0 +1,1 @@
+{"utc": "2026-10-07T14:44:20Z", "game": "game5", "what": "artref object c03_inkwell", "kind": "image-fast", "api_id": "61e0ef8f-3405-4006-9337-c44b3e42dfa4", "credits_max_hold": 46, "ok": true, "result_id": "02cc0d7b-fd9c-42c7-aedd-6de8d2cb1164", "file": "/Users/atlas/astrocade-game5/ref/objects/c03_inkwell.png", "bytes": 785483, "sha16": "3dcf59e03d477b56", "secs": 10.9}

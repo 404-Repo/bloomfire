@@ -1,0 +1,9 @@
+capture: centre-crop to 844:390, resample 844x390
+frame                              warm_pct       cold_pct       p98_luma        p2_luma top2_warm_shar near_edge_dens  near_luma_std ink_line_pct_i ink_line_pct_i    magenta_pct enemy_height_f
+01_lampwrights_rise.png                25.4           51.9          245.0            9.2           0.94          0.584           64.1          15.29           9.76           0.45          0.272
+02_olive_terraces.png                  20.6           54.6          250.9            1.0           0.29           0.61           67.7          17.71          16.36           0.18          0.295
+03_millbrook_bridge.png                18.4           63.1          239.9           11.1            0.7          0.541           60.1          13.61          10.63            0.1            0.2
+04_vell_market.png                      9.8           64.7          240.3            1.1           0.95           0.59           73.6          17.54          11.94           0.12          0.715
+05_windmill_ridge.png                  36.7           38.9          233.4           13.2           0.99          0.585           49.4          15.01           9.14           0.05          0.159
+06_sun_chapel.png                      22.3           51.7          248.0            7.5           0.95          0.558           61.1          13.19           9.42           0.31          0.523
+MEDIAN                                21.45          53.25         242.65           8.35          0.945          0.585           62.6          15.15         10.195           0.15          0.283
