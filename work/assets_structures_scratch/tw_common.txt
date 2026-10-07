@@ -1,0 +1,19 @@
+  const g = new THREE.Group();
+  const mat = (c, n, r = 0.92) => { const m = new THREE.MeshStandardMaterial({ color: c, roughness: r }); m.name = n; return m; };
+  const STONE = mat(0xc9b48f, 'stone');
+  const CHALK = mat(0xe8e2d4, 'stone');
+  const TERRA = mat(0xc0603a, 'stone');
+  let seed = 23; const rnd = () => ((seed = (seed * 16807) % 2147483647) / 2147483647);
+  const pick = () => { const r = rnd(); return r < 0.08 ? TERRA : r < 0.22 ? CHALK : STONE; };
+  const L = 6.0, H = 1.2, D = 0.6, CAP = 0.13, BODY = H - CAP;
+  // lay courses: returns [{x, y, w, h}] covering the face
+  const courses = () => {
+    const out = []; let y = 0;
+    while (y < BODY - 0.05) {
+      let h = 0.2 + rnd() * 0.12; if (BODY - (y + h) < 0.14) h = BODY - y;
+      let x = -L / 2;
+      while (x < L / 2 - 0.05) { let w = 0.28 + rnd() * 0.4; if (L / 2 - (x + w) < 0.2) w = L / 2 - x; out.push({ x: x + w / 2, y: y + h / 2, w, h }); x += w; }
+      y += h;
+    }
+    return out;
+  };

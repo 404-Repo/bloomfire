@@ -1,0 +1,84 @@
+<!doctype html><html><head><meta charset="utf-8"><title>raw vs assetlib</title>
+<script type="importmap">
+{ "imports": {
+  "three": "https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js",
+  "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.169.0/examples/jsm/"
+} }
+</script>
+<style>
+ body{margin:0;background:#14171a;color:#ddd;font:12px/1.35 -apple-system,sans-serif}
+ .row{display:inline-flex;gap:6px;padding:6px;align-items:center}
+ .row canvas{width:220px;height:220px;background:#2b3036;border-radius:6px}
+ .lbl{width:140px;font-size:12px}
+ .tag{font-size:11px;color:#8ab4f8}
+</style></head><body>
+<div id="out"></div>
+<script type="module">
+import * as THREE from 'three';
+import { ASSET } from '/game/assetlib.js';
+// Adapted from ~/404_assetlib/rawtest.html: raw module vs the game's assetlib.
+const SLUGS = ['olive_tree','cypress','lemon_tree_pot','lavender_bush','flower_patch','grass_tuft','boulder','cart',
+  'barrel_cluster','crate_stack','amphora','wooden_fence','haystack','field_wall','chalk_block'];
+const JOINTS = {};
+const off = document.createElement('canvas'); off.width = 220; off.height = 220;
+const r = new THREE.WebGLRenderer({ canvas: off, antialias: true });
+r.setSize(220, 220, false);
+function shoot(obj, cv) {
+  const sc = new THREE.Scene(); sc.background = new THREE.Color(0x2b3036);
+  sc.add(new THREE.HemisphereLight(0xffffff, 0x556677, 2.1));
+  const d = new THREE.DirectionalLight(0xffffff, 1.7); d.position.set(4, 8, 6); sc.add(d);
+  sc.add(obj);
+  const box = new THREE.Box3().setFromObject(obj);
+  const size = box.getSize(new THREE.Vector3()), ctr = box.getCenter(new THREE.Vector3());
+  const rad = Math.max(size.x, size.y, size.z) * 0.95 + 0.3;
+  const cam = new THREE.PerspectiveCamera(38, 1, 0.01, 500);
+  cam.position.set(ctr.x + rad, ctr.y + rad * 0.55, ctr.z + rad * 1.2); cam.lookAt(ctr);
+  r.render(sc, cam);
+  cv.getContext('2d').drawImage(off, 0, 0);
+  let meshes = 0, tris = 0; const names = new Set();
+  obj.traverse((o) => {
+    if (!o.isMesh || !o.geometry) return;
+    meshes++; names.add(o.material.name || '');
+    const g = o.geometry;
+    const t = (g.index ? g.index.count : (g.attributes.position?.count || 0)) / 3;
+    tris += t * (o.isInstancedMesh ? o.count : 1);
+  });
+  sc.remove(obj);
+  return { meshes, tris: Math.round(tris), mats: [...names].sort(), size: [+size.x.toFixed(2), +size.y.toFixed(2), +size.z.toFixed(2)] };
+}
+const out = document.getElementById('out');
+const report = [];
+for (const slug of SLUGS) {
+  const url = `/game/assets/${slug}.js`;
+  const row = document.createElement('div'); row.className = 'row';
+  const lbl = document.createElement('div'); lbl.className = 'lbl'; lbl.textContent = slug;
+  const c1 = document.createElement('canvas'); c1.width = 220; c1.height = 220;
+  const c2 = document.createElement('canvas'); c2.width = 220; c2.height = 220;
+  row.append(lbl, c1, c2); out.appendChild(row);
+  let raw = null;
+  try { const mod = await import(url); raw = (mod.default || mod.build || mod.create)(THREE); }
+  catch (e) { lbl.textContent = slug + ' (raw failed: ' + e.message.slice(0, 60) + ')'; }
+  const rawInfo = raw ? shoot(raw, c1) : null;
+  const via = await ASSET(url, {});
+  const libInfo = shoot(via, c2);
+  const rec = { slug, raw: rawInfo, assetlib: libInfo };
+  if (JOINTS[slug]) {
+    const h = await ASSET(url, { keepHierarchy: true });
+    const j = h.userData.joints && h.userData.joints[JOINTS[slug]];
+    rec.joint = { name: JOINTS[slug], resolved: !!(j && j.isObject3D), children: j ? j.children.length : 0 };
+    if (j) {
+      // spin test: bbox of the joint subtree must stay (nearly) the same centre after a turn
+      h.updateMatrixWorld(true);
+      const b0 = new THREE.Box3().setFromObject(j).getCenter(new THREE.Vector3());
+      if (JOINTS[slug] === 'wheel') j.rotation.x += 0.7; else j.rotation.z += 0.7;
+      h.updateMatrixWorld(true);
+      const b1 = new THREE.Box3().setFromObject(j).getCenter(new THREE.Vector3());
+      rec.joint.centreDrift = +b0.distanceTo(b1).toFixed(3);
+    }
+  }
+  report.push(rec);
+  const keep = rawInfo ? libInfo.tris / Math.max(1, rawInfo.tris) : 0;
+  lbl.innerHTML = `${slug}<br><span class="tag">raw ${rawInfo ? rawInfo.tris : '-'}<br>lib ${libInfo.tris}<br>kept ${(keep*100).toFixed(0)}%</span>`;
+}
+window.__RAW__ = report; window.__DONE__ = true;
+</script></body></html>

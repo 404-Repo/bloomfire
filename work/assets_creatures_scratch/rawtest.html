@@ -1,0 +1,27 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script type="importmap">{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js", "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.169.0/examples/jsm/" } }</script>
+<style>body{margin:0;background:#14171a;color:#ddd;font:12px -apple-system,sans-serif}.row{display:flex;gap:6px;padding:6px;align-items:center}.lbl{width:150px}canvas{width:260px;height:260px;border-radius:4px}</style></head><body><div id="out"></div>
+<script type="module">
+// Raw module vs the game's assetlib.js, merged and keepHierarchy. Gate is triangle retention.
+import * as THREE from 'three';
+import { ASSET } from '/game/assetlib.js';
+const SLUGS = ['blotling', 'smear', 'spitter', 'quill', 'inkhorn', 'inkwell', 'old_inkhorn', 'prism_rifle'];
+const tris = (obj) => { let t = 0, meshes = 0; obj.updateMatrixWorld(true); obj.traverse((o) => { if (!o.isMesh || !o.geometry) return; meshes++; const g = o.geometry; t += (g.index ? g.index.count : g.attributes.position.count) / 3 * (o.isInstancedMesh ? o.count : 1); }); return { tris: Math.round(t), meshes, size: new THREE.Box3().setFromObject(obj).getSize(new THREE.Vector3()).toArray().map((v) => +v.toFixed(3)) }; };
+const rep = [];
+for (const slug of SLUGS) {
+  const mod = await import(`/game/assets/${slug}.js`);
+  const raw = mod.default(THREE), rawJ = Object.keys(raw.userData.joints || {});
+  const merged = await ASSET(`/game/assets/${slug}.js`, {});
+  const tree = await ASSET(`/game/assets/${slug}.js`, { keepHierarchy: true });
+  const tj = tree.userData.joints || {};
+  const resolved = rawJ.filter((n) => tj[n] && tj[n].isObject3D);
+  // does rotating a resolved joint actually move geometry in THIS instance?
+  let moves = false;
+  const probe = tj[rawJ.find((n) => n !== 'body' && n !== 'muzzle' && !n.startsWith('node')) || rawJ[0]];
+  if (probe) { const b0 = new THREE.Box3().setFromObject(tree); probe.rotation.x += 0.8; probe.rotation.z += 0.8; tree.updateMatrixWorld(true); const b1 = new THREE.Box3().setFromObject(tree); moves = !b0.equals(b1); }
+  const scaled = await ASSET(`/game/assets/${slug}.js`, { height: 1.0, keepHierarchy: true });
+  rep.push({ slug, raw: tris(raw), merged: tris(merged), tree: tris(tree), jointsDeclared: rawJ.length, jointsResolved: resolved.length, jointMovesGeometry: moves, scaledHeight: +new THREE.Box3().setFromObject(scaled).getSize(new THREE.Vector3()).y.toFixed(3) });
+}
+document.getElementById('out').textContent = JSON.stringify(rep);
+window.__REP__ = rep; window.__DONE__ = true;
+</script></body></html>

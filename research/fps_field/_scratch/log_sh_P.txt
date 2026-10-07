@@ -1,0 +1,19 @@
+gpu ANGLE (Apple, ANGLE Metal Renderer: Apple M4, Unspecified Version)
+button#menu-button. [324,25 46x46] "Ⅱ"
+button#bag-button. [320,83 50x38] "I Gear"
+button#potion-button. [320,126 50x38] "Q · 3 Heal"
+button#map-button. [16,228 92x92] "M · Map"
+button#camera-reset. [16,325 92x44] "↺ View"
+button#weapon-button. [208,640 166x44] "R Iron Sword"
+button#cleave. [208,690 52x80] "1 Cleave 20 stamina"
+button#slam. [265,690 52x80] "2 Ground Slam 30 stamina"
+button#cry. [322,690 52x80] "3 Battle Cry 25 stamina"
+button#dodge. [225,776 72x54] "↝ Dodge"
+button#attack. [302,776 72x54] "⚔ Attack"
+div#stick. [22,709 104x104] "Movement joystick"
+cam {"yaw":0,"pitch":0.7454194762741583,"zoom":0.88,"distance":15.568789291399636,"blocked":false,"heading":"N","position":{"x":0,"y":12.160000023841858,"z":22.439999999999998}}
+CAM before/after 100px drag while stick held:
+  {"yaw":0,"pitch":0.7454194762741583,"zoom":0.88,"distance":15.568789291399636,"blocked":false,"heading":"N","position":{ 
+  {"yaw":-0.8982179023255734,"pitch":0.7454194762741583,"zoom":0.88,"distance":15.568789291399636,"blocked":false,"heading
+[2s] kills 0/24 hp 120 pos 0.2,1.0 wp 1 near raider 33m attacks 0 hits 0 | draws 129 tris 246842 fps 60
+[4s] kills 0/24 hp 120 pos 0.1,-4.3 wp 1 near raider 30m attacks 0 hits 0 | draws 114 tris 225343 fps 60

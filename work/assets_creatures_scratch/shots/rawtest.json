@@ -1,0 +1,274 @@
+[
+ {
+  "slug": "blotling",
+  "raw": {
+   "tris": 2300,
+   "meshes": 26,
+   "size": [
+    0.67,
+    0.621,
+    0.782
+   ]
+  },
+  "merged": {
+   "tris": 2300,
+   "meshes": 4,
+   "size": [
+    0.67,
+    0.587,
+    0.777
+   ]
+  },
+  "tree": {
+   "tris": 2300,
+   "meshes": 26,
+   "size": [
+    0.803,
+    0.621,
+    0.782
+   ]
+  },
+  "jointsDeclared": 5,
+  "jointsResolved": 5,
+  "jointMovesGeometry": true,
+  "scaledHeight": 1
+ },
+ {
+  "slug": "smear",
+  "raw": {
+   "tris": 2316,
+   "meshes": 25,
+   "size": [
+    0.796,
+    1.936,
+    0.957
+   ]
+  },
+  "merged": {
+   "tris": 2316,
+   "meshes": 4,
+   "size": [
+    0.796,
+    1.921,
+    0.891
+   ]
+  },
+  "tree": {
+   "tris": 2316,
+   "meshes": 25,
+   "size": [
+    0.796,
+    1.827,
+    1.02
+   ]
+  },
+  "jointsDeclared": 6,
+  "jointsResolved": 6,
+  "jointMovesGeometry": true,
+  "scaledHeight": 1
+ },
+ {
+  "slug": "spitter",
+  "raw": {
+   "tris": 2748,
+   "meshes": 34,
+   "size": [
+    1.178,
+    1.675,
+    1.91
+   ]
+  },
+  "merged": {
+   "tris": 2748,
+   "meshes": 4,
+   "size": [
+    1.178,
+    1.675,
+    1.91
+   ]
+  },
+  "tree": {
+   "tris": 2748,
+   "meshes": 34,
+   "size": [
+    1.491,
+    1.801,
+    1.965
+   ]
+  },
+  "jointsDeclared": 3,
+  "jointsResolved": 3,
+  "jointMovesGeometry": true,
+  "scaledHeight": 1
+ },
+ {
+  "slug": "quill",
+  "raw": {
+   "tris": 1820,
+   "meshes": 42,
+   "size": [
+    1.294,
+    0.665,
+    0.815
+   ]
+  },
+  "merged": {
+   "tris": 1820,
+   "meshes": 4,
+   "size": [
+    1.234,
+    0.66,
+    0.815
+   ]
+  },
+  "tree": {
+   "tris": 1820,
+   "meshes": 42,
+   "size": [
+    0.974,
+    0.802,
+    0.904
+   ]
+  },
+  "jointsDeclared": 3,
+  "jointsResolved": 3,
+  "jointMovesGeometry": true,
+  "scaledHeight": 1
+ },
+ {
+  "slug": "inkhorn",
+  "raw": {
+   "tris": 2948,
+   "meshes": 47,
+   "size": [
+    2.871,
+    3.146,
+    1.547
+   ]
+  },
+  "merged": {
+   "tris": 2948,
+   "meshes": 4,
+   "size": [
+    2.669,
+    3.146,
+    1.444
+   ]
+  },
+  "tree": {
+   "tris": 2948,
+   "meshes": 47,
+   "size": [
+    2.871,
+    3.113,
+    2.008
+   ]
+  },
+  "jointsDeclared": 6,
+  "jointsResolved": 6,
+  "jointMovesGeometry": true,
+  "scaledHeight": 1
+ },
+ {
+  "slug": "inkwell",
+  "raw": {
+   "tris": 3688,
+   "meshes": 50,
+   "size": [
+    2.652,
+    7.1,
+    3.035
+   ]
+  },
+  "merged": {
+   "tris": 3688,
+   "meshes": 3,
+   "size": [
+    2.652,
+    7.1,
+    3.035
+   ]
+  },
+  "tree": {
+   "tris": 3688,
+   "meshes": 50,
+   "size": [
+    5.801,
+    5.512,
+    4.747
+   ]
+  },
+  "jointsDeclared": 4,
+  "jointsResolved": 4,
+  "jointMovesGeometry": true,
+  "scaledHeight": 1
+ },
+ {
+  "slug": "old_inkhorn",
+  "raw": {
+   "tris": 6954,
+   "meshes": 52,
+   "size": [
+    12.983,
+    14.205,
+    7.847
+   ]
+  },
+  "merged": {
+   "tris": 6954,
+   "meshes": 4,
+   "size": [
+    11.807,
+    14.205,
+    6.706
+   ]
+  },
+  "tree": {
+   "tris": 6954,
+   "meshes": 52,
+   "size": [
+    12.983,
+    13.994,
+    10.703
+   ]
+  },
+  "jointsDeclared": 7,
+  "jointsResolved": 7,
+  "jointMovesGeometry": true,
+  "scaledHeight": 1
+ },
+ {
+  "slug": "prism_rifle",
+  "raw": {
+   "tris": 1512,
+   "meshes": 37,
+   "size": [
+    0.093,
+    0.218,
+    0.973
+   ]
+  },
+  "merged": {
+   "tris": 1512,
+   "meshes": 4,
+   "size": [
+    0.093,
+    0.218,
+    0.973
+   ]
+  },
+  "tree": {
+   "tris": 1512,
+   "meshes": 37,
+   "size": [
+    0.131,
+    0.255,
+    0.973
+   ]
+  },
+  "jointsDeclared": 2,
+  "jointsResolved": 2,
+  "jointMovesGeometry": true,
+  "scaledHeight": 1
+ }
+]

@@ -1,0 +1,17 @@
+{
+ "olive_tree": {"height": 4.6, "tolerance": 0.15},
+ "cypress": {"height": 10.0, "tolerance": 0.15},
+ "lemon_tree_pot": {"height": 3.2, "tolerance": 0.15},
+ "lavender_bush": {"height": 0.7, "tolerance": 0.2},
+ "flower_patch": {"height": 0.35, "width": 1.0, "tolerance": 0.3},
+ "grass_tuft": {"height": 0.55, "tolerance": 0.25},
+ "boulder": {"height": 1.7, "tolerance": 0.2},
+ "cart": {"height": 1.5, "depth": 3.2, "tolerance": 0.15},
+ "barrel_cluster": {"height": 1.25, "tolerance": 0.15},
+ "crate_stack": {"height": 1.4, "tolerance": 0.15},
+ "amphora": {"height": 0.9, "tolerance": 0.15},
+ "wooden_fence": {"width": 3.0, "height": 1.0, "tolerance": 0.15},
+ "haystack": {"height": 2.2, "tolerance": 0.15},
+ "field_wall": {"width": 5.0, "height": 1.0, "depth": 0.5, "tolerance": 0.2},
+ "chalk_block": {"height": 1.3, "tolerance": 0.2}
+}

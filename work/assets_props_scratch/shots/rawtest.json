@@ -1,0 +1,429 @@
+[
+ {
+  "slug": "olive_tree",
+  "raw": {
+   "meshes": 23,
+   "tris": 966,
+   "mats": [
+    "foliage",
+    "timber"
+   ],
+   "size": [
+    4.39,
+    4.8,
+    4.04
+   ]
+  },
+  "assetlib": {
+   "meshes": 4,
+   "tris": 966,
+   "mats": [
+    "foliage",
+    "timber"
+   ],
+   "size": [
+    3.87,
+    4.61,
+    3.63
+   ]
+  }
+ },
+ {
+  "slug": "cypress",
+  "raw": {
+   "meshes": 2,
+   "tris": 312,
+   "mats": [
+    "foliage",
+    "timber"
+   ],
+   "size": [
+    2.19,
+    10,
+    2.13
+   ]
+  },
+  "assetlib": {
+   "meshes": 2,
+   "tris": 312,
+   "mats": [
+    "foliage",
+    "timber"
+   ],
+   "size": [
+    2.19,
+    10,
+    2.13
+   ]
+  }
+ },
+ {
+  "slug": "lemon_tree_pot",
+  "raw": {
+   "meshes": 28,
+   "tris": 606,
+   "mats": [
+    "foliage",
+    "ground",
+    "tile",
+    "timber"
+   ],
+   "size": [
+    1.63,
+    3.23,
+    1.64
+   ]
+  },
+  "assetlib": {
+   "meshes": 5,
+   "tris": 606,
+   "mats": [
+    "foliage",
+    "ground",
+    "tile",
+    "timber"
+   ],
+   "size": [
+    1.52,
+    3.2,
+    1.53
+   ]
+  }
+ },
+ {
+  "slug": "lavender_bush",
+  "raw": {
+   "meshes": 3,
+   "tris": 304,
+   "mats": [
+    "foliage"
+   ],
+   "size": [
+    0.87,
+    0.67,
+    0.79
+   ]
+  },
+  "assetlib": {
+   "meshes": 3,
+   "tris": 304,
+   "mats": [
+    "foliage"
+   ],
+   "size": [
+    0.87,
+    0.67,
+    0.79
+   ]
+  }
+ },
+ {
+  "slug": "flower_patch",
+  "raw": {
+   "meshes": 35,
+   "tris": 237,
+   "mats": [
+    "foliage"
+   ],
+   "size": [
+    1.06,
+    0.38,
+    0.97
+   ]
+  },
+  "assetlib": {
+   "meshes": 7,
+   "tris": 237,
+   "mats": [
+    "foliage"
+   ],
+   "size": [
+    1.05,
+    0.37,
+    0.95
+   ]
+  }
+ },
+ {
+  "slug": "grass_tuft",
+  "raw": {
+   "meshes": 2,
+   "tris": 60,
+   "mats": [
+    "foliage"
+   ],
+   "size": [
+    0.45,
+    0.51,
+    0.39
+   ]
+  },
+  "assetlib": {
+   "meshes": 2,
+   "tris": 60,
+   "mats": [
+    "foliage"
+   ],
+   "size": [
+    0.45,
+    0.51,
+    0.39
+   ]
+  }
+ },
+ {
+  "slug": "boulder",
+  "raw": {
+   "meshes": 3,
+   "tris": 152,
+   "mats": [
+    "stone"
+   ],
+   "size": [
+    3.23,
+    1.9,
+    2.65
+   ]
+  },
+  "assetlib": {
+   "meshes": 2,
+   "tris": 152,
+   "mats": [
+    "stone"
+   ],
+   "size": [
+    3.08,
+    1.84,
+    2.15
+   ]
+  }
+ },
+ {
+  "slug": "cart",
+  "raw": {
+   "meshes": 36,
+   "tris": 948,
+   "mats": [
+    "metal",
+    "timber"
+   ],
+   "size": [
+    1.72,
+    1.44,
+    3.28
+   ]
+  },
+  "assetlib": {
+   "meshes": 4,
+   "tris": 948,
+   "mats": [
+    "metal",
+    "timber"
+   ],
+   "size": [
+    1.72,
+    1.44,
+    3.28
+   ]
+  }
+ },
+ {
+  "slug": "barrel_cluster",
+  "raw": {
+   "meshes": 40,
+   "tris": 1084,
+   "mats": [
+    "metal",
+    "tile",
+    "timber"
+   ],
+   "size": [
+    1.57,
+    1.23,
+    1.04
+   ]
+  },
+  "assetlib": {
+   "meshes": 6,
+   "tris": 1084,
+   "mats": [
+    "metal",
+    "tile",
+    "timber"
+   ],
+   "size": [
+    1.57,
+    1.23,
+    1.04
+   ]
+  }
+ },
+ {
+  "slug": "crate_stack",
+  "raw": {
+   "meshes": 18,
+   "tris": 696,
+   "mats": [
+    "timber"
+   ],
+   "size": [
+    1.55,
+    1.4,
+    0.82
+   ]
+  },
+  "assetlib": {
+   "meshes": 2,
+   "tris": 696,
+   "mats": [
+    "timber"
+   ],
+   "size": [
+    1.55,
+    1.4,
+    0.82
+   ]
+  }
+ },
+ {
+  "slug": "amphora",
+  "raw": {
+   "meshes": 8,
+   "tris": 630,
+   "mats": [
+    "tile",
+    "timber"
+   ],
+   "size": [
+    0.53,
+    0.92,
+    0.56
+   ]
+  },
+  "assetlib": {
+   "meshes": 2,
+   "tris": 630,
+   "mats": [
+    "tile",
+    "timber"
+   ],
+   "size": [
+    0.53,
+    0.92,
+    0.56
+   ]
+  }
+ },
+ {
+  "slug": "wooden_fence",
+  "raw": {
+   "meshes": 22,
+   "tris": 252,
+   "mats": [
+    "metal",
+    "timber"
+   ],
+   "size": [
+    3.15,
+    1.02,
+    0.33
+   ]
+  },
+  "assetlib": {
+   "meshes": 3,
+   "tris": 252,
+   "mats": [
+    "metal",
+    "timber"
+   ],
+   "size": [
+    3.01,
+    1.02,
+    0.28
+   ]
+  }
+ },
+ {
+  "slug": "haystack",
+  "raw": {
+   "meshes": 18,
+   "tris": 312,
+   "mats": [
+    "fabric",
+    "timber"
+   ],
+   "size": [
+    2.75,
+    2.34,
+    2.63
+   ]
+  },
+  "assetlib": {
+   "meshes": 3,
+   "tris": 312,
+   "mats": [
+    "fabric",
+    "timber"
+   ],
+   "size": [
+    2.61,
+    2.23,
+    2.58
+   ]
+  }
+ },
+ {
+  "slug": "field_wall",
+  "raw": {
+   "meshes": 83,
+   "tris": 1372,
+   "mats": [
+    "stone"
+   ],
+   "size": [
+    5.13,
+    1.06,
+    0.56
+   ]
+  },
+  "assetlib": {
+   "meshes": 3,
+   "tris": 1372,
+   "mats": [
+    "stone"
+   ],
+   "size": [
+    5.13,
+    1.06,
+    0.56
+   ]
+  }
+ },
+ {
+  "slug": "chalk_block",
+  "raw": {
+   "meshes": 12,
+   "tris": 208,
+   "mats": [
+    "stone"
+   ],
+   "size": [
+    1.88,
+    1.46,
+    1.52
+   ]
+  },
+  "assetlib": {
+   "meshes": 2,
+   "tris": 208,
+   "mats": [
+    "stone"
+   ],
+   "size": [
+    1.85,
+    1.41,
+    1.44
+   ]
+  }
+ }
+]

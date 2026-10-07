@@ -1,0 +1,11 @@
+import * as THREE from 'three';
+const [file, joint, axis] = process.argv.slice(2);
+const g = (await import(file)).default(THREE);
+const j = g.userData.joints[joint];
+const bb = () => { g.updateMatrixWorld(true); const b = new THREE.Box3(); const v = new THREE.Vector3();
+  j.traverse((n) => { if (!n.isMesh) return; const p = n.geometry.attributes.position; for (let i = 0; i < p.count; i++) b.expandByPoint(v.fromBufferAttribute(p, i).applyMatrix4(n.matrixWorld)); }); return b; };
+const b0 = bb(); const c0 = b0.getCenter(new THREE.Vector3());
+const pivot = j.getWorldPosition(new THREE.Vector3());
+j.rotation[axis] += Math.PI / 4; const b1 = bb(); const c1 = b1.getCenter(new THREE.Vector3());
+const f = (v) => v.toArray().map((x) => x.toFixed(2)).join(',');
+console.log(file.split('/').slice(-2).join('/'), joint, 'pivot', f(pivot), 'centre0', f(c0), 'centre after 45deg', f(c1), 'size0', f(b0.getSize(new THREE.Vector3())), 'size1', f(b1.getSize(new THREE.Vector3())));

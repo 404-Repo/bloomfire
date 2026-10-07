@@ -1,0 +1,78 @@
+[
+ {
+  "slug": "blotling",
+  "joints": [
+   "body",
+   "legFL",
+   "legFR",
+   "legBL",
+   "legBR"
+  ]
+ },
+ {
+  "slug": "smear",
+  "joints": [
+   "body",
+   "head",
+   "armL",
+   "armR",
+   "legL",
+   "legR"
+  ]
+ },
+ {
+  "slug": "spitter",
+  "joints": [
+   "body",
+   "sac",
+   "tube"
+  ]
+ },
+ {
+  "slug": "quill",
+  "joints": [
+   "body",
+   "wingL",
+   "wingR"
+  ]
+ },
+ {
+  "slug": "inkhorn",
+  "joints": [
+   "body",
+   "head",
+   "armL",
+   "armR",
+   "legL",
+   "legR"
+  ]
+ },
+ {
+  "slug": "inkwell",
+  "joints": [
+   "spire",
+   "node0",
+   "node1",
+   "node2"
+  ]
+ },
+ {
+  "slug": "old_inkhorn",
+  "joints": [
+   "body",
+   "head",
+   "core",
+   "armL",
+   "armR",
+   "legL",
+   "legR"
+  ]
+ },
+ {
+  "slug": "prism_rifle",
+  "joints": [
+   "prism",
+   "muzzle"
+  ]
+ }
+]

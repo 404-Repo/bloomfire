@@ -28,7 +28,7 @@ sun.shadow.bias = -0.0006; sun.shadow.normalBias = 0.04;
 scene.add(sun, sun.target);
 export const hemi = new THREE.HemisphereLight(0x8eaee0, 0x5e4c3a, 1.05);
 scene.add(hemi);
-export const fog = new THREE.Fog(new THREE.Color().setHex(0xc9b9a4, THREE.SRGBColorSpace), 90, 640);
+export const fog = new THREE.Fog(new THREE.Color().setHex(0xd9cdbb, THREE.SRGBColorSpace), 140, 950);
 scene.fog = fog;
 
 export function followShadow(p) {
@@ -51,7 +51,7 @@ const sky = new THREE.Mesh(new THREE.SphereGeometry(720, 32, 16), new THREE.Shad
     vec3 zen = vec3(0.18,0.33,0.62), hor = vec3(0.98,0.80,0.58), low = vec3(0.86,0.72,0.60);
     vec3 c = mix(hor, zen, pow(clamp(h,0.0,1.0), 0.55));
     if (h < 0.0) c = mix(hor, low, clamp(-h*4.0,0.0,1.0));
-    if (uHasTex > 0.5) { float u = atan(d.x, -d.z)/6.2831853 + 0.5; float v = clamp(h*0.5+0.5, 0.0, 1.0); vec3 t = texture2D(uTex, vec2(u, v)).rgb; t = pow(t, vec3(2.2)); c = mix(c, t*1.15, smoothstep(-0.02, 0.04, h)); }
+    if (uHasTex > 0.5) { float u = atan(d.x, -d.z)/6.2831853 + 0.5; float v = clamp(asin(clamp(h,-1.0,1.0))/3.14159 + 0.5, 0.0, 1.0); vec3 t = texture2D(uTex, vec2(u, v)).rgb; t = pow(t, vec3(2.2)); c = mix(c, t*1.15, smoothstep(-0.02, 0.04, h)); }
     float s = max(dot(d, uSun), 0.0);
     c += vec3(1.0,0.72,0.4)*pow(s, 8.0)*0.55 + vec3(1.0,0.9,0.7)*pow(s, 600.0)*6.0;
     // the ink: a cold paper wash over the sky until the valley is restored
@@ -130,12 +130,25 @@ export function resize() {
   postU.uPx.value = Math.max(1, DPR * 0.75);
 }
 
+// the first-person rifle draws in its own scene after a depth clear, so it never clips into a wall
+export const vmScene = new THREE.Scene();
+const vmKey = new THREE.DirectionalLight(0xffd8a8, 2.4); vmKey.position.set(-1, 1.2, 0.6);
+const vmFill = new THREE.HemisphereLight(0x9ab6e6, 0x5a4636, 1.2);
+vmScene.add(vmKey, vmFill);
+export const vmCam = new THREE.PerspectiveCamera(52, 1, 0.01, 10);
+renderer.autoClear = false;
+
 export function draw() {
   renderer.info.reset();
   renderer.setRenderTarget(rt);
+  renderer.clear();
   renderer.render(scene, camera);
   renderer.setRenderTarget(null);
+  renderer.clear();
   postU.uProjInv.value.copy(camera.projectionMatrixInverse);
   postU.uCamWorld.value.copy(camera.matrixWorld);
   renderer.render(postScene, postCam);
+  vmCam.aspect = camera.aspect; vmCam.fov = Math.min(64, Math.max(46, camera.fov * 0.8)); vmCam.updateProjectionMatrix();
+  renderer.clearDepth();
+  renderer.render(vmScene, vmCam);
 }

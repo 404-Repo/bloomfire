@@ -33,8 +33,8 @@ export const PATHS = [
 ];
 
 export const BRIDGES = [
-  { at: [-20, -6], yaw: Math.PI / 2 + 0.12, len: 18 },   // Millbrook, on the mill-market road
-  { at: [8, 76], yaw: Math.PI / 2 - 0.3, len: 18 },      // south footbridge
+  { at: [-20, -6], yaw: 0.14, len: 18 },   // Millbrook, on the mill-market road
+  { at: [8, 76], yaw: 0.56, len: 18 },      // south footbridge
 ];
 
 // The inkwells: the five hearts. `order` is only the teaching order; the middle four can be done in any order.
@@ -53,4 +53,4 @@ export const LANTERNS = [
   { id: 'stair', at: [40, -192] }, { id: 'chapel', at: [40, -276] },
 ];
 
-export const SPAWN = { at: [-198, 176], yaw: -0.7 };   // yaw 0 looks north (-z); this looks north-east, over the valley
+export const SPAWN = { at: [-192, 168], yaw: -0.82 };   // yaw 0 looks north (-z); this looks north-east, over the valley

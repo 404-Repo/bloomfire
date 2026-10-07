@@ -1,0 +1,58 @@
+// market_stall c2: profiles. Counter is one extruded side section swept along X, the awning
+// stripes are a bowed extruded section, the valance is a scalloped extruded shape, and the
+// goods sit in lathed baskets.
+export default function (THREE) {
+  const g = new THREE.Group();
+  const M = (color, name, rough = 0.85, extra = {}) => { const mt = new THREE.MeshStandardMaterial({ color, roughness: rough, metalness: 0, ...extra }); mt.name = name; return mt; };
+  const timber = M(0x7a5534, 'timber'), dark = M(0x4a3324, 'timber');
+  const ochre = M(0xd9a441, 'fabric', 0.9, { side: THREE.DoubleSide }), madder = M(0xa8382e, 'fabric', 0.9, { side: THREE.DoubleSide });
+  const basketM = M(0xc9b48f, 'fabric', 0.9, { side: THREE.DoubleSide });
+  const fruitA = M(0xd9a441, 'foliage', 0.6), fruitB = M(0xc0603a, 'foliage', 0.6);
+  const add = (geo, mat, x, y, z, rx = 0, ry = 0, rz = 0) => { const ms = new THREE.Mesh(geo, mat); ms.position.set(x, y, z); ms.rotation.set(rx, ry, rz); g.add(ms); return ms; };
+  // sweep a section drawn in (depth=u toward +Z, height=v) along X across [x0, x1]
+  const sweepX = (pts, x0, x1, mat) => {
+    const sh = new THREE.Shape(pts.map(([u, v]) => new THREE.Vector2(-u, v)));
+    const geo = new THREE.ExtrudeGeometry(sh, { depth: x1 - x0, bevelEnabled: false, curveSegments: 6 });
+    return add(geo, mat, x0, 0, 0, 0, Math.PI / 2, 0);
+  };
+  // chamfered post, swept up Y
+  const postShape = (s) => { const c = s * 0.25, h = s / 2; return new THREE.Shape([[-h + c, -h], [h - c, -h], [h, -h + c], [h, h - c], [h - c, h], [-h + c, h], [-h, h - c], [-h, -h + c]].map(([a, b]) => new THREE.Vector2(a, b))); };
+  const post = (x, z, hgt) => add(new THREE.ExtrudeGeometry(postShape(0.13), { depth: hgt, bevelEnabled: false }), dark, x, 0, z, -Math.PI / 2, 0, 0);
+  const X = 1.12;
+  for (const sx of [-1, 1]) { post(sx * X, 0.55, 2.25); post(sx * X, -0.6, 2.62); }
+  // counter section: plinth kick, front face, overhanging top lip, back drop
+  sweepX([[0.5, 0.0], [0.5, 0.92], [0.58, 0.92], [0.58, 1.02], [-0.56, 1.02], [-0.56, 0.92], [-0.5, 0.92], [-0.5, 0.0]], -1.1, 1.1, timber);
+  // plank seams + rails on the front and back faces, so neither side is a blank slab
+  for (let i = 1; i < 8; i++) { const x = -1.1 + i * 2.2 / 8; add(new THREE.BoxGeometry(0.03, 0.86, 0.02), dark, x, 0.46, 0.51); add(new THREE.BoxGeometry(0.03, 0.86, 0.02), dark, x, 0.46, -0.51); }
+  for (const zz of [0.52, -0.52]) { add(new THREE.BoxGeometry(2.2, 0.08, 0.03), dark, 0, 0.2, zz); add(new THREE.BoxGeometry(2.2, 0.08, 0.03), dark, 0, 0.78, zz); }
+  // beams
+  add(new THREE.BoxGeometry(2.4, 0.1, 0.1), timber, 0, 2.2, 0.55);
+  add(new THREE.BoxGeometry(2.4, 0.1, 0.1), timber, 0, 2.57, -0.6);
+  for (const sx of [-1, 1]) add(new THREE.BoxGeometry(0.08, 0.08, 1.3), timber, sx * X, 2.08, -0.03);
+  // bowed awning: arc section from back to front, swept per stripe
+  const arc = [];
+  const N = 8, zb = -0.68, yb = 2.64, zf = 0.92, yf = 2.16;
+  for (let i = 0; i <= N; i++) { const t = i / N; arc.push([zb + (zf - zb) * t, yb + (yf - yb) * t + Math.sin(Math.PI * t) * 0.12]); }
+  const sec = arc.concat(arc.slice().reverse().map(([u, v]) => [u, v - 0.035]));
+  const S = 6, sw = 2.56 / S;
+  for (let i = 0; i < S; i++) {
+    const mat = i % 2 ? madder : ochre, x0 = -1.28 + i * sw;
+    sweepX(sec, x0, x0 + sw, mat);
+    // scalloped valance: a flat shape with a round bottom, thin extrusion
+    const sh = new THREE.Shape();
+    sh.moveTo(0, 0); sh.lineTo(sw, 0); sh.lineTo(sw, -0.16);
+    sh.absarc(sw / 2, -0.16, sw / 2, 0, -Math.PI, true); sh.lineTo(0, 0);
+    // flatten the scallop a little
+    const vg = new THREE.ExtrudeGeometry(sh, { depth: 0.02, bevelEnabled: false, curveSegments: 6 });
+    const vm = add(vg, mat, x0, yf + 0.01, zf - 0.01); vm.scale.set(1, 0.8, 1);
+  }
+  // baskets of fruit (lathe), plus one crate
+  const basketGeo = new THREE.LatheGeometry([[0, 0], [0.2, 0], [0.26, 0.06], [0.28, 0.15], [0.3, 0.16]].map(([a, b]) => new THREE.Vector2(a, b)), 10);
+  const fruitGeo = new THREE.SphereGeometry(0.075, 7, 5);
+  const basket = (x, z, mat) => {
+    add(basketGeo, basketM, x, 1.02, z);
+    const pts = [[0, 0], [0.12, 0.03], [-0.12, 0.02], [0.03, 0.12], [-0.04, -0.12], [0.14, -0.1], [-0.15, 0.1], [0, 0.0]];
+    pts.forEach(([a, b], k) => add(fruitGeo, mat, x + a, 1.12 + (k === 7 ? 0.1 : 0), z + b));
+  };
+  basket(-0.7, 0.15, fruitA); basket(0.0, 0.12, fruitB); basket(0.7, 0.15, fruitA);
+  add(new THREE.BoxGeometry(0.45, 0.25, 0.35), timber, -0.3, 1.145, -0.36).rotation.y = 0.12;

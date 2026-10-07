@@ -1,0 +1,55 @@
+// lantern_post c3: a different reading. Square chamfered post on a square plinth (extruded
+// sections), a swan neck that arches over from the top of the post, and a tapered four-sided
+// lantern with a deep brass hood hanging from its tip.
+export default function (THREE) {
+  const g = new THREE.Group();
+  const M = (color, name, rough = 0.6, extra = {}) => { const mt = new THREE.MeshStandardMaterial({ color, roughness: rough, metalness: 0.5, ...extra }); mt.name = name; return mt; };
+  const iron = M(0x3c3a38, 'metal', 0.55), brass = M(0xb8913a, 'metal', 0.45, { metalness: 0.7 });
+  const glass = new THREE.MeshStandardMaterial({ color: 0xffd27a, emissive: 0xffd27a, emissiveIntensity: 0, roughness: 0.2, metalness: 0 });
+  glass.name = 'lamp_glass';
+  const add = (geo, mat, x, y, z, rx = 0, ry = 0, rz = 0) => { const ms = new THREE.Mesh(geo, mat); ms.position.set(x, y, z); ms.rotation.set(rx, ry, rz); g.add(ms); return ms; };
+  const V = (pts) => pts.map(([a, b]) => new THREE.Vector2(a, b));
+  const cham = (s, k) => { const h = s / 2; return new THREE.Shape(V([[-h + k, -h], [h - k, -h], [h, -h + k], [h, h - k], [h - k, h], [-h + k, h], [-h, h - k], [-h, -h + k]])); };
+  const up = (shape, y0, hgt, mat) => add(new THREE.ExtrudeGeometry(shape, { depth: hgt, bevelEnabled: false }), mat, 0, y0, 0, -Math.PI / 2, 0, 0);
+  // plinth steps and post
+  up(cham(0.42, 0.06), 0, 0.12, iron);
+  up(cham(0.32, 0.05), 0.12, 0.1, iron);
+  // tapered pedestal: a frustum with four sides
+  add(new THREE.CylinderGeometry(0.1, 0.18, 0.5, 4), iron, 0, 0.47, 0, 0, Math.PI / 4, 0);
+  up(cham(0.24, 0.04), 0.72, 0.06, iron);
+  up(cham(0.1, 0.02), 0.78, 2.04, iron);
+  up(cham(0.17, 0.03), 1.6, 0.05, iron);
+  up(cham(0.17, 0.03), 2.78, 0.06, iron);
+  // swan neck: rises from the post top, arcs out to +X and turns down
+  const neck = new THREE.CatmullRomCurve3([
+    new THREE.Vector3(0, 2.8, 0), new THREE.Vector3(0.0, 3.0, 0), new THREE.Vector3(0.12, 3.13, 0), new THREE.Vector3(0.36, 3.16, 0),
+    new THREE.Vector3(0.58, 3.1, 0), new THREE.Vector3(0.7, 2.98, 0), new THREE.Vector3(0.72, 2.88, 0)]);
+  add(new THREE.TubeGeometry(neck, 24, 0.04, 6, false), iron, 0, 0, 0);
+  add(new THREE.SphereGeometry(0.06, 8, 6), iron, 0, 2.86, 0);
+  // decorative inner scroll under the neck
+  add(new THREE.TorusGeometry(0.13, 0.018, 5, 12, Math.PI * 1.5), iron, 0.25, 2.92, 0, 0, 0, Math.PI * 0.75);
+  // lantern
+  const lx = 0.72, ly = 2.5;
+  add(new THREE.CylinderGeometry(0.035, 0.035, 0.1, 6), brass, lx, 2.85, 0);
+  add(new THREE.ConeGeometry(0.22, 0.18, 4), brass, lx, ly + 0.27, 0, 0, Math.PI / 4, 0);
+  add(new THREE.CylinderGeometry(0.155, 0.155, 0.04, 4), brass, lx, ly + 0.17, 0, 0, Math.PI / 4, 0);
+  add(new THREE.CylinderGeometry(0.14, 0.095, 0.3, 4), glass, lx, ly, 0, 0, Math.PI / 4, 0);
+  add(new THREE.CylinderGeometry(0.11, 0.09, 0.05, 4), brass, lx, ly - 0.17, 0, 0, Math.PI / 4, 0);
+  add(new THREE.ConeGeometry(0.05, 0.12, 4), brass, lx, ly - 0.25, 0, Math.PI, Math.PI / 4, 0);
+  // corner bars following the taper
+  for (const [sx, sz] of [[1, 1], [1, -1], [-1, 1], [-1, -1]]) {
+    const b = add(new THREE.BoxGeometry(0.025, 0.32, 0.025), brass, lx + sx * 0.083, ly, sz * 0.083);
+    b.rotation.set(sz * 0.07, 0, -sx * 0.07);
+  }
+  const box = new THREE.Box3(), v = new THREE.Vector3(), m = new THREE.Matrix4(), im = new THREE.Matrix4();
+  g.updateMatrixWorld(true);
+  g.traverse((n) => {
+    const p = n.isMesh && n.geometry.attributes.position; if (!p) return;
+    const put = (mat) => { for (let i = 0; i < p.count; i++) box.expandByPoint(v.fromBufferAttribute(p, i).applyMatrix4(mat)); };
+    if (n.isInstancedMesh) { for (let c = 0; c < n.count; c++) { n.getMatrixAt(c, im); put(m.multiplyMatrices(n.matrixWorld, im)); } return; }
+    put(n.matrixWorld);
+  });
+  const c = box.getCenter(new THREE.Vector3());
+  g.children.forEach((o) => { o.position.x -= c.x; o.position.y -= box.min.y; o.position.z -= c.z; });
+  return g;
+}

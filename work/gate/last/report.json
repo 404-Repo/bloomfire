@@ -1,0 +1,23 @@
+{
+ "url": "http://localhost:8797/",
+ "viewport": "844x390",
+ "gpu": "ANGLE (Apple, ANGLE Metal Renderer: Apple M4, Unspecified Version)",
+ "readyS": 0.946,
+ "secs": 200,
+ "path_m": 848.4,
+ "moved_m": 16.1,
+ "shots": 194,
+ "kills": 82,
+ "score": 24423,
+ "restored": 0.25,
+ "stage": 1,
+ "cleansed": 0,
+ "hp": 85,
+ "deaths": 2,
+ "bestCombo": null,
+ "peakDraws": 885,
+ "peakTris": 1183397,
+ "fps": 60,
+ "notes": [],
+ "fails": []
+}

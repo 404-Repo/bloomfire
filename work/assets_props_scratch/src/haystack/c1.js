@@ -1,0 +1,6 @@
+// haystack c1: profile. A lathed dome (fat beehive profile with a flared skirt) roughened with noise and droops, a ragged skirt of hay tufts (open cones) round the base, and a dark pole out of the crown.
+const hay = M(0xd9b54a, 'fabric', 0.95, { flatShading: true }), hay2 = M(0xc9a03c, 'fabric', 0.95, { flatShading: true, side: THREE.DoubleSide }), pole = M(0x4a3324, 'timber', 0.9);
+const prof = [[0.0, 0.0], [1.15, 0.0], [1.2, 0.12], [1.12, 0.45], [1.0, 0.9], [0.82, 1.3], [0.58, 1.62], [0.3, 1.85], [0.08, 1.93], [0.0, 1.94]].map(([r, y]) => new THREE.Vector2(r, y));
+add(warp(new THREE.LatheGeometry(prof, 14), (p) => { const a = Math.atan2(p.z, p.x); const k = 1 + 0.07 * Math.sin(a * 7 + p.y * 3) + 0.05 * noise(p.x * 4, p.y * 4, p.z * 4); p.x *= k; p.z *= k; if (p.y > 0.05) p.y -= 0.04 * Math.abs(Math.sin(a * 5 + p.y * 6)); }), hay);
+for (let i = 0; i < 16; i++) { const a = i / 16 * Math.PI * 2 + rr(-0.1, 0.1); const ms = add(new THREE.ConeGeometry(0.16, 0.42, 3, 1, true), hay2, Math.cos(a) * 1.15, 0.17, Math.sin(a) * 1.15, 0, -a, 0); ms.rotation.set(Math.sin(a) * 0.5, -a, -Math.cos(a) * 0.5, 'YXZ'); ms.rotateZ(Math.PI); }
+limb(V(0, 1.6, 0), V(0.04, 2.2, 0.02), 0.045, 0.035, pole, 6);

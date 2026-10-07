@@ -1,0 +1,458 @@
+[
+ {
+  "slug": "village_house",
+  "raw": {
+   "meshes": 221,
+   "tris": 3292,
+   "mats": [
+    "plaster",
+    "stone",
+    "tile",
+    "timber"
+   ],
+   "size": [
+    9.24,
+    7.92,
+    6.67
+   ]
+  },
+  "assetlib": {
+   "meshes": 5,
+   "tris": 3292,
+   "mats": [
+    "plaster",
+    "stone",
+    "tile",
+    "timber"
+   ],
+   "size": [
+    9.24,
+    7.92,
+    6.67
+   ]
+  }
+ },
+ {
+  "slug": "tower_house",
+  "raw": {
+   "meshes": 156,
+   "tris": 2752,
+   "mats": [
+    "plaster",
+    "stone",
+    "tile",
+    "timber"
+   ],
+   "size": [
+    5.39,
+    11.54,
+    5.39
+   ]
+  },
+  "assetlib": {
+   "meshes": 5,
+   "tris": 2752,
+   "mats": [
+    "plaster",
+    "stone",
+    "tile",
+    "timber"
+   ],
+   "size": [
+    5.37,
+    11.54,
+    5.38
+   ]
+  }
+ },
+ {
+  "slug": "water_mill",
+  "raw": {
+   "meshes": 195,
+   "tris": 3442,
+   "mats": [
+    "",
+    "metal",
+    "plaster",
+    "stone",
+    "tile",
+    "timber"
+   ],
+   "size": [
+    11.98,
+    9.32,
+    9
+   ]
+  },
+  "assetlib": {
+   "meshes": 10,
+   "tris": 3442,
+   "mats": [
+    "",
+    "metal",
+    "plaster",
+    "stone",
+    "tile",
+    "timber"
+   ],
+   "size": [
+    11.98,
+    9.31,
+    9
+   ]
+  },
+  "joint": {
+   "name": "wheel",
+   "resolved": true,
+   "children": 32,
+   "centreDrift": 0
+  }
+ },
+ {
+  "slug": "stone_bridge",
+  "raw": {
+   "meshes": 69,
+   "tris": 2516,
+   "mats": [
+    "stone"
+   ],
+   "size": [
+    18.26,
+    3.28,
+    5.34
+   ]
+  },
+  "assetlib": {
+   "meshes": 2,
+   "tris": 2516,
+   "mats": [
+    "stone"
+   ],
+   "size": [
+    18.26,
+    3.28,
+    5.34
+   ]
+  }
+ },
+ {
+  "slug": "stone_steps",
+  "raw": {
+   "meshes": 63,
+   "tris": 1132,
+   "mats": [
+    "stone"
+   ],
+   "size": [
+    3.2,
+    3.04,
+    4.95
+   ]
+  },
+  "assetlib": {
+   "meshes": 2,
+   "tris": 1132,
+   "mats": [
+    "stone"
+   ],
+   "size": [
+    3.2,
+    3.04,
+    4.95
+   ]
+  }
+ },
+ {
+  "slug": "terrace_wall",
+  "raw": {
+   "meshes": 131,
+   "tris": 2588,
+   "mats": [
+    "stone"
+   ],
+   "size": [
+    5.99,
+    1.25,
+    0.71
+   ]
+  },
+  "assetlib": {
+   "meshes": 3,
+   "tris": 2588,
+   "mats": [
+    "stone"
+   ],
+   "size": [
+    5.96,
+    1.22,
+    0.71
+   ]
+  }
+ },
+ {
+  "slug": "windmill",
+  "raw": {
+   "meshes": 169,
+   "tris": 2276,
+   "mats": [
+    "fabric",
+    "metal",
+    "plaster",
+    "stone",
+    "timber"
+   ],
+   "size": [
+    16,
+    19.6,
+    9.4
+   ]
+  },
+  "assetlib": {
+   "meshes": 8,
+   "tris": 2276,
+   "mats": [
+    "fabric",
+    "metal",
+    "plaster",
+    "stone",
+    "timber"
+   ],
+   "size": [
+    16,
+    19.6,
+    9.4
+   ]
+  },
+  "joint": {
+   "name": "sails",
+   "resolved": true,
+   "children": 6,
+   "centreDrift": 0
+  }
+ },
+ {
+  "slug": "quarry_crane",
+  "raw": {
+   "meshes": 60,
+   "tris": 1828,
+   "mats": [
+    "fabric",
+    "metal",
+    "timber"
+   ],
+   "size": [
+    11.13,
+    12.2,
+    3.8
+   ]
+  },
+  "assetlib": {
+   "meshes": 4,
+   "tris": 1828,
+   "mats": [
+    "fabric",
+    "metal",
+    "timber"
+   ],
+   "size": [
+    10.97,
+    12.2,
+    3.8
+   ]
+  }
+ },
+ {
+  "slug": "chapel",
+  "raw": {
+   "meshes": 227,
+   "tris": 5610,
+   "mats": [
+    "plaster",
+    "stone",
+    "tile",
+    "timber"
+   ],
+   "size": [
+    8.55,
+    13.5,
+    14.45
+   ]
+  },
+  "assetlib": {
+   "meshes": 5,
+   "tris": 5610,
+   "mats": [
+    "plaster",
+    "stone",
+    "tile",
+    "timber"
+   ],
+   "size": [
+    8.55,
+    13.5,
+    14.44
+   ]
+  }
+ },
+ {
+  "slug": "clock_tower",
+  "raw": {
+   "meshes": 383,
+   "tris": 7164,
+   "mats": [
+    "plaster",
+    "stone",
+    "tile",
+    "timber"
+   ],
+   "size": [
+    5.61,
+    18.06,
+    5.65
+   ]
+  },
+  "assetlib": {
+   "meshes": 5,
+   "tris": 7164,
+   "mats": [
+    "plaster",
+    "stone",
+    "tile",
+    "timber"
+   ],
+   "size": [
+    5.58,
+    18.06,
+    5.63
+   ]
+  }
+ },
+ {
+  "slug": "arcade_section",
+  "raw": {
+   "meshes": 116,
+   "tris": 3200,
+   "mats": [
+    "plaster",
+    "stone",
+    "tile",
+    "timber"
+   ],
+   "size": [
+    12.54,
+    8.16,
+    4.92
+   ]
+  },
+  "assetlib": {
+   "meshes": 5,
+   "tris": 3200,
+   "mats": [
+    "plaster",
+    "stone",
+    "tile",
+    "timber"
+   ],
+   "size": [
+    12.54,
+    8.16,
+    4.92
+   ]
+  }
+ },
+ {
+  "slug": "market_stall",
+  "raw": {
+   "meshes": 67,
+   "tris": 2744,
+   "mats": [
+    "fabric",
+    "foliage",
+    "timber"
+   ],
+   "size": [
+    2.56,
+    2.64,
+    1.61
+   ]
+  },
+  "assetlib": {
+   "meshes": 7,
+   "tris": 2744,
+   "mats": [
+    "fabric",
+    "foliage",
+    "timber"
+   ],
+   "size": [
+    2.56,
+    2.64,
+    1.61
+   ]
+  }
+ },
+ {
+  "slug": "stone_well",
+  "raw": {
+   "meshes": 76,
+   "tris": 1860,
+   "mats": [
+    "fabric",
+    "ground",
+    "metal",
+    "stone",
+    "timber"
+   ],
+   "size": [
+    2.36,
+    2.68,
+    1.84
+   ]
+  },
+  "assetlib": {
+   "meshes": 9,
+   "tris": 1860,
+   "mats": [
+    "fabric",
+    "ground",
+    "metal",
+    "stone",
+    "timber"
+   ],
+   "size": [
+    2.36,
+    2.67,
+    1.84
+   ]
+  }
+ },
+ {
+  "slug": "lantern_post",
+  "raw": {
+   "meshes": 14,
+   "tris": 1128,
+   "mats": [
+    "lamp_glass",
+    "metal"
+   ],
+   "size": [
+    1.04,
+    3.2,
+    0.48
+   ]
+  },
+  "assetlib": {
+   "meshes": 3,
+   "tris": 1128,
+   "mats": [
+    "lamp_glass",
+    "metal"
+   ],
+   "size": [
+    1.04,
+    3.2,
+    0.48
+   ]
+  }
+ }
+]

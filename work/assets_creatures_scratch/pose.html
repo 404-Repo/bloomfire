@@ -1,0 +1,39 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script type="importmap">{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js", "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.169.0/examples/jsm/" } }</script>
+<style>body{margin:0;background:#14171a;color:#ddd;font:12px -apple-system,sans-serif}.row{display:flex;gap:6px;padding:6px;align-items:center}.lbl{width:150px}canvas{width:260px;height:260px;border-radius:4px}</style></head><body><div id="out"></div>
+<script type="module">
+// Pose test: rotate every joint by -0.6 / 0 / +0.6 rad about its intended axis and render,
+// raw module, so tearing or a pivot in the wrong place is visible.
+import * as THREE from 'three';
+const LIST = [['blotling', 'x'], ['smear', 'x'], ['spitter', 'x'], ['quill', 'z'], ['inkhorn', 'x'], ['inkwell', 'x'], ['old_inkhorn', 'x'], ['prism_rifle', 'z']];
+const off = document.createElement('canvas'); off.width = off.height = 260;
+const r = new THREE.WebGLRenderer({ canvas: off, antialias: true });
+function shoot(obj, cv, yaw) {
+  const sc = new THREE.Scene(); sc.background = new THREE.Color(0x8a8f96);
+  sc.add(new THREE.HemisphereLight(0xffffff, 0x556677, 2.2)); const d = new THREE.DirectionalLight(0xffffff, 1.6); d.position.set(4, 8, 6); sc.add(d);
+  sc.add(obj); const box = new THREE.Box3().setFromObject(obj), c = box.getCenter(new THREE.Vector3()), s = box.getSize(new THREE.Vector3());
+  const rad = Math.max(s.x, s.y, s.z) * 1.25; const cam = new THREE.PerspectiveCamera(35, 1, 0.005, 500);
+  cam.position.set(c.x + Math.sin(yaw) * rad * 1.6, c.y + rad * 0.35, c.z + Math.cos(yaw) * rad * 1.6); cam.lookAt(c);
+  r.render(sc, cam); cv.getContext('2d').drawImage(off, 0, 0);
+}
+const report = [];
+for (const [slug, axis] of LIST) {
+  const row = document.createElement('div'); row.className = 'row'; const lbl = document.createElement('div'); lbl.className = 'lbl'; row.appendChild(lbl); document.getElementById('out').appendChild(row);
+  const mod = await import(`/game/assets/${slug}.js`);
+  const names = Object.keys(mod.default(THREE).userData.joints || {});
+  lbl.innerHTML = `${slug}<br>${names.join(', ')}`;
+  report.push({ slug, joints: names });
+  for (const [ang, yaw] of [[-0.6, 1.0], [0, 1.0], [0.6, 1.0], [0.6, 2.4]]) {
+    const o = mod.default(THREE), J = o.userData.joints;
+    for (const [n, j] of Object.entries(J)) {
+      if (n === 'body' || n === 'muzzle' || n.startsWith('node')) continue;
+      const ax = n === 'sac' ? 'x' : n === 'tube' ? 'y' : n === 'prism' ? 'z' : axis;
+      const k = (n.endsWith('R') || n.endsWith('BL') || n.endsWith('FR')) && ax === 'x' ? -1 : 1;  // alternate legs like a gait
+      j.rotation[ax] += ang * k;
+    }
+    if (J.body && slug !== 'inkwell') J.body.rotation.y += ang * 0.3;
+    const cv = document.createElement('canvas'); cv.width = cv.height = 260; row.appendChild(cv); shoot(o, cv, yaw);
+  }
+}
+window.__REP__ = report; window.__DONE__ = true;
+</script></body></html>
