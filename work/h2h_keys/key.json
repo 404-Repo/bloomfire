@@ -16,5 +16,32 @@
    "A": 8852,
    "B": 8853
   }
+ },
+ "s03": {
+  "A": "sundrift",
+  "B": "bloomfire",
+  "persona": "casual",
+  "ports": {
+   "A": 8860,
+   "B": 8861
+  }
+ },
+ "s04": {
+  "A": "bellkeeper",
+  "B": "bloomfire",
+  "persona": "casual",
+  "ports": {
+   "A": 8862,
+   "B": 8863
+  }
+ },
+ "s05": {
+  "A": "bloomfire",
+  "B": "farseek",
+  "persona": "indie",
+  "ports": {
+   "A": 8864,
+   "B": 8865
+  }
  }
 }

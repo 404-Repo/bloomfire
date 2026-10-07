@@ -100,7 +100,7 @@ const postMat = new THREE.ShaderMaterial({
       vec3 nL = normalize(cross(C - L, UL - DL)), nR = normalize(cross(Rr - C, UR - DR)), nU = normalize(cross(UR - UL, Uu - C)), nD = normalize(cross(DR - DL, C - D));
       float crease = max(max(1.0 - dot(nC, nL), 1.0 - dot(nC, nR)), max(1.0 - dot(nC, nU), 1.0 - dot(nC, nD)));
       float sil = max(max(abs(L.z - C.z), abs(Rr.z - C.z)), max(abs(Uu.z - C.z), abs(D.z - C.z))) / max(z, 0.5);
-      float line = smoothstep(0.12, 0.35, crease) * 0.85 + smoothstep(0.04, 0.12, sil);
+      float line = smoothstep(0.2, 0.45, crease) * 0.85 + smoothstep(0.04, 0.12, sil);
       line = clamp(line, 0.0, 1.0) * (1.0 - smoothstep(70.0, 260.0, z) * 0.7);
       vec4 ndc = vec4(vUv*2.0-1.0, d0*2.0-1.0, 1.0); vec4 vp = uProjInv * ndc; vp /= vp.w; vec3 wp = (uCamWorld * vp).xyz;
       float e; float pk = paintAmount(wp, e);
@@ -114,6 +114,8 @@ const postMat = new THREE.ShaderMaterial({
       vec3 inkC = mix(vec3(0.05,0.06,0.11), vec3(0.20,0.11,0.06), pk);
       col = mix(col, inkC, line * mix(0.9, 0.55, pk));
     }
+    // warm the highlights a touch: the brightest things in frame are sunlit, not paper
+    { float lum = dot(col, vec3(0.3,0.59,0.11)); col += vec3(0.10,0.05,-0.02) * smoothstep(0.55, 1.2, lum); }
     col += vec3(1.0,0.78,0.45) * uFlash;
     vec2 q = vUv - 0.5; float vig = 1.0 - dot(q, q) * 0.55; col *= vig;
     col = mix(col, col * vec3(1.25, 0.55, 0.75), uHurt * smoothstep(0.15, 0.55, length(q)));

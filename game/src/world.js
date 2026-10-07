@@ -245,6 +245,7 @@ export function litLantern(id, on = true) {
 }
 
 // the near field: a ring of grass and stones that follows you, so the ground within 30 m is never bare
+const TOWNS = PLACES.filter((p) => ['rise', 'mill', 'market', 'chapel'].includes(p.id));
 const RING = { mesh: [], cell: 2.3, n: 26, cx: 1e9, cz: 1e9 };
 async function makeRing() {
   for (const [name, h, per] of [['grass_tuft', 0.38, 0.75], ['boulder', 0.5, 0.06], ['lavender_bush', 0.6, 0.05]]) {
@@ -271,6 +272,7 @@ function updateRing(cam) {
       const gi = ci + i, gj = cj + j; if (hh(gi, gj, sd) > per) continue;
       const x = (gi + hh(gi, gj, sd + 1)) * RING.cell, z = (gj + hh(gi, gj, sd + 2)) * RING.cell;
       if (waterLevelAt(x, z) > -50 || T.normal(x, z)[1] < 0.7) continue;
+      if (per < 0.5 && TOWNS.some((q) => Math.hypot(x - q.at[0], z - q.at[1]) < q.r * 0.75)) continue;   // no boulders in a square
       const s = (0.7 + hh(gi, gj, sd + 3) * 0.9) * (per < 0.5 ? 1.4 : 1);
       _rq.setFromAxisAngle(_ry, hh(gi, gj, sd + 4) * 6.28); _rs.setScalar(s); _rp.set(x, T.height(x, z) - 0.04, z);
       im.setMatrixAt(k++, _rm.compose(_rp, _rq, _rs));
