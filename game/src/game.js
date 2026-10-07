@@ -45,9 +45,9 @@ async function makeWells() {
     }
     obj.traverse((o) => { if (o.material) (Array.isArray(o.material) ? o.material : [o.material]).forEach((m) => m.userData.noPaint = true); if (o.isMesh) o.castShadow = true; });
     obj.position.set(w.at[0], y - 0.2, w.at[1]); scene.add(obj);
-    addCircle(w.at[0], w.at[1], 2.0, y, y + 7);
+    addCircle(w.at[0], w.at[1], 1.6, y, y + 7, { noRay: true });
     const light = new THREE.PointLight(0xff3d8b, 6, 16, 1.5); light.position.set(w.at[0], y + 4, w.at[1]); scene.add(light);
-    WELLS.push({ ...w, obj, y, light, nodes: nodes.map((n) => ({ n, hp: 90, alive: true, pos: new THREE.Vector3() })), awake: false, alive: true, wave: 0, waveT: 0, owned: 0, sinkT: 0, plumeT: 0 });
+    WELLS.push({ ...w, obj, y, light, nodes: nodes.map((n) => ({ n, hp: 120, alive: true, pos: new THREE.Vector3() })), awake: false, alive: true, wave: 0, waveT: 0, owned: 0, sinkT: 0, plumeT: 0 });
   }
 }
 
@@ -70,7 +70,7 @@ function updateWells(dt) {
     }
     const d = Math.hypot(pp.x - w.at[0], pp.z - w.at[1]);
     if (!w.awake && d < 52 && S.mode === 'play' && S.stage >= 1) {
-      w.awake = true; w.waveT = 1.5; caption('An inkwell. Break its <b>three glowing nodes</b>.', 4);
+      w.awake = true; w.waveT = 0.8; caption('An inkwell. Clear its ink, then break its <b>three glowing nodes</b>.', 4.5);
       sfx.roar(); playMusic('fight');
     }
     if (!w.awake) continue;
@@ -78,17 +78,18 @@ function updateWells(dt) {
     // creep: a living, awake inkwell takes colour back around itself
     S.creepT += dt;
     if (S.creepT > 1) { S.creepT = 0; creep(w.at[0], w.at[1], 24, 7); }
-    // waves
+    // waves: the nodes are sealed in ink while a wave lives; clear it and they open; break one and the next wave comes
     w.owned = ENEMIES.filter((e) => e.owner === w && e.alive).length;
-    w.waveT -= dt;
-    const cap = 7 + wellTier() * 2;
-    // a few waves, then it only tops up slowly; breaking a node always calls one more
-    if (w.waveT <= 0 && w.owned < cap - 2) { spawnWave(w); w.waveT = w.wave < 3 + wellTier() ? 11 - Math.min(5, wellTier()) : 22; }
+    const wasShield = w.shield; w.shield = w.owned > 2 || w.waveT > 0;
+    if (wasShield && !w.shield) { callout('NODES OPEN'); sfx.tier(1); }
+    for (const nd of w.nodes) if (nd.alive) { const k = w.shield ? 0.45 : 1 + Math.sin(S.t * 6) * 0.08; nd.n.scale.setScalar(nd.n.scale.x + (k - nd.n.scale.x) * Math.min(1, dt * 6)); }
+    if (w.waveT > 0) { w.waveT -= dt; if (w.waveT <= 0) spawnWave(w); }
+    else if (!w.shield) { w.trickle = (w.trickle || 0) + dt; if (w.trickle > 16) { w.trickle = 0; spawnWave(w, true); } }
   }
 }
 
-function spawnWave(w) {
-  const tier = wellTier(), k = w.wave++;
+function spawnWave(w, small = false) {
+  const tier = wellTier(), k = small ? Math.max(0, w.wave - 2) : w.wave++;
   const comp = [];
   comp.push(...Array(3 + Math.min(4, k) + tier).fill('blotling'));
   if (k >= 1 || tier >= 1) comp.push('smear');
@@ -110,7 +111,7 @@ function destroyNode(w, nd) {
   emit('add', nd.pos.x, nd.pos.y, nd.pos.z, 40, { speed: 9, up: 3, life: 0.9, size: 0.3, color: [1.6, 0.4, 0.9] });
   emit('ink', nd.pos.x, nd.pos.y, nd.pos.z, 30, { speed: 7, up: 4, life: 1.0, size: 0.4, color: [0.08, 0.07, 0.12] });
   splat(w.at[0], w.at[1], 14); addScore(500, nd.pos, 'NODE +500', 'big');
-  if (w.nodes.some((q) => q.alive)) spawnWave(w);
+  if (w.nodes.some((q) => q.alive)) { w.waveT = 1.6; caption('The ink answers. <b>Clear the wave</b> to open the next node.', 3.5); }
   callout(w.nodes.filter((q) => q.alive).length ? 'NODE BROKEN' : 'INKWELL BROKEN');
   post.uFlash.value = 0.25;
   if (!w.nodes.some((q) => q.alive)) cleanse(w);
@@ -232,7 +233,7 @@ function targets() {
     if (!e.alive) continue; const t = tgt();
     t.pos.set(e.pos.x, e.pos.y + e.t.coreY * e.o.scale.y, e.pos.z); t.r = e.t.bodyR * 1.15 + (e.fly ? 0.3 : 0); t.ent = e; t.kind = 'enemy'; t.core = false; TG.push(t);
   }
-  for (const w of WELLS) if (w.alive) for (const nd of w.nodes) if (nd.alive) { const t = tgt(); t.pos.copy(nd.pos); t.r = 0.85; t.ent = nd; t.well = w; t.kind = 'node'; t.core = true; TG.push(t); }
+  for (const w of WELLS) if (w.alive && w.awake) for (const nd of w.nodes) if (nd.alive) { const t = tgt(); t.pos.copy(nd.pos); t.r = 0.85; t.ent = nd; t.well = w; t.kind = 'node'; t.core = true; TG.push(t); }
   if (BOSS && BOSS.alive && BOSS.state !== 'rise') {
     const c = tgt(); c.pos.copy(BOSS.core); c.r = 1.4; c.ent = BOSS; c.kind = 'boss'; c.core = true; TG.push(c);
     const b = tgt(); b.pos.copy(BOSS.body); b.r = 3.6; b.ent = BOSS; b.kind = 'boss'; b.core = false; TG.push(b);
@@ -252,7 +253,9 @@ function onHit(tg, point, dist, o = {}) {
     hitMarker(false);
     if (damage(e, dmg, { core })) onKill(e, { dist, core, arc: o.arc });
   } else if (tg.kind === 'node') {
-    const nd = tg.ent; if (!nd.alive) return; nd.hp -= dmg; hitMarker(false);
+    const nd = tg.ent; if (!nd.alive) return; hitMarker(false);
+    if (tg.well.shield) { emit('ink', point.x, point.y, point.z, 2, { speed: 3, life: 0.3, size: 0.15, color: [0.1, 0.08, 0.14] }); return; }
+    nd.hp -= dmg;
     emit('add', point.x, point.y, point.z, 3, { speed: 4, life: 0.3, size: 0.14, color: [1.5, 0.4, 0.9] });
     if (nd.hp <= 0) destroyNode(tg.well, nd);
   } else if (tg.kind === 'boss') { hitMarker(false); bossHit(dmg, tg.core, point); }

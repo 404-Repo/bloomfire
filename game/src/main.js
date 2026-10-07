@@ -3,7 +3,7 @@ import * as THREE from 'three';
 import { renderer, scene, camera, resize, draw, followShadow, skyFollow, isTouch, post, setSkyTexture } from './render.js';
 import { buildTerrain } from './terrain.js';
 import { makeGround, makeWater, waterLevelAt, waterU } from './ground.js';
-import { updatePaint, setLandMask, loadDetail } from './paint.js';
+import { updatePaint, setLandMask, loadDetail, splatNow } from './paint.js';
 import { groundU } from './ground.js';
 import { IN, readLook } from './input.js';
 import { P, initPlayer, placePlayer, updatePlayer, applyCamera } from './player.js';
@@ -34,6 +34,9 @@ async function boot() {
   progress(0.95, 'grinding the prism');
   await Game.init(T);
   placePlayer(SPAWN.at[0], SPAWN.at[1], SPAWN.yaw);
+  // capture/dev only: ?at=x,z,yaw,pitch stands you somewhere; ?paint=x,z,r paints a circle (used by the frame capture tool)
+  if (params.get('at')) { const [x, z, yw, pt] = params.get('at').split(',').map(Number); placePlayer(x, z, yw || 0); P.pitch = pt || 0; }
+  if (params.get('paint')) for (const c of params.get('paint').split(';')) { const [x, z, r] = c.split(',').map(Number); splatNow(x, z, r); }
   progress(1, 'ready');
   // compile every shader once while the title is up, so the first fight does not hitch
   applyCamera(camera, 0); renderer.compile(scene, camera);

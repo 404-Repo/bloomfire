@@ -14,7 +14,7 @@ export const U = {
   uWorld: { value: new THREE.Vector2(HALF, WORLD) },   // half size, size
   uTime: { value: 0 },
   uGlobal: { value: 0 },        // 0..1 how much of the whole world is forced painted (the finale)
-  uInkTint: { value: new THREE.Color(0x3c465e) },
+  uInkTint: { value: new THREE.Color(0x4a5268) },
   uPaper: { value: new THREE.Color(0xf2efe8) },
 };
 
@@ -119,26 +119,30 @@ float paintAmount(vec3 p, out float edge){
 `;
 const INK_DECL = `
 varying vec3 vPN;
-// the ink side: a paper wash with pen hatching in the shade, drawn in world space so it does not swim
-vec3 inkWash(vec3 c, vec3 p, vec3 n){
-  float l = dot(c, vec3(0.299, 0.587, 0.114));
-  l = smoothstep(0.02, 0.85, pow(clamp(l*1.15, 0.0, 1.0), 0.8));
-  float grain = pnoise(p.xz*3.0 + p.y*2.0)*0.08 - 0.04;
+// the ink side: a paper wash driven by LIGHT more than by albedo (a drawing does not paint a tree dark),
+// with sparse pen hatching in the shade, drawn in world space so it does not swim
+vec3 inkWash(vec3 lit, vec3 alb, vec3 p, vec3 n){
+  float la = max(dot(alb, vec3(0.299, 0.587, 0.114)), 0.04);
+  float shade = dot(lit, vec3(0.299, 0.587, 0.114)) / la;            // how much light lands here
+  float l = clamp(shade * 0.42, 0.0, 1.2) * mix(0.72, 1.08, smoothstep(0.05, 0.6, la));
+  l = 0.38 + 0.62 * smoothstep(0.04, 0.95, l);
+  l += (la - 0.32) * 0.55;   // keep the surface's own texture as a wash
+  float grain = pnoise(p.xz*3.0 + p.y*2.0)*0.07 - 0.035;
   vec3 b = abs(n); vec2 hp = b.y > 0.6 ? p.xz : (b.x > b.z ? p.zy : p.xy);
-  float h1 = abs(fract(dot(hp, vec2(0.71, 0.71)) * 4.0) - 0.5);
-  float h2 = abs(fract(dot(hp, vec2(-0.71, 0.71)) * 4.0) - 0.5);
-  float w1 = fwidth(dot(hp, vec2(0.71, 0.71)) * 4.0), w2 = fwidth(dot(hp, vec2(-0.71, 0.71)) * 4.0);
-  float fade = 1.0 - smoothstep(0.25, 0.6, max(w1, w2));
-  float hatch = (1.0 - smoothstep(0.0, 0.08 + w1, h1 - 0.38)) * smoothstep(0.55, 0.25, l) * 0.55;
-  hatch += (1.0 - smoothstep(0.0, 0.08 + w2, h2 - 0.38)) * smoothstep(0.32, 0.1, l) * 0.5;
-  hatch *= fade;
+  float u = dot(hp, vec2(0.71, 0.71)) * 3.0;
+  float w = fwidth(u), h = abs(fract(u) - 0.5);
+  float fade = 1.0 - smoothstep(0.18, 0.45, w);
+  float hatch = (1.0 - smoothstep(0.0, 0.06 + w, h - 0.41)) * smoothstep(0.7, 0.45, l) * 0.55 * fade * (1.0 - smoothstep(0.5, 0.8, b.y));
+  // ground: ink stipple instead of ruled lines
+  float st = step(0.9, ph21(floor(p.xz * 6.0))) * smoothstep(0.75, 0.4, l) * smoothstep(0.5, 0.8, b.y) * 0.35 * fade;
+  hatch += st;
   vec3 ink = mix(uInkTint, uPaper, clamp(l + grain, 0.0, 1.0));
-  return mix(ink, uInkTint * 0.6, clamp(hatch, 0.0, 0.8));
+  return mix(ink, uInkTint * 0.7, clamp(hatch, 0.0, 0.6));
 }
 `;
 const FRAG_BODY = `
   { float pEdge; float pk = paintAmount(vPW, pEdge);
-    vec3 washed = inkWash(outgoingLight, vPW, normalize(vPN));
+    vec3 washed = inkWash(outgoingLight, diffuseColor.rgb, vPW, normalize(vPN));
     outgoingLight = mix(washed, outgoingLight * (1.0 + 0.12*pEdge), pk);
     outgoingLight += vec3(1.0, 0.62, 0.22) * pEdge * 0.35 * (1.0 - uGlobal); }
 `;

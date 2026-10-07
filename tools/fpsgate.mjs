@@ -17,7 +17,7 @@ try {
   const page = await browser.newPage();
   await page.setViewport({ width: W, height: H, deviceScaleFactor: 2, isMobile: true, hasTouch: true });
   const errs = [], missing = [];
-  page.on('console', (m) => { if (m.type() === 'error') errs.push(m.text().slice(0, 200)); });
+  page.on('console', (m) => { if (m.text().startsWith('NODE')) console.log(m.text().slice(0,300)); if (m.type() === 'error') errs.push(m.text().slice(0, 200)); });
   page.on('pageerror', (e) => errs.push('pageerror: ' + e.message));
   page.on('response', (r) => { if (r.status() >= 400) missing.push(r.status() + ' ' + r.url()); });
   const t0 = Date.now();
@@ -40,7 +40,7 @@ try {
   const SX = stickBox[0], SY = stickBox[1];
   const LX0 = W * (H > W ? 0.55 : 0.62), LY0 = H * (H > W ? 0.42 : 0.42);
   await down(1, SX, SY); await sleep(60); await down(2, LX0, LY0);
-  let lx = LX0, ly = LY0, start = Date.now(), lastShot = 0, shotN = 0, peakD = 0, peakT = 0, path = 0, last = g0.pos;
+  let bloomsUsed = 0, dashes = 0, lx = LX0, ly = LY0, start = Date.now(), lastShot = 0, shotN = 0, peakD = 0, peakT = 0, path = 0, last = g0.pos;
   const series = [];
   const route = (arg('route', '') || '').split(';').filter(Boolean).map((s) => s.split(',').map(Number));
   while ((Date.now() - start) / 1000 < SECS) {
@@ -69,6 +69,10 @@ try {
     lx += ddx; ly += ddy;
     if (lx < W * 0.5 || lx > W - 20 || ly < 20 || ly > H - 20) { await up(2); lx = LX0; ly = LY0; await down(2, lx, ly); }
     else await move(2, lx, ly);
+    // the buttons, pressed by a third finger like a thumb would
+    const tapBtn = async (sel) => { const b = await page.$eval(sel, (e) => { const r = e.getBoundingClientRect(); return [r.x + r.width / 2, r.y + r.height / 2]; }); await down(3, b[0], b[1]); await sleep(50); await up(3); };
+    if (g.bloom >= 1 && g.enemies >= 4 && g.near && g.near[2] < 14) { await tapBtn('#bbloom'); bloomsUsed++; }
+    if (g.hp < 40 && g.near && g.near[2] < 4 && Math.random() < 0.3) { await tapBtn('#bdash'); dashes++; }
     const el = (Date.now() - start) / 1000;
     if (el - lastShot > SECS / 8 && shotN < 8) { lastShot = el; await page.screenshot({ path: `${OUT}/f${shotN++}.jpg`, type: 'jpeg', quality: 80 }); }
     series.push({ t: +el.toFixed(1), pos: g.pos, kills: g.kills, shots: g.shots, restored: g.restored, hp: g.hp, stage: g.stage, cleansed: g.cleansed, score: g.score });
@@ -88,7 +92,7 @@ try {
   if (errs.length) fails.push(`${errs.length} console errors: ${errs[0]}`);
   if (missing.length) fails.push(`${missing.length} failed requests: ${missing[0]}`);
   const report = { url: URL_, viewport: `${W}x${H}`, gpu, readyS, secs: +((Date.now() - start) / 1000).toFixed(0), path_m: +path.toFixed(1), moved_m: +moved.toFixed(1),
-    shots: g.shots, kills: g.kills, score: g.score, restored: g.restored, stage: g.stage, cleansed: g.cleansed, hp: g.hp, deaths: g.deaths, bestCombo: null, peakDraws: peakD, peakTris: peakT, fps: g.fps, notes, fails };
+    shots: g.shots, kills: g.kills, score: g.score, restored: g.restored, stage: g.stage, cleansed: g.cleansed, hp: g.hp, deaths: g.deaths, bloomsUsed, dashes, lenses: g.lenses, bestCombo: null, peakDraws: peakD, peakTris: peakT, fps: g.fps, notes, fails };
   fs.writeFileSync(`${OUT}/report.json`, JSON.stringify(report, null, 1));
   console.log(JSON.stringify(report, null, 1));
   console.log(fails.length ? 'GATE: FAIL' : 'GATE: PASS');
