@@ -1,0 +1,29 @@
+{
+ "url": "http://localhost:8797/",
+ "viewport": "844x390",
+ "gpu": "ANGLE (Apple, ANGLE Metal Renderer: Apple M4, Unspecified Version)",
+ "readyS": 0.708,
+ "secs": 123,
+ "path_m": 475,
+ "moved_m": 123.5,
+ "shots": 511,
+ "kills": 103,
+ "score": 60220,
+ "restored": 9.47,
+ "stage": 2,
+ "cleansed": 3,
+ "hp": 89,
+ "deaths": 0,
+ "bloomsUsed": 2,
+ "dashes": 3,
+ "lensPicks": 0,
+ "lenses": 2,
+ "bestCombo": null,
+ "peakDraws": 430,
+ "peakTris": 929728,
+ "fps": 60,
+ "notes": [
+  "reached cleansed 3 at 122 s"
+ ],
+ "fails": []
+}
