@@ -21,7 +21,7 @@ export async function initWeapon(terrain, have, targets, hitCb) {
   if (have.has('prism_rifle')) {
     gun = await ASSET('./assets/prism_rifle.js', { keepHierarchy: true });
     const size = new THREE.Box3().setFromObject(gun).getSize(new THREE.Vector3());
-    const L = Math.max(size.x, size.z); gun.scale.multiplyScalar(0.8 / L);
+    const L = Math.max(size.x, size.z); gun.scale.multiplyScalar(0.72 / L);
     WPN.prism = gun.userData.joints?.prism || null; WPN.muzzleNode = gun.userData.joints?.muzzle || null;
     gun.traverse((o) => { if (o.material && o.material.name === 'prism') { o.material = o.material.clone(); WPN.prismMat = o.material; } });
   } else {

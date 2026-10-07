@@ -12,10 +12,10 @@ let T = null, have = new Set();
 export const ENEMIES = [], SHOTS = [];
 
 export const TYPES = {
-  blotling: { hp: 18, speed: 7.6, r: 0.45, height: 0.62, score: 100, splat: 4.5, dmg: 8, reach: 1.7, cd: 0.9, coreY: 0.35, coreR: 0.22, bodyR: 0.42 },
-  smear: { hp: 62, speed: 3.6, r: 0.6, height: 2.0, score: 200, splat: 6.5, dmg: 14, reach: 2.5, cd: 1.6, windup: 0.55, coreY: 1.25, coreR: 0.26, bodyR: 0.62 },
+  blotling: { hp: 18, speed: 7.6, r: 0.55, height: 0.9, score: 100, splat: 4.5, dmg: 8, reach: 1.7, cd: 0.9, coreY: 0.5, coreR: 0.3, bodyR: 0.58 },
+  smear: { hp: 62, speed: 3.6, r: 0.65, height: 2.3, score: 200, splat: 6.5, dmg: 14, reach: 2.5, cd: 1.6, windup: 0.55, coreY: 1.25, coreR: 0.26, bodyR: 0.62 },
   spitter: { hp: 46, speed: 2.6, r: 0.75, height: 1.6, score: 250, splat: 6.5, dmg: 15, range: [11, 26], cd: 2.6, windup: 0.7, coreY: 0.8, coreR: 0.3, bodyR: 0.8 },
-  quill: { hp: 22, speed: 9.5, r: 0.55, height: 0.7, fly: 4.2, score: 200, splat: 4.5, dmg: 10, reach: 1.4, cd: 1.4, coreY: 0.3, coreR: 0.22, bodyR: 0.55 },
+  quill: { hp: 22, speed: 9.5, r: 0.7, height: 0.95, fly: 4.2, score: 200, splat: 4.5, dmg: 10, reach: 1.4, cd: 1.4, coreY: 0.4, coreR: 0.28, bodyR: 0.7 },
   inkhorn: { hp: 300, speed: 2.9, r: 1.15, height: 3.2, score: 800, splat: 11, dmg: 28, reach: 3.2, cd: 2.0, windup: 0.9, coreY: 2.0, coreR: 0.42, bodyR: 1.2, armour: 0.45 },
 };
 const PROTO = {};

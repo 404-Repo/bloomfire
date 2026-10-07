@@ -348,7 +348,7 @@ function director(dt) {
     if (tier >= 3 && Math.random() < 0.35) comp.push('inkhorn');
     // ahead of the player, so the fight comes to meet you
     const a0 = P.yaw + Math.PI + (Math.random() - 0.5) * 1.6;   // yaw looks along -z; ahead is (-sin, -cos)
-    const r = 20 + Math.random() * 10;
+    const r = 14 + Math.random() * 9;
     const cx = pp.x - Math.sin(P.yaw) * r + Math.cos(a0) * 3, cz = pp.z - Math.cos(P.yaw) * r + Math.sin(a0) * 3;
     comp.forEach((type, i) => { const x = cx + (Math.random() - 0.5) * 8, z = cz + (Math.random() - 0.5) * 8; setTimeout(() => { if (S.mode === 'play') spawn(type, x, z, { tier }); }, i * 160); });
   }
