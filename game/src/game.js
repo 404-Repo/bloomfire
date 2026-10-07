@@ -11,7 +11,7 @@ import { emit, updateParticles, updateTracers, updateBlooms, bloomAt, setBloomPr
 import { HUD, compass, hitMarker, updateHud, floater, callout, banner, caption } from './hud.js';
 import { sfx, unlockAudio, setSound, soundOn, loadMusic, playMusic, musicIntensity } from './audio.js';
 import { addCircle } from './collide.js';
-import { INKWELLS, PLACES, LANTERNS, SPAWN } from './layout.js';
+import { INKWELLS, PLACES, LANTERNS, SPAWN, NESTS } from './layout.js';
 import { litLantern, W } from './world.js';
 
 const $ = (id) => document.getElementById(id);
@@ -23,20 +23,22 @@ const S = {
   mode: 'title', paused: false, score: 0, kills: 0, combo: 0, comboT: 0, bestCombo: 0, mult: 1, tierShown: 0,
   stage: 0, cleansed: [], t: 0, startT: 0, deadT: 0, lastKillT: -9, multi: 0, multiT: 0, roamT: 6, visited: new Set(),
   tutorial: { packed: false, firstKill: false, bloomTold: false, dashTold: false }, finaleT: 0, restoredAtFinale: 0, best: 0, deaths: 0,
-  respawn: 'rise', hurtShown: 0, stepT: 0, creepT: 0,
+  respawn: 'rise', nests: 0, hurtShown: 0, stepT: 0, creepT: 0,
 };
 const WELLS = [];
 let BOSS = null;
 
 // ---- inkwells ---------------------------------------------------------------------------------------
 async function makeWells() {
-  for (const w of INKWELLS) {
+  const all = [...INKWELLS.map((w) => ({ ...w, nest: false })), ...NESTS.map((at, i) => ({ id: 'nest' + i, place: null, at, nest: true }))];
+  for (const w of all) {
     const y = T.height(w.at[0], w.at[1]);
     let obj, nodes = [];
     if (have.has('inkwell')) {
-      obj = await ASSET('./assets/inkwell.js', { height: 7, keepHierarchy: true });
+      obj = await ASSET('./assets/inkwell.js', { height: w.nest ? 3.6 : 7, keepHierarchy: true });
       const j = obj.userData.joints || {};
-      for (const k of ['node0', 'node1', 'node2']) if (j[k]) nodes.push(j[k]);
+      for (const k of (w.nest ? ['node1'] : ['node0', 'node1', 'node2'])) if (j[k]) nodes.push(j[k]);
+      if (w.nest) for (const k of ['node0', 'node2']) if (j[k]) j[k].visible = false;
       bakeJoints(obj);
     } else {
       obj = new THREE.Group();
@@ -45,9 +47,9 @@ async function makeWells() {
     }
     obj.traverse((o) => { if (o.material) (Array.isArray(o.material) ? o.material : [o.material]).forEach((m) => m.userData.noPaint = true); if (o.isMesh) o.castShadow = true; });
     obj.position.set(w.at[0], y - 0.2, w.at[1]); scene.add(obj);
-    addCircle(w.at[0], w.at[1], 1.6, y, y + 7, { noRay: true });
-    const light = new THREE.PointLight(0xff3d8b, 6, 16, 1.5); light.position.set(w.at[0], y + 4, w.at[1]); scene.add(light);
-    WELLS.push({ ...w, obj, y, light, nodes: nodes.map((n) => ({ n, hp: 120, alive: true, pos: new THREE.Vector3() })), awake: false, alive: true, wave: 0, waveT: 0, owned: 0, sinkT: 0, plumeT: 0 });
+    addCircle(w.at[0], w.at[1], w.nest ? 0.9 : 1.6, y, y + (w.nest ? 3.6 : 7), { noRay: true });
+    const light = new THREE.PointLight(0xff3d8b, w.nest ? 3 : 6, w.nest ? 9 : 16, 1.5); light.position.set(w.at[0], y + 4, w.at[1]); scene.add(light);
+    WELLS.push({ ...w, obj, y, light, nodes: nodes.map((n) => ({ n, hp: w.nest ? 80 : 120, alive: true, pos: new THREE.Vector3() })), awake: false, alive: true, wave: 0, waveT: 0, owned: 0, sinkT: 0, plumeT: 0 });
   }
 }
 
@@ -59,7 +61,7 @@ function updateWells(dt) {
     // the plume: a column of ink over every living inkwell, visible across the valley
     if (w.alive) {
       w.plumeT -= dt;
-      if (w.plumeT <= 0) { w.plumeT = 0.16; emit('ink', w.at[0] + (Math.random() - 0.5) * 1.2, w.y + 7, w.at[1] + (Math.random() - 0.5) * 1.2, 1, { speed: 0.6, up: 0, life: 7, size: 2.2 + Math.random() * 1.6, color: [0.07, 0.06, 0.1], grav: -1.2, drag: 0.3 }); }
+      if (w.plumeT <= 0) { w.plumeT = 0.16; emit('ink', w.at[0] + (Math.random() - 0.5) * 1.2, w.y + (w.nest ? 3.6 : 7), w.at[1] + (Math.random() - 0.5) * 1.2, 1, { speed: 0.6, up: 0, life: w.nest ? 3 : 7, size: (w.nest ? 0.9 : 2.2) + Math.random() * 1.6, color: [0.07, 0.06, 0.1], grav: -1.2, drag: 0.3 }); }
       if (Math.random() < dt * 3) emit('add', w.at[0], w.y + 6.5 + Math.random() * 4, w.at[1], 1, { speed: 0.4, up: 0, life: 2.5, size: 0.5, color: [1.3, 0.2, 0.6], grav: -1.5 });
       for (const nd of w.nodes) if (nd.alive) nd.n.getWorldPosition(nd.pos);
       w.light.intensity = 5 + Math.sin(S.t * 3) * 2;
@@ -69,7 +71,8 @@ function updateWells(dt) {
       continue;
     }
     const d = Math.hypot(pp.x - w.at[0], pp.z - w.at[1]);
-    if (!w.awake && d < 52 && S.mode === 'play' && S.stage >= 1) {
+    if (!w.awake && w.nest && d < 30 && S.mode === 'play') { w.awake = true; w.waveT = 0.5; caption('An ink <b>nest</b>. Break it for a burst of colour.', 3.5); }
+    if (!w.awake && !w.nest && d < 52 && S.mode === 'play' && S.stage >= 1) {
       w.awake = true; w.waveT = 0.8; caption('An inkwell. Clear its ink, then break its <b>three glowing nodes</b>.', 4.5);
       sfx.roar(); playMusic('fight');
     }
@@ -77,7 +80,7 @@ function updateWells(dt) {
     if (d > 90) { w.awake = false; continue; }
     // creep: a living, awake inkwell takes colour back around itself
     S.creepT += dt;
-    if (S.creepT > 1) { S.creepT = 0; creep(w.at[0], w.at[1], 24, 7); }
+    if (S.creepT > 1 && !w.nest) { S.creepT = 0; creep(w.at[0], w.at[1], 24, 7); }
     // waves: the nodes are sealed in ink while a wave lives; clear it and they open; break one and the next wave comes
     w.owned = ENEMIES.filter((e) => e.owner === w && e.alive).length;
     const wasShield = w.shield; w.shield = w.owned > 2 || w.waveT > 0;
@@ -91,12 +94,15 @@ function updateWells(dt) {
 function spawnWave(w, small = false) {
   const tier = wellTier(), k = small ? Math.max(0, w.wave - 2) : w.wave++;
   const comp = [];
+  if (w.nest) { if (k > 0) return; comp.push('blotling', 'blotling', 'blotling', 'blotling', tier >= 1 ? 'smear' : 'blotling', tier >= 2 ? 'quill' : 'blotling'); }
+  else {
   comp.push(...Array(3 + Math.min(4, k) + tier).fill('blotling'));
   if (k >= 1 || tier >= 1) comp.push('smear');
   if (tier >= 1 && k >= 1) comp.push('quill', 'quill');
   if (tier >= 2 && k >= 1) comp.push('spitter');
   if (tier >= 3 && k >= 2) comp.push('inkhorn');
   if (k >= 3) comp.push('smear', 'spitter');
+  }
   const pp = P.pos;
   comp.forEach((type, i) => {
     const a = Math.random() * Math.PI * 2, r = 7 + Math.random() * 12;
@@ -118,6 +124,14 @@ function destroyNode(w, nd) {
 }
 
 function cleanse(w) {
+  if (w.nest) {   // a nest: a smaller burst, a big score, no lens
+    w.alive = false; S.nests++; sfx.cleanse(); scene.remove(w.light);
+    splat(w.at[0], w.at[1], 34, { speed: 30 });
+    ENEMIES.filter((e) => e.owner === w && e.alive).forEach((e, i) => setTimeout(() => { if (e.alive) { e.alive = false; onKill(e, { chain: true }); } }, 200 + i * 110));
+    for (let i = 0; i < 24; i++) { const a = Math.random() * 6.28, r = 2 + Math.random() * 16; const x = w.at[0] + Math.cos(a) * r, z = w.at[1] + Math.sin(a) * r; bloomAt(x, T.height(x, z), z, Math.random() * 6, 0.8 + Math.random() * 0.6); }
+    addScore(1500, new THREE.Vector3(w.at[0], w.y + 2, w.at[1]), 'NEST +1500', 'big'); banner('Ink nest broken', S.nests + ' of ' + NESTS.length + ' nests', 3);
+    return;
+  }
   w.alive = false; S.cleansed.push(w.id); sfx.cleanse(); playMusic('calm', 3);
   scene.remove(w.light);
   // the wave of colour over the whole place, and every ink it spawned bursts in a chain
@@ -341,11 +355,11 @@ function director(dt) {
 }
 
 // ---- objectives --------------------------------------------------------------------------------------
-function nearestWell() { let b = null, bd = 1e9; for (const w of WELLS) if (w.alive) { const d = Math.hypot(w.at[0] - P.pos.x, w.at[1] - P.pos.z); if (d < bd) { bd = d; b = w; } } return b; }
+function nearestWell() { let b = null, bd = 1e9; for (const w of WELLS) if (w.alive && !w.nest) { const d = Math.hypot(w.at[0] - P.pos.x, w.at[1] - P.pos.z); if (d < bd) { bd = d; b = w; } } return b; }
 function setStage(n) {
   S.stage = n;
   if (n === 1) { HUD.objective('Break the inkwell in the Olive Terraces', 'follow the gold mark'); }
-  if (n === 2) { const left = WELLS.filter((w) => w.alive).map((w) => PLACES.find((p) => p.id === w.place).name); HUD.objective(`Break the inkwells: ${left.length} left`, left.join(' · ') + ' · any order'); }
+  if (n === 2) { const left = WELLS.filter((w) => w.alive && !w.nest).map((w) => PLACES.find((p) => p.id === w.place).name); HUD.objective(`Break the inkwells: ${left.length} left`, left.join(' · ') + ' · any order'); }
   if (n === 3) { S.respawn = 'stair'; HUD.objective('Climb the Pilgrim Stair to the Sun Chapel', 'the blot waits at the summit'); litLantern('stair'); banner('The valley is answering', 'the Pilgrim Stair is open', 4); }
   if (n === 4) { S.respawn = 'chapel'; litLantern('chapel'); }
   if (n === 4) HUD.objective('Break Old Inkhorn', 'shoot the core when its chest opens');
@@ -374,7 +388,7 @@ function endCard() {
   let best = 0; try { best = +localStorage.getItem('bloomfire_best') || 0; if (S.score > best) localStorage.setItem('bloomfire_best', S.score); } catch {}
   const mm = Math.floor(secs / 60), ss = String(secs % 60).padStart(2, '0');
   $('overs').innerHTML = `<b>${S.score.toLocaleString('en-US')}</b>${S.score > best ? ' new best' : ' best ' + best.toLocaleString('en-US')}<br>
-    ${mm}:${ss} &middot; ${S.kills} ink &middot; best chain ${S.bestCombo}<br>
+    ${mm}:${ss} &middot; ${S.kills} ink &middot; best chain ${S.bestCombo} &middot; nests ${S.nests} of ${NESTS.length}<br>
     you restored ${(rest * 100).toFixed(0)}% of the valley (+${restBonus.toLocaleString('en-US')}) &middot; time +${timeBonus.toLocaleString('en-US')}`;
   const c = $('overmap'); drawMap(c.getContext('2d'), c.width, c.height);
   $('over').classList.add('on'); document.body.classList.remove('playing');
@@ -500,7 +514,7 @@ export const Game = {
     // HUD
     HUD.score(S.score); HUD.combo(S.mult, S.combo); HUD.hp(P.hp / P.maxHp); HUD.restored(rf);
     HUD.lock(!!WPN.lock); HUD.bloom(WPN.bloom, WPN.bloom >= 1); HUD.dash(P.dashCharges);
-    if (S.stage === 2) { const left = WELLS.filter((w) => w.alive).length; HUD.objective(`Break the inkwells: ${left} left`, WELLS.filter((w) => w.alive).map((w) => PLACES.find((p) => p.id === w.place).name).join(' · ') + ' · any order'); }
+    if (S.stage === 2) { const left = WELLS.filter((w) => w.alive && !w.nest).length; HUD.objective(`Break the inkwells: ${left} left`, WELLS.filter((w) => w.alive && !w.nest).map((w) => PLACES.find((p) => p.id === w.place).name).join(' · ') + ' · any order'); }
     compass(objectiveTarget(), P.yaw);
     updateHud(rdt);
   },
@@ -509,7 +523,7 @@ export const Game = {
     g.score = S.score; g.over = S.mode === 'over'; g.hp = Math.round(P.hp); g.shots = WPN.shots; g.kills = S.kills; g.alive = P.alive;
     g.combo = S.combo; g.mult = S.mult; g.stage = S.stage; g.cleansed = S.cleansed.length; g.restored = +(restoredFraction() * 100).toFixed(2);
     g.enemies = ENEMIES.length; g.lock = !!WPN.lock; g.mode = S.mode; g.bloom = +WPN.bloom.toFixed(2); g.lenses = WPN.lenses.length;
-    g.boss = BOSS ? Math.round(BOSS.hp) : null; g.deaths = S.deaths;
+    g.boss = BOSS ? Math.round(BOSS.hp) : null; g.deaths = S.deaths; g.nests = S.nests;
     // the screen position of the nearest visible target, for a gate that wants to aim
     const tg = WPN.lock; if (tg) { const v = tg.pos.clone().project(camera); g.aim = [+(v.x * 0.5 + 0.5).toFixed(3), +(-v.y * 0.5 + 0.5).toFixed(3), 1]; } else g.aim = null;
     // where the nearest ink is relative to the view (yaw and pitch deltas), for a gate that wants to aim like a thumb would

@@ -29,6 +29,7 @@ export const PATHS = [
   { id: 'market_quarry', kind: 'dirt', w: 5, pts: [[112, 0], [122, -40], [124, -84], [136, -118], [152, -146], [162, -160]] },
   { id: 'mill_stair', kind: 'dirt', w: 4.5, pts: [[-2, -34], [6, -84], [22, -140], [40, -188]] },
   { id: 'stair', kind: 'cobble', w: 5, steep: true, pts: [[40, -188], [76, -204], [78, -218], [14, -230], [10, -244], [70, -256], [72, -268], [40, -280], [40, -290]] },
+  { id: 'quarry_back', kind: 'dirt', w: 4, pts: [[166, -166], [178, -186], [200, -200], [226, -198]] },
   { id: 'market_lake', kind: 'dirt', w: 4, pts: [[112, 40], [116, 90], [104, 140], [96, 168]] },
 ];
 
@@ -51,6 +52,11 @@ export const LANTERNS = [
   { id: 'rise', at: [-186, 156] }, { id: 'terraces', at: [-98, 74] }, { id: 'mill', at: [-30, -22] },
   { id: 'market', at: [98, 30] }, { id: 'ridge', at: [-146, -126] }, { id: 'quarry', at: [146, -144] },
   { id: 'stair', at: [40, -192] }, { id: 'chapel', at: [40, -276] },
+];
+
+// Ink nests: optional, off the roads, each a small spire with one node. The reason to explore and replay.
+export const NESTS = [
+  [-232, 110], [-60, 150], [58, 118], [196, 70], [-238, -30], [-96, -206], [92, -122], [214, -96],
 ];
 
 export const SPAWN = { at: [-192, 168], yaw: -0.82 };   // yaw 0 looks north (-z); this looks north-east, over the valley
