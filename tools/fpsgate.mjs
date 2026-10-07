@@ -26,7 +26,7 @@ try {
   const readyS = (Date.now() - t0) / 1000;
   const G = () => page.evaluate(() => JSON.parse(JSON.stringify(window.__GAME__)));
   // start with a real tap on the real button
-  const sb = await page.$eval('#startb', (e) => { const r = e.getBoundingClientRect(); return [r.x + r.width / 2, r.y + r.height / 2]; });
+  const sb = await page.$eval(arg('start', '#startb'), (e) => { const r = e.getBoundingClientRect(); return [r.x + r.width / 2, r.y + r.height / 2]; });
   await page.touchscreen.tap(sb[0], sb[1]); await sleep(1500);
   const g0 = await G();
   if (g0.mode !== 'play') fails.push('a real tap on #startb did not start the game (mode ' + g0.mode + ')');

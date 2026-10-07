@@ -53,7 +53,7 @@ async function loadProto(type) {
     bakeJoints(obj);
   } else obj = placeholder(type);
   const names = {}; for (const [k, v] of Object.entries(obj.userData.joints || {})) if (v && v.name) names[k] = v.name;
-  obj.traverse((o) => { if (o.material) { const ms = Array.isArray(o.material) ? o.material : [o.material]; ms.forEach(inkLook); } if (o.isMesh) { o.castShadow = true; o.receiveShadow = false; } });
+  obj.traverse((o) => { if (o.material) { const ms = Array.isArray(o.material) ? o.material : [o.material]; ms.forEach(inkLook); } if (o.isMesh) { o.castShadow = type === 'smear' || type === 'inkhorn'; o.receiveShadow = false; } });
   PROTO[type] = { obj, names };
 }
 // a soft magenta glow on every core, so the weak spot reads at range

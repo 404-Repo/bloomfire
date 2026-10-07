@@ -2,7 +2,7 @@
 import * as THREE from 'three';
 import { ASSET } from '../assetlib.js';
 import { scene, camera, post, skyU, isTouch, fog } from './render.js';
-import { splat, restoredFraction, maskAt, creep, U as PU, drawMap } from './paint.js';
+import { splat, splatNow, restoredFraction, maskAt, creep, U as PU, drawMap } from './paint.js';
 import { IN, takeDash, takeBloom } from './input.js';
 import { P, placePlayer, dash, heal, EYE } from './player.js';
 import { ENEMIES, TYPES, initEnemies, spawn, damage, updateEnemies, lob, clearEnemies } from './enemies.js';
@@ -308,7 +308,7 @@ function onKill(e, o = {}) {
   const nm = e.type === 'blotling' ? 2 : 4;
   for (let i = 0; i < nm; i++) emit('add', p.x, p.y, p.z, 1, { speed: 4, up: 3, life: 3, size: 0.35, color: [1.6, 1.2, 0.5], home: { onArrive: () => { heal(2); S.score += 10; sfx.pickup(); } } });
   sfx.kill(S.combo); hitMarker(true);
-  WPN.bloom = Math.min(1, WPN.bloom + (WPN.lenses.includes('sun') ? 0.12 : 0.065));
+  WPN.bloom = Math.min(1, WPN.bloom + (WPN.lenses.includes('sun') ? 0.075 : 0.05));
   if (!S.tutorial.firstKill) { S.tutorial.firstKill = true; caption('Every kill gives the colour back. <b>Chain kills</b> for a bigger multiplier.', 5); }
   if (WPN.lenses.includes('arc') && !o.arc && !o.chain) arcFrom(p, e);
   if (WPN.lenses.includes('burst') && !o.chain) for (const q of ENEMIES) if (q.alive && q !== e && q.pos.distanceTo(e.pos) < 3.6) { if (damage(q, 25)) onKill(q, { chain: true }); }
@@ -354,6 +354,33 @@ function director(dt) {
   }
 }
 
+function rushUpdate(dt, rdt) {
+  S.rushT -= rdt; const el = 180 - S.rushT, tier = Math.min(5, Math.floor(el / 32));
+  const lensN = Math.min(5, Math.floor(el / 30)); while (WPN.lenses.length < lensN) { const l = LENS_ORDER[WPN.lenses.length]; WPN.lenses.push(l); banner(LENS_TEXT[l][0], LENS_TEXT[l][1], 2.5); sfx.lantern(); }
+  S.roamT -= dt;
+  const alive = ENEMIES.filter((e) => e.alive).length;
+  if (S.roamT <= 0 && alive < 9 + tier * 2) {
+    S.roamT = Math.max(2.2, 5 - tier * 0.5);
+    const comp = []; for (let i = 0; i < 3 + tier; i++) comp.push('blotling');
+    if (tier >= 1) comp.push('smear'); if (tier >= 1) comp.push('quill'); if (tier >= 2) comp.push('spitter', 'quill'); if (tier >= 3) comp.push('smear'); if (tier >= 4 && Math.random() < 0.6) comp.push('inkhorn');
+    const a = P.yaw + (Math.random() - 0.5) * 2.2, r = 14 + Math.random() * 9;   // ahead of you, give or take
+    const cx = P.pos.x - Math.sin(a) * r, cz = P.pos.z - Math.cos(a) * r;
+    comp.forEach((type, i) => { const x = cx + (Math.random() - 0.5) * 8, z = cz + (Math.random() - 0.5) * 8; setTimeout(() => { if (S.mode === 'play') spawn(type, x, z, { tier: tier - 1 }); }, i * 150); });
+  }
+  const m = Math.max(0, Math.ceil(S.rushT)), mm = Math.floor(m / 60), ss = String(m % 60).padStart(2, '0');
+  HUD.objective(`Rush ${mm}:${ss}`, S.rushBest ? 'beat ' + S.rushBest.toLocaleString('en-US') : 'set a score to beat');
+  if (S.rushT <= 0) rushEnd();
+}
+function rushEnd() {
+  S.mode = 'over'; clearEnemies();
+  let best = 0; try { best = +localStorage.getItem('bloomfire_rush') || 0; if (S.score > best) localStorage.setItem('bloomfire_rush', S.score); } catch {}
+  $('overt').textContent = 'Rush over';
+  $('overs').innerHTML = `<b>${S.score.toLocaleString('en-US')}</b>${S.score > best ? ' new best rush' : ' best ' + best.toLocaleString('en-US')}<br>${S.kills} ink &middot; best chain ${S.bestCombo}`;
+  const c = $('overmap'); drawMap(c.getContext('2d'), c.width, c.height);
+  $('keepb').style.display = 'none'; $('againb').textContent = 'Again';
+  $('over').classList.add('on'); document.body.classList.remove('playing');
+}
+
 // ---- objectives --------------------------------------------------------------------------------------
 function nearestWell() { let b = null, bd = 1e9; for (const w of WELLS) if (w.alive && !w.nest) { const d = Math.hypot(w.at[0] - P.pos.x, w.at[1] - P.pos.z); if (d < bd) { bd = d; b = w; } } return b; }
 function setStage(n) {
@@ -365,7 +392,7 @@ function setStage(n) {
   if (n === 4) HUD.objective('Break Old Inkhorn', 'shoot the core when its chest opens');
 }
 function objectiveTarget() {
-  if (S.stage === 0) return null;
+  if (S.stage === 0 || S.rush) return null;
   if (S.stage === 1) return INKWELLS[0].at;
   if (S.stage === 2) { const w = nearestWell(); return w ? w.at : null; }
   if (S.stage === 3) return ARENA;
@@ -416,13 +443,14 @@ export const Game = {
     setParticleScale(innerHeight);
     addEventListener('resize', () => { setParticleScale(innerHeight); layoutViewmodel(); });
     $('startb').addEventListener('click', () => Game.start());
+    $('rushb').addEventListener('click', () => Game.startRush());
     $('pauseb').addEventListener('click', () => Game.pause(true));
     $('resumeb').addEventListener('click', () => Game.pause(false));
     $('soundb').addEventListener('click', () => { setSound(!soundOn()); $('soundb').textContent = 'Sound: ' + (soundOn() ? 'on' : 'off'); });
     $('assistb').addEventListener('click', () => { WPN.assist = !WPN.assist; $('assistb').textContent = 'Aim assist: ' + (WPN.assist ? 'on' : 'off'); });
     const sens = [['slow', 0.7], ['normal', 1], ['fast', 1.4]]; let si = 1;
     $('sensb').addEventListener('click', () => { si = (si + 1) % 3; IN.sens = sens[si][1]; $('sensb').textContent = 'Look speed: ' + sens[si][0]; });
-    $('againb').addEventListener('click', () => { location.search = '?again=1'; });
+    $('againb').addEventListener('click', () => { location.search = S.rush ? '?again=rush' : '?again=1'; });
     $('keepb').addEventListener('click', () => { $('over').classList.remove('on'); document.body.classList.add('playing'); S.mode = 'roam'; });
     addEventListener('keydown', (e) => { if (e.code === 'Escape' || e.code === 'KeyP') { if (S.mode === 'play') Game.pause(!Game.paused); } });
   },
@@ -433,7 +461,9 @@ export const Game = {
     let si = 0; const els = box.querySelectorAll('.sl'), cap = $('slidecap');
     const show = () => { els.forEach((e, i) => e.classList.toggle('on', i === si)); cap.textContent = slides[si][1]; cap.classList.toggle('on', !!slides[si][1]); si = (si + 1) % slides.length; };
     show(); S.slideTimer = setInterval(() => { if (S.mode === 'title') show(); else clearInterval(S.slideTimer); }, 6000);
-    if (S.best) $('best').textContent = 'best ' + S.best.toLocaleString('en-US');
+    let rb = 0; try { rb = +localStorage.getItem('bloomfire_rush') || 0; } catch {}
+    const bits = []; if (S.best) bits.push('best ' + S.best.toLocaleString('en-US')); if (rb) bits.push('best rush ' + rb.toLocaleString('en-US'));
+    $('best').textContent = bits.join(' · ');
     if (new URLSearchParams(location.search).has('again')) {} // the title is one tap either way
   },
   start() {
@@ -449,7 +479,21 @@ export const Game = {
     HUD.objective('Clear the ink from the Rise', 'the five plumes are the inkwells');
     S.visited.add('rise');
   },
+  // Rush: three minutes in Vell Market, packs that never stop, a lens every 30 s, beat your best
+  startRush() {
+    if (S.mode !== 'title') return;
+    unlockAudio();
+    $('title').classList.remove('on'); document.body.classList.add('playing');
+    S.mode = 'play'; S.rush = true; S.rushT = 180; S.startT = S.t; IN.enabled = true; S.stage = 9; S.roamT = 2;
+    for (const k of Object.keys(S.tutorial)) S.tutorial[k] = true;
+    for (const w of WELLS) { w.alive = false; w.obj.visible = false; scene.remove(w.light); }
+    placePlayer(112, 34, 0); splatNow(112, 20, 18);
+    try { S.rushBest = +localStorage.getItem('bloomfire_rush') || 0; } catch { S.rushBest = 0; }
+    playMusic('fight', 1); banner('Rush', 'three minutes in Vell Market', 3);
+    caption('Packs never stop. A new lens every <b>30 seconds</b>. Chain kills for the multiplier.', 5);
+  },
   pause(on) { if (S.mode !== 'play') return; Game.paused = on; $('pause').classList.toggle('on', on); if (on && document.pointerLockElement) document.exitPointerLock(); },
+  objectiveLess() {},
   playing() { return S.mode === 'play' || S.mode === 'finale' || S.mode === 'roam'; },
   idle(dt) { updateParticles(dt, null); updateTracers(dt); },
   preUpdate(dt) {
@@ -460,15 +504,16 @@ export const Game = {
     let dt = rdt; if (S.slowmo > 0) { S.slowmo -= rdt; dt = rdt * 0.35; }
     S.t += rdt;
     // tutorial pack
-    if (S.mode === 'play' && !S.tutorial.packed && S.t - S.startT > 4.5) {
+    if (S.mode === 'play' && !S.rush && !S.tutorial.packed && S.t - S.startT > 4.5) {
       S.tutorial.packed = true;
       const cx = P.pos.x - Math.sin(P.yaw) * 15, cz = P.pos.z - Math.cos(P.yaw) * 15;
       for (let i = 0; i < 3; i++) { const e = spawn('blotling', cx + (i - 1) * 3, cz + (Math.random() - 0.5) * 3, { tier: -2 }); e.cd = 5 + i; e.hold = 4 + i * 0.8; }
       caption(isTouch ? 'Drag your <b>right thumb</b> to aim. On ink, the prism <b>fires by itself</b>.' : '<b>Mouse</b> to aim, <b>click</b> to fire, <b>Shift</b> to dash.', 6);
       S.roamT = 14;
     }
-    if (S.stage === 0 && S.kills >= 3) { setStage(1); setTimeout(() => caption('Five inkwells feed the blot. Start with the one in the <b>Olive Terraces</b>, below.', 6), 1500); }
-    if (S.mode === 'play') { director(dt); updateWells(dt); }
+    if (!S.rush && S.stage === 0 && S.kills >= 3) { setStage(1); setTimeout(() => caption('Five inkwells feed the blot. Start with the one in the <b>Olive Terraces</b>, below.', 6), 1500); }
+    if (S.mode === 'play' && S.rush) rushUpdate(dt, rdt);
+    else if (S.mode === 'play') { director(dt); updateWells(dt); }
     if (S.stage === 3 && Math.hypot(P.pos.x - ARENA[0], P.pos.z - ARENA[1]) < 26 && BOSS && !BOSS.alive && BOSS.hp > 0) wakeBoss();
     updateBoss(dt);
     // combo decay
@@ -488,7 +533,8 @@ export const Game = {
       S.deadT += rdt;
       if (S.deadT > 2.2) {
         S.deadT = 0; let l = LANTERNS[0], bd = 1e9; // wake at the nearest lit lantern
-        for (const q of W.lanterns) if (q.lit) { const d = Math.hypot(q.at[0] - P.pos.x, q.at[1] - P.pos.z); if (d < bd) { bd = d; l = q; } }
+        if (S.rush) { l = { at: [110, 32] }; bd = -1; }
+        if (bd > 0) for (const q of W.lanterns) if (q.lit) { const d = Math.hypot(q.at[0] - P.pos.x, q.at[1] - P.pos.z); if (d < bd) { bd = d; l = q; } }
         placePlayer(l.at[0] + 2, l.at[1] + 2, P.yaw); P.hp = P.maxHp; P.alive = true; P.invuln = 2;
         if (S.stage >= 2) S.score = Math.round(S.score * 0.95);
         for (const e of ENEMIES) if (e.pos.distanceTo(P.pos) < 28) e.alive = false;
