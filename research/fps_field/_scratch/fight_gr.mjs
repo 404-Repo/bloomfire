@@ -20,16 +20,16 @@ try {
   for (let i = 0; i < 6; i++) { const c = await s.clickText(/^(continue|begin|start|take off|fly|launch|go|ok|skip|press on|next).{0,12}$/); if (!c) break; console.log('tapped', c); await sleep(1500); }
   const stick = await box('#stick'); console.log('stick', JSON.stringify(stick));
   let fireB = await box('#bfire'), viewB = await box('#bview');
-  let stickDown = false;
+  let stickDown = false, fd = false; const ffB = await box('#bff'); await sleep(2000); await T.down(3, ffB.cx, ffB.cy); await sleep(60); await T.up(3); console.log('tapped press-on');
   while (Date.now() - t0 < DUR) {
     const g = await full(); ticks++;
     const el = (Date.now() - t0) / 1000;
-    if (stick && stick.vis) {
+    if (stick && stick.vis && viewTaps >= 3) {
       if (!stickDown) { await T.down(1, stick.cx, stick.cy); stickDown = true; }
-      await T.move(1, stick.cx + Math.sin(el / 3) * stick.w * 0.3, stick.cy + Math.cos(el / 5) * stick.h * 0.15);
+      await T.move(1, stick.cx + Math.sin(el / 2) * stick.w * 0.25, stick.cy + Math.cos(el / 3) * stick.h * 0.1);
     }
-    if (el > 60 && viewTaps < 4 && ticks % 150 === 0 && viewB) { await T.down(3, viewB.cx, viewB.cy); await sleep(60); await T.up(3); viewTaps++; console.log('VIEW tap', viewTaps); await sleep(600); await s.snap('view' + viewTaps); }
-    if (fireB && ticks % 30 < 8) { if (ticks % 30 === 0) await T.down(2, fireB.cx, fireB.cy); if (ticks % 30 === 7) await T.up(2); }
+    if (el > 45 && viewTaps < 3 && ticks % 100 === 0 && viewB) { await T.down(3, viewB.cx, viewB.cy); await sleep(60); await T.up(3); viewTaps++; console.log('VIEW tap', viewTaps); await sleep(600); await s.snap('view' + viewTaps); }
+    if (fireB && viewTaps >= 3) { const want = ticks % 30 < 12; if (want && !fd) { await T.down(2, fireB.cx, fireB.cy); fd = true; } else if (!want && fd) { await T.up(2); fd = false; } }
     if (ticks % 50 === 0) { fpsS.push(g.fps); console.log(`[${el.toFixed(0)}s] ${JSON.stringify(g).slice(0, 260)} | ${(await hudText()).slice(0, 200)}`); }
     if (ticks % 110 === 55) await s.snap('play');
     await sleep(40);

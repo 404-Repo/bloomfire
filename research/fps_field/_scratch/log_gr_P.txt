@@ -1,0 +1,27 @@
+gpu ANGLE (Apple, ANGLE Metal Renderer: Apple M4, Unspecified Version)
+div#hud-top. [0,0 390x94] "Consolidated Catalina Mk I AX-L · Z2147 "
+div#hud-objectives. [14,92 240x86] "☑ Take off ☐ Depth-charge the rafts: sco"
+div#obj-marker. [15,323 106x34] "Raft A · 10.4 nm"
+div#hud-ticker.on [16,579 359x65] "Range procedure: cycle the gun positions"
+div#lever. [14,251 74x240] "THROTTLE · IAS FULL 3/4 1/2 1/4 SHUT 100"
+div#lever-knob.knob [30,258 30x13] ""
+div#lever-val.val [14,491 74x22] "100% · 142 mph"
+div#stick. [16,700 128x128] ""
+button#bfire. [326,652 52x52] "FIRE"
+button#bdrop. [264,652 52x52] "DROP"
+button#breport. [326,714 52x52] "REPORT"
+button#bdepth. [264,714 52x52] "DEPTH 25 ft"
+button#bview. [326,776 52x52] "VIEW"
+button#bff. [264,776 52x52] "▶▶"
+button#bpause. [340,10 40x40] "II"
+button#bradar. [334,58 46x36] "RADAR"
+stick {"x":16,"y":700,"w":128,"h":128,"cx":80,"cy":764,"vis":true}
+tapped press-on
+[8s] {"fps":59.813137308066516,"draws":522,"tris":1264308,"pos":[2603.943443199034,-1205.2212458343438],"speed":75.09884891461887} | Range procedure: cycle the gun positions with the View button; the rafts score bullseye inside 10 m, near inside 25 m, wide inside 50 m.1942-03-10 — Practice Ra
+[10s] {"fps":60.23467875235799,"draws":520,"tris":1265676,"pos":[2664.603640369602,-1048.9790030704025],"speed":77.26680936314676} | Range procedure: cycle the gun positions with the View button; the rafts score bullseye inside 10 m, near inside 25 m, wide inside 50 m.1942-03-10 — Practice Ra
+[13s] {"fps":60.6341207942646,"draws":522,"tris":1264946,"pos":[2723.8853353416794,-892.9114495527868],"speed":79.16485872734754} | Range procedure: cycle the gun positions with the View button; the rafts score bullseye inside 10 m, near inside 25 m, wide inside 50 m.1942-03-10 — Practice Ra
+[15s] {"fps":59.96775514884604,"draws":515,"tris":1145992,"pos":[2785.3296571565575,-729.3725114309085],"speed":80.88887331963011} | Range procedure: cycle the gun positions with the View button; the rafts score bullseye inside 10 m, near inside 25 m, wide inside 50 m.1942-03-10 — Practice Ra
+[17s] {"fps":60.206469512344746,"draws":501,"tris":1130184,"pos":[2846.781281385777,-564.8977882188399],"speed":82.38672732328126} | Range procedure: cycle the gun positions with the View button; the rafts score bullseye inside 10 m, near inside 25 m, wide inside 50 m.1942-03-10 — Practice Ra
+[19s] {"fps":59.93483524769359,"draws":496,"tris":1129892,"pos":[2910.1114113942326,-394.88207474935615],"speed":83.7218920043715} | Range procedure: cycle the gun positions with the View button; the rafts score bullseye inside 10 m, near inside 25 m, wide inside 50 m.1942-03-10 — Practice Ra
+[21s] {"fps":60.02218525581188,"draws":396,"tris":1097176,"pos":[2972.7733543533463,-226.39698728834125],"speed":84.85974443643158} | Range procedure: cycle the gun positions with the View button; the rafts score bullseye inside 10 m, near inside 25 m, wide inside 50 m.1942-03-10 — Practice Ra
+[23s] {"fps":59.91607970026186,"draws":386,"tris":941376,"pos":[3038.237752522573,-50.23005995592128],"speed":85.88516140633769} | Range procedure: cycle the gun positions with the View button; the rafts score bullseye inside 10 m, near inside 25 m, wide inside 50 m.1942-03-10 — Practice Ra
