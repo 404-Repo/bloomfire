@@ -1,0 +1,22 @@
+{
+  "label": "Game B",
+  "persona": "casual",
+  "play_seconds": 542.3,
+  "fun": 4,
+  "nuance": 6,
+  "nuance_found": "Mirror relay puzzle: one mirror can pass light to another, and a mirror only reflects into some directions, so each beam has to be chained and aimed (mirror 1 to mirror 2 to a stela). I got 2 of 3 stelae lit. Block pushing and a ledge climb exist but I did not need them to progress.",
+  "pace": 3,
+  "pace_word": "too slow",
+  "feedback_juice": 6,
+  "looks": 8,
+  "audio": "Nothing for the first 15 s of loading, then a quiet ambient loop with sparse notes, soft whooshes when I used things, and no reward sound I could pick out.",
+  "would_replay": "no",
+  "would_quit_at_s": 60,
+  "understood_goal_by_s": 60,
+  "furthest_progress": "Level 1, The Sunken Court: read the field notes, pushed the stone block, lit stelae 1 and 3 of 3 (two of three glyphs), never opened the gate. Levels 2 to 4 shown as locked.",
+  "used_movement_assist": "yes, about 35 times",
+  "control_trouble": "Turning a mirror needs a held Use button plus the stick on the other thumb, and the game only reads left or right, so I overshot for minutes. Camera also swung wildly, and one goto dropped me hanging off a ledge. Some of this is me, but a real thumb would also find the holding awkward.",
+  "best_moment": "The beam snapping onto the first stela, the glyph icon glowing and the line of light running from mirror to mirror.",
+  "worst_moment": "Minutes of spinning a mirror in a loop with nothing happening, no hint which way to aim, and the gate still shut at the end.",
+  "verdict": "It is a beautiful little diorama, much prettier than most phone games, and the story notes are a nice touch. But I waited 15 seconds on a loading bar, then spent the first minute walking and reading, and after that nearly nine minutes turning mirrors for two small wins. There are no enemies, no score, no streaks, and the only reward was a small icon lighting up. The mirror-to-mirror idea is clever and I felt smart for about 30 seconds when the beam jumped across, but the controls needing a held button and the stick together make it feel like work. On the bus I would have deleted it before the first mirror was done. A 4, maybe 5 for the looks."
+}

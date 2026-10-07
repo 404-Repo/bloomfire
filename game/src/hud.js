@@ -69,3 +69,14 @@ export function waypoint(t) {
   wp.style.display = 'block'; wp.style.left = ((sx * 0.5 + 0.5) * 100) + '%'; wp.style.top = ((-sy * 0.5 + 0.5) * 100) + '%';
   wp.classList.toggle('edge', edge); wpd.textContent = Math.round(d) + ' m';
 }
+
+// threats: red chevrons around the reticle pointing at ink that is close and off screen
+const thr = [...document.querySelectorAll('#threats i')];
+export function threats(list) {   // list of { rel (rad, + is left), d (m) }
+  thr.forEach((el, i) => {
+    const t = list[i]; if (!t) { el.style.display = 'none'; return; }
+    const R = Math.min(innerWidth, innerHeight) * 0.36, a = -t.rel;   // screen angle, clockwise from up
+    el.style.display = 'block'; el.style.opacity = Math.max(0.45, 1 - t.d / 14);
+    el.style.transform = `translate(${Math.sin(a) * R}px, ${-Math.cos(a) * R}px) rotate(${a}rad) scale(${t.d < 4 ? 1.3 : 1})`;
+  });
+}

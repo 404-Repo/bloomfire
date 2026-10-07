@@ -134,8 +134,8 @@ body.playing.touchdev #touch { display: block; }
 #slidecap.on { opacity: 1; }
 #dmgdir { position: absolute; left: 50%; top: 50%; width: 0; height: 0; opacity: 0; transition: opacity 0.5s; }
 #dmgdir.on { opacity: 1; transition: opacity 0.05s; }
-#dmgdir i { position: absolute; left: -60px; top: -150px; width: 120px; height: 34px; border-radius: 50% 50% 0 0 / 100% 100% 0 0;
-  border-top: 7px solid rgba(255, 61, 139, 0.9); filter: drop-shadow(0 0 6px rgba(255,61,139,0.8)); }
+#dmgdir i { position: absolute; left: -110px; top: -170px; width: 220px; height: 60px; border-radius: 50% 50% 0 0 / 100% 100% 0 0;
+  border-top: 12px solid rgba(255, 61, 139, 0.95); filter: drop-shadow(0 0 10px rgba(255,61,139,0.9)); }
 @media (orientation: portrait) { #dmgdir i { top: -210px; } }
 #wp { position: absolute; display: none; transform: translate(-50%, -50%); text-align: center; pointer-events: none; }
 #wp b { display: block; width: 16px; height: 16px; margin: 0 auto 3px; transform: rotate(45deg); background: var(--gold); box-shadow: 0 0 10px var(--sun), 0 0 0 2px rgba(20,16,10,0.6); }
@@ -151,3 +151,5 @@ body.playing.touchdev #touch { display: block; }
 #lensopts { display: flex; gap: 14px; margin-top: 12px; flex-wrap: wrap; justify-content: center; }
 .lensb { width: min(240px, 40vw); padding: 16px 14px; border-radius: 16px; border: 0; background: linear-gradient(160deg, #fff1c8, #ffc061); color: #26160a; font: 800 17px 'Nunito Sans', sans-serif; box-shadow: 0 6px 0 #8a4a2a; }
 .lensb small { display: block; font-weight: 600; font-size: 13px; margin-top: 6px; color: #4a3020; }
+#threats i { position: absolute; left: 50%; top: 50%; width: 0; height: 0; display: none; margin: -14px 0 0 -12px;
+  border-left: 12px solid transparent; border-right: 12px solid transparent; border-bottom: 22px solid rgba(255, 61, 139, 0.92); filter: drop-shadow(0 0 6px rgba(255,61,139,0.9)); }

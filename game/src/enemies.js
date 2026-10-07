@@ -156,7 +156,7 @@ export function updateEnemies(dt, now, cam) {
         else { e.state = 'strike'; e.st = 0; }
       }
     } else if (e.state === 'strike') {
-      if (e.st < 0.05 && d < t.reach + 0.6) { if (hurt(Math.round(t.dmg * (e.tier < 0 ? 0.5 : e.tier === 0 ? 0.75 : 1) * (e.onPaint ? 0.7 : 1)), e.pos.x, e.pos.z)) sfx.hurt(); }
+      if (e.st < 0.05 && d < t.reach + 0.6) { if (hurt(Math.round(t.dmg * (e.tier < 0 ? 0.5 : e.tier <= 1 ? 0.65 : 0.85) * (e.onPaint ? 0.7 : 1)), e.pos.x, e.pos.z)) sfx.hurt(); }
       if (e.type === 'blotling' && e.st < 0.25) { moving = true; e.dir.set(dx / d, 0, dz / d); speed = 12; }
       if (e.st > 0.35) { e.state = 'chase'; e.cd = t.cd; e.st = 0; }
     } else if (e.state === 'charge_wind') {
