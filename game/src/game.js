@@ -417,14 +417,18 @@ function objectiveTarget() {
   if (S.stage === 2) { const w = nearestWell(); return w ? w.at : null; }
   if (S.stage === 3) {   // lead along the Pilgrim Stair, not straight at a cliff: aim at the end of the segment you are on
     const st = PATHS.find((p) => p.id === 'stair').pts, px = P.pos.x, pz = P.pos.z;
-    let bi = 0, bd = 1e9;
+    let bi = 0, bd = 1e9, bq = null;
     for (let i = 1; i < st.length; i++) {
-      const [ax, az] = st[i - 1], [bx, bz] = st[i], abx = bx - ax, abz = bz - az;
-      const t = Math.max(0, Math.min(1, ((px - ax) * abx + (pz - az) * abz) / (abx * abx + abz * abz)));
-      const d = Math.hypot(px - (ax + abx * t), pz - (az + abz * t));
-      if (d < bd - 0.01) { bd = d; bi = i; }
+      const [ax, az] = st[i - 1], [bx, bz] = st[i], abx = bx - ax, abz = bz - az, L = Math.hypot(abx, abz);
+      const t = Math.max(0, Math.min(1, ((px - ax) * abx + (pz - az) * abz) / (L * L)));
+      const qx = ax + abx * t, qz = az + abz * t, d = Math.hypot(px - qx, pz - qz);
+      // the point a few metres further along the road from where you meet it
+      if (d < bd - 0.01) { bd = d; bi = i; const k = Math.min(1, t + 6 / L); bq = [ax + abx * k, az + abz * k]; }
     }
-    if (bd > 16) return Math.hypot(px - st[0][0], pz - st[0][1]) < Math.hypot(px - st[bi][0], pz - st[bi][1]) + 30 ? st[0] : st[bi];
+    if (bd > 10) {   // off the road: back to the nearest bit of it (or the foot of the stair if that is much closer)
+      const d0 = Math.hypot(px - st[0][0], pz - st[0][1]);
+      return d0 < bd + 25 ? st[0] : bq;
+    }
     const tgt = st[bi]; if (Math.hypot(px - tgt[0], pz - tgt[1]) < 9 && bi + 1 < st.length) return st[bi + 1];
     return bi >= st.length - 1 ? ARENA : tgt;
   }
