@@ -15,7 +15,7 @@ export const U = {
   uTime: { value: 0 },
   uGlobal: { value: 0 },        // 0..1 how much of the whole world is forced painted (the finale)
   uInkTint: { value: new THREE.Color(0x4a5268) },
-  uPaper: { value: new THREE.Color(0xf2efe8) },
+  uPaper: { value: new THREE.Color(0xf6eedf) },
 };
 
 let dirty = false;

@@ -39,10 +39,10 @@
   "min": 540
  },
  "bloomfire": {
-  "url": "http://localhost:8797/",
+  "url": "http://localhost:8799/",
   "w": 844,
   "h": 390,
-  "src": "~/astrocade-game5/game",
+  "src": "~/astrocade-game5-snap (git worktree, frozen commit)",
   "min": 540
  }
 }

@@ -104,6 +104,13 @@ const postMat = new THREE.ShaderMaterial({
       line = clamp(line, 0.0, 1.0) * (1.0 - smoothstep(70.0, 260.0, z) * 0.7);
       vec4 ndc = vec4(vUv*2.0-1.0, d0*2.0-1.0, 1.0); vec4 vp = uProjInv * ndc; vp /= vp.w; vec3 wp = (uCamWorld * vp).xyz;
       float e; float pk = paintAmount(wp, e);
+      // on the ink side, the surface texture itself is drawn: luminance edges become pen strokes
+      vec2 tp = px * 1.0;
+      float lC = dot(col, vec3(0.3,0.59,0.11));
+      float lx = dot(texture2D(tColor, vUv + vec2(tp.x,0.0)).rgb - texture2D(tColor, vUv - vec2(tp.x,0.0)).rgb, vec3(0.3,0.59,0.11));
+      float ly = dot(texture2D(tColor, vUv + vec2(0.0,tp.y)).rgb - texture2D(tColor, vUv - vec2(0.0,tp.y)).rgb, vec3(0.3,0.59,0.11));
+      float le = length(vec2(lx, ly)) / max(lC, 0.15);
+      line = max(line, smoothstep(0.10, 0.32, le) * 0.55 * (1.0 - pk) * (1.0 - smoothstep(40.0, 140.0, z)));
       vec3 inkC = mix(vec3(0.05,0.06,0.11), vec3(0.20,0.11,0.06), pk);
       col = mix(col, inkC, line * mix(0.9, 0.55, pk));
     }

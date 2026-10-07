@@ -1,0 +1,20 @@
+{
+ "s01": {
+  "A": "bloomfire",
+  "B": "sundrift",
+  "persona": "casual",
+  "ports": {
+   "A": 8850,
+   "B": 8851
+  }
+ },
+ "s02": {
+  "A": "sundrift",
+  "B": "bloomfire",
+  "persona": "competitive",
+  "ports": {
+   "A": 8852,
+   "B": 8853
+  }
+ }
+}

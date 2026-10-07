@@ -56,8 +56,14 @@ async function loadProto(type) {
   obj.traverse((o) => { if (o.material) { const ms = Array.isArray(o.material) ? o.material : [o.material]; ms.forEach(inkLook); } if (o.isMesh) { o.castShadow = true; o.receiveShadow = false; } });
   PROTO[type] = { obj, names };
 }
+// a soft magenta glow on every core, so the weak spot reads at range
+const glowTex = (() => { const c = document.createElement('canvas'); c.width = c.height = 64; const x = c.getContext('2d'); const g = x.createRadialGradient(32, 32, 0, 32, 32, 32);
+  g.addColorStop(0, 'rgba(255,220,240,1)'); g.addColorStop(0.25, 'rgba(255,61,139,0.9)'); g.addColorStop(1, 'rgba(255,61,139,0)'); x.fillStyle = g; x.fillRect(0, 0, 64, 64);
+  const t = new THREE.CanvasTexture(c); return t; })();
+const glowMat = new THREE.SpriteMaterial({ map: glowTex, blending: THREE.AdditiveBlending, depthWrite: false, transparent: true, toneMapped: false }); glowMat.userData.noPaint = true;
 function instance(type) {
   const p = PROTO[type], o = p.obj.clone(true), joints = {};
+  const t = TYPES[type], gl = new THREE.Sprite(glowMat); gl.scale.setScalar(t.coreR * 4.5); gl.position.set(0, t.coreY, t.bodyR * 0.75); gl.renderOrder = 4; o.add(gl);
   const by = new Map(); o.traverse((n) => { if (n.name) by.set(n.name, n); });
   for (const [k, name] of Object.entries(p.names)) { const n = by.get(name); if (n) joints[k] = { node: n, rx: n.rotation.x, ry: n.rotation.y, rz: n.rotation.z, sy: n.scale.y, py: n.position.y }; }
   return { o, joints };

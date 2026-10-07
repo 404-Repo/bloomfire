@@ -1,0 +1,5 @@
+{"podium":{"ours":3,"of":8,"wins":"p01 slight, p02 slight, p06 slight","losses":"p03 clear, p04 decisive, p05 clear, p07 decisive, p08 clear","round1":"2 of 8"},
+ "floor":{"ours":6,"of":6,"margins":"2 decisive, 2 clear, 2 slight","round1":"6 of 6"},
+ "bar":{"ours":0,"of":6,"margins":"6 decisive","round1":"0 of 6"},
+ "hud_mask":"8 rectangles (objective text, score, restored, BLOOM, FIRE, DASH, joystick, bottom caption) inpainted with cv2 TELEA before claims.py; centre banners left in",
+ "claims_masked":{"C1":"4 of 7 pass (f0,f3,f6 fail warm<8)","C2":"0 of 7 (median p98 214, top2 warm 0.39)","C3":"0 of 7 (median 0.108 vs bar 0.585, floor 0.033)","C4":"0 of 7 (median 1.35 vs bar 15.2)","C5":"fail: magenta 0 with enemies in view (f1,f5)","C6":"fail: enemy height 0 in all"}}

@@ -1,0 +1,32 @@
+{
+ "pair_01.png": {
+  "build": "left",
+  "build_file": "f1.jpg",
+  "ref_file": "01_lampwrights_rise.png"
+ },
+ "pair_02.png": {
+  "build": "left",
+  "build_file": "f2.jpg",
+  "ref_file": "02_olive_terraces.png"
+ },
+ "pair_03.png": {
+  "build": "left",
+  "build_file": "f3.jpg",
+  "ref_file": "03_millbrook_bridge.png"
+ },
+ "pair_04.png": {
+  "build": "left",
+  "build_file": "f4.jpg",
+  "ref_file": "04_vell_market.png"
+ },
+ "pair_05.png": {
+  "build": "right",
+  "build_file": "f5.jpg",
+  "ref_file": "05_windmill_ridge.png"
+ },
+ "pair_06.png": {
+  "build": "right",
+  "build_file": "f6.jpg",
+  "ref_file": "06_sun_chapel.png"
+ }
+}

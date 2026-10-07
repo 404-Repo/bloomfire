@@ -139,7 +139,7 @@ async function dressMarket() {
 
 async function dressRidge() {
   const a = [-236, -84], b = [-112, -196];
-  for (const t of [0.1, 0.3, 0.78, 0.94]) {
+  for (const t of [0.06, 0.2, 0.34, 0.74, 0.86, 0.97]) {
     const x = a[0] + (b[0] - a[0]) * t, z = a[1] + (b[1] - a[1]) * t;
     const wm = await put('windmill', x, z, Math.PI * 0.25, { keep: true, circle: 3.2 });
     if (wm && wm.userData.joints && wm.userData.joints.sails) W.animated.push({ node: wm.userData.joints.sails, axis: 'z', speed: 0.5 + R() * 0.3 });
@@ -147,6 +147,14 @@ async function dressRidge() {
   for (let i = 0; i < 14; i++) await put('haystack', -175 + (R() - 0.5) * 90, -140 + (R() - 0.5) * 70, R() * 3);
   for (let i = 0; i < 18; i++) { const x = -175 + (R() - 0.5) * 110, z = -140 + (R() - 0.5) * 80; await put('field_wall', x, z, R() * Math.PI, { sink: 0.3 }); }
   for (let i = 0; i < 70; i++) plant('lavender_bush', -175 + (R() - 0.5) * 80, -140 + (R() - 0.5) * 60, 0.9 + R() * 0.5);
+  // lavender rows and olive rows down both flanks of the ridge, the way farmed hillsides look
+  for (let r = 0; r < 9; r++) for (let k = 0; k < 22; k++) {
+    const t = 0.08 + k * 0.04, side = r % 2 ? 1 : -1, off = 14 + Math.floor(r / 2) * 7;
+    const x = a[0] + (b[0] - a[0]) * t + side * off * 0.67, z = a[1] + (b[1] - a[1]) * t + side * off * 0.74;
+    if (T.normal(x, z)[1] < 0.72) continue;
+    if (r < 4) plant('lavender_bush', x, z, 1.1); else if (k % 2 === 0) plant('olive_tree', x, z, 0.8 + R() * 0.2);
+  }
+  for (let i = 0; i < 8; i++) { const t = 0.1 + i * 0.11; await put('field_wall', a[0] + (b[0] - a[0]) * t + 10, a[1] + (b[1] - a[1]) * t + 11, Math.atan2(b[0] - a[0], b[1] - a[1]) + Math.PI / 2, { sink: 0.3 }); }
 }
 
 async function dressQuarry() {
@@ -220,6 +228,7 @@ export async function buildWorld(terrain, onProgress) {
     W.lanterns.push({ ...l, obj, glass, light, lit: false });
   }
   onProgress(0.85, 'growing the olives');
+  await makeRing();
   for (const n of ['olive_tree', 'cypress', 'lavender_bush', 'boulder', 'lemon_tree_pot', 'grass_tuft']) await growSpecies(n, n !== 'lavender_bush' && n !== 'grass_tuft');
   // bake each block of static scenery
   for (const g of blocks.values()) {
@@ -235,9 +244,45 @@ export function litLantern(id, on = true) {
   return l;
 }
 
+// the near field: a ring of grass and stones that follows you, so the ground within 30 m is never bare
+const RING = { mesh: [], cell: 2.3, n: 26, cx: 1e9, cz: 1e9 };
+async function makeRing() {
+  for (const [name, h, per] of [['grass_tuft', 0.55, 1], ['boulder', 0.5, 0.06], ['lavender_bush', 0.6, 0.05]]) {
+    if (!have.has(name)) continue;
+    const proto = await ASSET(A(name), { height: h }); proto.updateMatrixWorld(true);
+    const geos = []; let rough = 0, n = 0;
+    proto.traverse((o) => { if (!o.isMesh) return; const g = (o.geometry.index ? o.geometry.toNonIndexed() : o.geometry.clone()).applyMatrix4(o.matrixWorld);
+      for (const k of Object.keys(g.attributes)) if (k !== 'position' && k !== 'normal') g.deleteAttribute(k);
+      const c = o.material.color, cnt = g.attributes.position.count, arr = new Float32Array(cnt * 3); for (let i = 0; i < cnt; i++) { arr[i * 3] = c.r; arr[i * 3 + 1] = c.g; arr[i * 3 + 2] = c.b; }
+      g.setAttribute('color', new THREE.BufferAttribute(arr, 3)); geos.push(g); rough += o.material.roughness ?? 0.9; n++; });
+    const mat = new THREE.MeshStandardMaterial({ vertexColors: true, roughness: rough / n }); mat.name = 'foliage'; patchMaterial(mat);
+    const im = new THREE.InstancedMesh(mergeGeometries(geos, false), mat, RING.n * RING.n); im.frustumCulled = false; im.receiveShadow = true;
+    im.userData.per = per; im.userData.seed = RING.mesh.length * 977; scene.add(im); RING.mesh.push(im);
+  }
+}
+const _rm = new THREE.Matrix4(), _rq = new THREE.Quaternion(), _rs = new THREE.Vector3(), _rp = new THREE.Vector3(), _ry = new THREE.Vector3(0, 1, 0);
+const hh = (i, j, k) => { let h = (i * 374761393 + j * 668265263 + k * 2147483647) | 0; h = Math.imul(h ^ (h >>> 13), 1274126177); return ((h ^ (h >>> 16)) >>> 0) / 4294967295; };
+function updateRing(cam) {
+  const ci = Math.floor(cam.position.x / RING.cell), cj = Math.floor(cam.position.z / RING.cell);
+  if (ci === RING.cx && cj === RING.cz) return; RING.cx = ci; RING.cz = cj;
+  for (const im of RING.mesh) {
+    let k = 0; const per = im.userData.per, sd = im.userData.seed;
+    for (let j = -RING.n / 2; j < RING.n / 2; j++) for (let i = -RING.n / 2; i < RING.n / 2; i++) {
+      const gi = ci + i, gj = cj + j; if (hh(gi, gj, sd) > per) continue;
+      const x = (gi + hh(gi, gj, sd + 1)) * RING.cell, z = (gj + hh(gi, gj, sd + 2)) * RING.cell;
+      if (waterLevelAt(x, z) > -50 || T.normal(x, z)[1] < 0.7) continue;
+      const s = (0.7 + hh(gi, gj, sd + 3) * 0.9) * (per < 0.5 ? 1.4 : 1);
+      _rq.setFromAxisAngle(_ry, hh(gi, gj, sd + 4) * 6.28); _rs.setScalar(s); _rp.set(x, T.height(x, z) - 0.04, z);
+      im.setMatrixAt(k++, _rm.compose(_rp, _rq, _rs));
+    }
+    im.count = k; im.instanceMatrix.needsUpdate = true;
+  }
+}
+
 // far vegetation chunks are hidden and only near ones cast shadows
 const _c = new THREE.Vector3();
 export function updateWorld(dt, t, cam) {
+  if (cam) updateRing(cam);
   if (cam) for (const im of W.veg) { const s = im.boundingSphere; _c.copy(s.center); const d = _c.distanceTo(cam.position) - s.radius; im.visible = d < im.userData.far; im.castShadow = im.userData.cast && d < 40; }
   for (const a of W.animated) a.node.rotation[a.axis] += a.speed * dt;
 }

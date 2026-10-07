@@ -1,0 +1,29 @@
+{
+ "note": "Written before any critic2 KEY.json was opened. Seed 11 (round 1 used 7). Identity not truly blind: the landscape lantern-gun frames are recognisable. Podium sources recovered from critic1 podium_KEY + matching pair halves: bellkeeper/05,07,13; farseek/03,07; sundrift/05,06; jam evidence/27 desktop-05-explore.",
+ "podium": {
+  "pair_01": {"pick":"left","margin":"slight","why":"L: hatched ink town, clock tower, arcade, cobbles in one style. R: warm but a black pole slices the frame and two text panels."},
+  "pair_02": {"pick":"left","margin":"slight","why":"L: painted villa and arcade against a sketch hill, a readable idea. R: competent desert ruin under a tutorial panel. L ground is noisy and a hard flat shadow band crosses it."},
+  "pair_03": {"pick":"right","margin":"clear","why":"R: one committed sunset toon grade. L: grey sketch slope, a strip of photo grass, giant NODE BROKEN text over the middle."},
+  "pair_04": {"pick":"right","margin":"decisive","why":"R: dense lit village square with NPCs. L: bare grey hill, a dark blotch shadow, faceted grey octahedron foliage blobs top right."},
+  "pair_05": {"pick":"left","margin":"clear","why":"L: authored wood and costume even cropped. R: camera faces a blank beige slope filling 60% of frame, washed sky."},
+  "pair_06": {"pick":"right","margin":"slight","why":"R: quarry with gantry, creature, poppies, depth and sun. L: hero behind a big tutorial panel. R walls are stretched texture and muddy."},
+  "pair_07": {"pick":"right","margin":"decisive","why":"L: camera inside flat-shaded dark polygon cards, looks broken. R: committed synthwave racer."},
+  "pair_08": {"pick":"left","margin":"clear","why":"L: textured stone, dressed hero. R: bare grey hill and blotch shadow, polygon blob foliage."}
+ },
+ "floor": {
+  "pair_01": {"pick":"left","margin":"decisive","why":"L: ink town with depth. R: empty purple dune, plank gun."},
+  "pair_02": {"pick":"left","margin":"decisive","why":"L: painted villa, arcade, grass. R: grey blob tree, blue slabs, plank gun."},
+  "pair_03": {"pick":"left","margin":"clear","why":"Both messy. R: untextured black blob enemy, black square artifacts, plank gun."},
+  "pair_04": {"pick":"left","margin":"slight","why":"L: windmill linework and real gun despite bare hill. R: empty green field and plank gun."},
+  "pair_05": {"pick":"right","margin":"slight","why":"R: textured gun and a lit vista strip, but a blank beige wall fills most of it. L: pink dune with a readable village."},
+  "pair_06": {"pick":"right","margin":"clear","why":"R: quarry with structure and life. L: flat grey wall point blank, plank gun."}
+ },
+ "bar": {
+  "pair_01": {"pick":"right","margin":"decisive","why":"R: inked vista, warm light, ink plumes. L: no linework on the painted villa, generic 3D."},
+  "pair_02": {"pick":"right","margin":"decisive","why":"R: paint burst on a kill, stone walls, enemies. L: grey slope and banner text."},
+  "pair_03": {"pick":"right","margin":"decisive","why":"R: bridge, mill, creature. L: blank hill, polygon blobs."},
+  "pair_04": {"pick":"right","margin":"decisive","why":"R: arcaded market and boss. L: blank beige slope."},
+  "pair_05": {"pick":"left","margin":"decisive","why":"L: windmills, flyers, golden hour. R: muddy quarry."},
+  "pair_06": {"pick":"left","margin":"decisive","why":"L: chapel and horned boss. R: camera inside polygon cards."}
+ }
+}
