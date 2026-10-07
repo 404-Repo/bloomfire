@@ -7,7 +7,7 @@ export const IN = {
   sens: 1, enabled: false,
 };
 const keys = new Set();
-const TOUCH_SENS = 0.0058, MOUSE_SENS = 0.0022;
+const TOUCH_SENS = 0.0047, MOUSE_SENS = 0.0022;
 
 export function readLook() { const x = IN.lookX, y = IN.lookY; IN.lookX = 0; IN.lookY = 0; return [x, y]; }
 export function takeDash() { const d = IN.dash; IN.dash = false; return d; }

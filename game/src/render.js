@@ -1,6 +1,7 @@
 // Renderer, lights, sky, fog, and the ink-outline post pass.
 import * as THREE from 'three';
 import { U, PAINT_FRAG_DECL } from './paint.js';
+import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
 
 export const isTouch = matchMedia('(pointer: coarse)').matches || 'ontouchstart' in window;
 const canvas = document.getElementById('c');
@@ -85,20 +86,26 @@ const postMat = new THREE.ShaderMaterial({
   varying vec2 vUv; uniform sampler2D tColor; uniform sampler2D tDepth; uniform vec2 uRes; uniform float uNear; uniform float uFar;
   uniform mat4 uProjInv; uniform mat4 uCamWorld; uniform float uPx; uniform float uFlash; uniform float uHurt; uniform float uLines;
   float vz(vec2 uv){ float d = texture2D(tDepth, uv).x; return -perspectiveDepthToViewZ(d, uNear, uFar); }
+  vec3 vpos(vec2 uv){ float d = texture2D(tDepth, uv).x; vec4 p = uProjInv * vec4(uv*2.0-1.0, d*2.0-1.0, 1.0); return p.xyz / p.w; }
   void main(){
     vec3 col = texture2D(tColor, vUv).rgb;
     float d0 = texture2D(tDepth, vUv).x;
     if (d0 < 0.99999 && uLines > 0.5) {
       vec2 px = uPx / uRes;
-      float z = vz(vUv), zl = vz(vUv - vec2(px.x,0.0)), zr = vz(vUv + vec2(px.x,0.0)), zu = vz(vUv + vec2(0.0,px.y)), zd = vz(vUv - vec2(0.0,px.y));
-      float lap = (abs(zl + zr - 2.0*z) + abs(zu + zd - 2.0*z)) / max(z, 0.5);
-      float sil = max(max(abs(zl - z), abs(zr - z)), max(abs(zu - z), abs(zd - z))) / max(z, 0.5);
-      float line = smoothstep(0.018, 0.05, lap) * 0.8 + smoothstep(0.06, 0.16, sil) * 0.6;
-      line = clamp(line, 0.0, 1.0) * (1.0 - smoothstep(60.0, 220.0, z) * 0.75);
+      // 3x3 view positions: silhouettes from depth jumps, creases from normals that disagree
+      vec3 C = vpos(vUv), L = vpos(vUv - vec2(px.x,0.0)), Rr = vpos(vUv + vec2(px.x,0.0)), Uu = vpos(vUv + vec2(0.0,px.y)), D = vpos(vUv - vec2(0.0,px.y));
+      vec3 UL = vpos(vUv + vec2(-px.x,px.y)), UR = vpos(vUv + px), DL = vpos(vUv - px), DR = vpos(vUv + vec2(px.x,-px.y));
+      float z = -C.z;
+      vec3 nC = normalize(cross(Rr - L, Uu - D));
+      vec3 nL = normalize(cross(C - L, UL - DL)), nR = normalize(cross(Rr - C, UR - DR)), nU = normalize(cross(UR - UL, Uu - C)), nD = normalize(cross(DR - DL, C - D));
+      float crease = max(max(1.0 - dot(nC, nL), 1.0 - dot(nC, nR)), max(1.0 - dot(nC, nU), 1.0 - dot(nC, nD)));
+      float sil = max(max(abs(L.z - C.z), abs(Rr.z - C.z)), max(abs(Uu.z - C.z), abs(D.z - C.z))) / max(z, 0.5);
+      float line = smoothstep(0.12, 0.35, crease) * 0.85 + smoothstep(0.04, 0.12, sil);
+      line = clamp(line, 0.0, 1.0) * (1.0 - smoothstep(70.0, 260.0, z) * 0.7);
       vec4 ndc = vec4(vUv*2.0-1.0, d0*2.0-1.0, 1.0); vec4 vp = uProjInv * ndc; vp /= vp.w; vec3 wp = (uCamWorld * vp).xyz;
       float e; float pk = paintAmount(wp, e);
       vec3 inkC = mix(vec3(0.05,0.06,0.11), vec3(0.20,0.11,0.06), pk);
-      col = mix(col, inkC, line * mix(0.85, 0.32, pk));
+      col = mix(col, inkC, line * mix(0.9, 0.55, pk));
     }
     col += vec3(1.0,0.78,0.45) * uFlash;
     vec2 q = vUv - 0.5; float vig = 1.0 - dot(q, q) * 0.55; col *= vig;
@@ -120,14 +127,14 @@ export function resize() {
   const aspect = w / h;
   camera.aspect = aspect;
   const hf = THREE.MathUtils.degToRad(84);
-  camera.fov = THREE.MathUtils.clamp(THREE.MathUtils.radToDeg(2 * Math.atan(Math.tan(hf / 2) / aspect)), 50, 80);
+  camera.fov = THREE.MathUtils.clamp(THREE.MathUtils.radToDeg(2 * Math.atan(Math.tan(hf / 2) / aspect)), 50, 90);
   camera.updateProjectionMatrix();
   const bw = Math.floor(w * DPR), bh = Math.floor(h * DPR);
   if (rt) rt.dispose();
   rt = new THREE.WebGLRenderTarget(bw, bh, { type: THREE.HalfFloatType, depthBuffer: true });
   rt.depthTexture = new THREE.DepthTexture(bw, bh, THREE.UnsignedIntType);
   postU.tColor.value = rt.texture; postU.tDepth.value = rt.depthTexture; postU.uRes.value.set(bw, bh);
-  postU.uPx.value = Math.max(1, DPR * 0.75);
+  postU.uPx.value = Math.max(1, DPR * 0.85);
 }
 
 // the first-person rifle draws in its own scene after a depth clear, so it never clips into a wall
@@ -135,6 +142,8 @@ export const vmScene = new THREE.Scene();
 const vmKey = new THREE.DirectionalLight(0xffd8a8, 2.4); vmKey.position.set(-1, 1.2, 0.6);
 const vmFill = new THREE.HemisphereLight(0x9ab6e6, 0x5a4636, 1.2);
 vmScene.add(vmKey, vmFill);
+{ // a soft room reflection so the brass reads as metal, not as dark plastic
+  const pm = new THREE.PMREMGenerator(renderer); vmScene.environment = pm.fromScene(new RoomEnvironment(), 0.04).texture; vmScene.environmentIntensity = 0.55; pm.dispose(); }
 export const vmCam = new THREE.PerspectiveCamera(52, 1, 0.01, 10);
 renderer.autoClear = false;
 

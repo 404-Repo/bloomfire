@@ -56,7 +56,7 @@ async function put(name, x, z, yaw = 0, o = {}) {
 // ---- instanced vegetation -------------------------------------------------------------------------
 const species = new Map();   // name -> [{x,z,yaw,s}]
 function plant(name, x, z, s = 1, yaw = R() * Math.PI * 2) { if (!species.has(name)) species.set(name, []); species.get(name).push({ x, z, s, yaw }); }
-const FAR = { olive_tree: 230, grass_tuft: 110, lavender_bush: 130, boulder: 220, cypress: 320, lemon_tree_pot: 150 };
+const FAR = { olive_tree: 230, grass_tuft: 120, lavender_bush: 150, boulder: 220, cypress: 320, lemon_tree_pot: 150 };
 async function growSpecies(name, cast = true) {
   const list = species.get(name); if (!list || !have.has(name)) return;
   const proto = await ASSET(A(name), { height: HEIGHTS[name] });
@@ -161,7 +161,31 @@ async function dressStairAndChapel() {
   for (let i = 0; i < 26; i++) plant('cypress', 40 + (R() - 0.5) * 120, -240 + (R() - 0.5) * 70, 0.7 + R() * 0.3);
 }
 
+// the near field along every path: lavender, stones, grass clumps, the odd wall or fence
+async function dressPaths() {
+  const { PATHS } = await import('./layout.js');
+  for (const p of PATHS) {
+    for (let i = 1; i < p.pts.length; i++) {
+      const [ax, az] = p.pts[i - 1], [bx, bz] = p.pts[i], L = Math.hypot(bx - ax, bz - az), n = Math.floor(L / 6);
+      const dx = (bx - ax) / L, dz = (bz - az) / L;
+      for (let k = 0; k < n; k++) {
+        const t = (k + R()) / n, cx = ax + (bx - ax) * t, cz = az + (bz - az) * t;
+        for (const side of [-1, 1]) {
+          const off = p.w * 0.5 + 1.2 + R() * 2.5, x = cx - dz * off * side, z = cz + dx * off * side;
+          if (waterLevelAt(x, z) > -50 || PLACES.some((q) => Math.hypot(x - q.at[0], z - q.at[1]) < q.r * 0.5)) continue;
+          const r = R();
+          if (r < 0.35) plant('lavender_bush', x, z, 0.8 + R() * 0.6);
+          else if (r < 0.47) plant('boulder', x, z, 0.35 + R() * 0.5);
+          else if (r < 0.52 && !p.steep) await put('field_wall', x - dz * side * 0.6, z + dx * side * 0.6, Math.atan2(dx, dz) + Math.PI / 2, { sink: 0.25 });
+          for (let g = 0; g < 3; g++) plant('grass_tuft', x + (R() - 0.5) * 3, z + (R() - 0.5) * 3, 0.8 + R() * 0.8);
+        }
+      }
+    }
+  }
+}
+
 async function dressCountry() {
+  await dressPaths();
   for (let i = 0; i < 2600; i++) { const x = (R() - 0.5) * 560, z = (R() - 0.5) * 560; if (waterLevelAt(x, z) > -50 || T.normal(x, z)[1] < 0.75) continue; plant('grass_tuft', x, z, 0.8 + R() * 0.7); }
   // olive groves and cypress clumps across the valley floor, boulders on slopes; away from paths and water
   for (let i = 0; i < 520; i++) {

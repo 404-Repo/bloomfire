@@ -30,6 +30,22 @@ function placeholder(type) {
   g.userData.joints = {}; return g;
 }
 
+// the ink reads as wet indigo with a cold rim and a hot core, never as a flat black hole
+function inkLook(m) {
+  if (m.userData.inked) return; m.userData.inked = true; m.userData.noPaint = true;
+  const isCore = m.emissive && m.emissive.getHex() > 0x400000 && m.emissiveIntensity > 0.5;
+  if (isCore) { m.emissiveIntensity = 3.2; m.toneMapped = false; return; }
+  if (m.color && m.color.getHSL({}).l < 0.12) { m.color.lerp(new THREE.Color(0x2c2950), 0.55); m.roughness = Math.min(m.roughness ?? 0.3, 0.32); }
+  m.onBeforeCompile = (sh) => {
+    sh.fragmentShader = sh.fragmentShader.replace('#include <opaque_fragment>', `
+      { float rim = pow(1.0 - clamp(dot(normal, normalize(vViewPosition)), 0.0, 1.0), 2.6);
+        outgoingLight += vec3(0.62, 0.42, 1.0) * rim * 0.75; }
+      #include <opaque_fragment>`);
+  };
+  m.customProgramCacheKey = () => 'inkrim';
+  m.needsUpdate = true;
+}
+
 async function loadProto(type) {
   let obj;
   if (have.has(type)) {
@@ -37,7 +53,7 @@ async function loadProto(type) {
     bakeJoints(obj);
   } else obj = placeholder(type);
   const names = {}; for (const [k, v] of Object.entries(obj.userData.joints || {})) if (v && v.name) names[k] = v.name;
-  obj.traverse((o) => { if (o.material) { const ms = Array.isArray(o.material) ? o.material : [o.material]; ms.forEach((m) => { m.userData.noPaint = true; }); } if (o.isMesh) { o.castShadow = true; o.receiveShadow = false; } });
+  obj.traverse((o) => { if (o.material) { const ms = Array.isArray(o.material) ? o.material : [o.material]; ms.forEach(inkLook); } if (o.isMesh) { o.castShadow = true; o.receiveShadow = false; } });
   PROTO[type] = { obj, names };
 }
 function instance(type) {

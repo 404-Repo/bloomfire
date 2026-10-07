@@ -29,7 +29,7 @@ export async function initWeapon(terrain, have, targets, hitCb) {
   }
   gun.traverse((o) => { if (o.isMesh) { o.castShadow = false; o.receiveShadow = false; } });
   // the asset is built along -Z (muzzle away from the eye) with its base at y=0
-  gun.position.set(0, -0.06, -0.17); gun.rotation.y = 0.05;
+  gun.position.set(0, -0.06, -0.17); gun.rotation.y = 0.12;
   holder.add(gun);
   const flash = new THREE.PointLight(0xffc070, 0, 6, 2); flash.position.set(0, 0.1, -0.9); holder.add(flash); WPN.flash = flash;
   layoutViewmodel();
@@ -103,14 +103,15 @@ export function updateWeapon(dt, wantFire, now) {
   v.rotation.set(WPN.kick * 0.18, WPN.swayX * -1.2, 0);
   WPN.swayX *= Math.exp(-dt * 8); WPN.swayY *= Math.exp(-dt * 8);
   if (WPN.prism) WPN.prism.rotation.z += dt * (2 + WPN.bloom * 8);
-  if (WPN.prismMat) WPN.prismMat.emissiveIntensity = 1.4 + WPN.bloom * 2.5 + (WPN.firing ? 1.5 : 0);
+  if (WPN.prismMat) WPN.prismMat.emissiveIntensity = 0.9 + WPN.bloom * 2.5 + (WPN.firing ? 1.5 : 0);
   WPN.flash.intensity *= Math.exp(-dt * 30);
 }
 export function swayFromLook(lx, ly) { WPN.swayX = THREE.MathUtils.clamp(WPN.swayX - lx * 0.08, -0.04, 0.04); WPN.swayY = THREE.MathUtils.clamp(WPN.swayY + ly * 0.06, -0.03, 0.03); }
 
 function muzzleWorld(out) {
   // the muzzle as seen by the world camera: below-right of the eye, forward
-  out.set(isTouch && innerHeight > innerWidth ? 0.12 : 0.22, -0.2, -0.7).applyQuaternion(camera.quaternion).add(camera.position);
+  // where the beam starts in the world: a little ahead of the muzzle, so the near end of the beam is not a wedge across the screen
+  out.set(isTouch && innerHeight > innerWidth ? 0.1 : 0.16, -0.13, -2.4).applyQuaternion(camera.quaternion).add(camera.position);
   return out;
 }
 

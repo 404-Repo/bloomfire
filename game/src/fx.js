@@ -73,7 +73,7 @@ const tracers = new THREE.InstancedMesh(trGeo, trMat, TR_MAX); tracers.frustumCu
 tracers.instanceColor = new THREE.InstancedBufferAttribute(new Float32Array(TR_MAX * 3), 3);
 scene.add(tracers);
 const trList = [];
-export function tracer(from, to, width = 0.035, color = [1.6, 1.15, 0.55]) {
+export function tracer(from, to, width = 0.022, color = [1.6, 1.15, 0.55]) {
   if (trList.length >= TR_MAX) trList.shift();
   trList.push({ from: from.clone(), to: to.clone(), t: 0, life: 0.09, w: width, c: color });
 }

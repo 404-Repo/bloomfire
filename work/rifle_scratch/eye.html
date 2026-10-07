@@ -1,0 +1,31 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script type="importmap">{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js", "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.169.0/examples/jsm/" } }</script>
+<style>html,body{margin:0;background:#c3ccd8;overflow:hidden}canvas{display:block;width:100vw;height:100vh}</style></head><body><canvas id="c"></canvas>
+<script type="module">
+// Eye view: the candidate loaded through the game's assetlib, placed exactly like weapon.js
+// (holder at the landscape base, gun at (0,-0.06,-0.17) rot.y 0.05), lit like render.js vmScene.
+import * as THREE from 'three';
+import { ASSET } from '/game/assetlib.js';
+const q = new URLSearchParams(location.search);
+const num = (k, d) => (q.has(k) ? +q.get(k) : d);
+const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('c'), antialias: false });
+renderer.setPixelRatio(devicePixelRatio); renderer.setSize(innerWidth, innerHeight, false);
+renderer.outputColorSpace = THREE.SRGBColorSpace; renderer.toneMapping = THREE.ACESFilmicToneMapping;
+const sc = new THREE.Scene(); sc.background = new THREE.Color(0xc3ccd8);
+const key = new THREE.DirectionalLight(0xffd8a8, 2.4); key.position.set(-1, 1.2, 0.6);
+sc.add(key, new THREE.HemisphereLight(0x9ab6e6, 0x5a4636, 1.2));
+const cam = new THREE.PerspectiveCamera(num('fov', 50), innerWidth / innerHeight, 0.01, 10);
+const holder = new THREE.Group(); sc.add(holder);
+holder.position.set(num('hx', 0.2), num('hy', -0.19), num('hz', -0.46));
+const gun = await ASSET(q.get('u'), { keepHierarchy: true });
+const size = new THREE.Box3().setFromObject(gun).getSize(new THREE.Vector3());
+gun.scale.multiplyScalar(0.95 / Math.max(size.x, size.z));
+gun.traverse((o) => { if (o.material && o.material.name === 'prism') { o.material = o.material.clone(); o.material.emissiveIntensity = num('ei', 1.4); } });
+const pj = gun.userData.joints?.prism; if (pj) pj.rotation.z = num('spin', 0.4);
+gun.position.set(num('gx', 0), num('gy', -0.06), num('gz', -0.17)); gun.rotation.y = num('ry', 0.05);
+holder.add(gun);
+renderer.render(sc, cam);
+let tris = 0; gun.traverse((o) => { if (o.isMesh) tris += (o.geometry.index ? o.geometry.index.count : o.geometry.attributes.position.count) / 3; });
+window.__REP__ = { size: size.toArray(), tris, joints: Object.keys(gun.userData.joints || {}) };
+window.__DONE__ = true;
+</script></body></html>

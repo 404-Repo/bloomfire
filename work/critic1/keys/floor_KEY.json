@@ -1,0 +1,32 @@
+{
+ "pair_01.png": {
+  "build": "left",
+  "build_file": "f1.jpg",
+  "ref_file": "f1.png"
+ },
+ "pair_02.png": {
+  "build": "left",
+  "build_file": "f2.jpg",
+  "ref_file": "f2.png"
+ },
+ "pair_03.png": {
+  "build": "left",
+  "build_file": "f3.jpg",
+  "ref_file": "f3.png"
+ },
+ "pair_04.png": {
+  "build": "left",
+  "build_file": "f4.jpg",
+  "ref_file": "f4.png"
+ },
+ "pair_05.png": {
+  "build": "left",
+  "build_file": "f5.jpg",
+  "ref_file": "f5.png"
+ },
+ "pair_06.png": {
+  "build": "right",
+  "build_file": "f6.jpg",
+  "ref_file": "f6.png"
+ }
+}

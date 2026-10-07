@@ -391,6 +391,10 @@ export const Game = {
     await makeBoss();
     if (have.has('flower_patch')) setBloomProto(await ASSET('./assets/flower_patch.js', { height: 0.35 }));
     litLantern('rise');
+    // dev and capture only: ?skip=n breaks the first n inkwells at once
+    const skip = +new URLSearchParams(location.search).get('skip') || 0;
+    for (let i = 0; i < Math.min(5, skip); i++) { const w = WELLS[i]; w.awake = true; for (const nd of w.nodes) nd.alive = false; cleanse(w); }
+    if (skip) { S.stage = skip >= 5 ? 3 : 2; }
     try { S.best = +localStorage.getItem('bloomfire_best') || 0; } catch {}
     let aidx = []; try { aidx = await (await fetch('./audio/index.json')).json(); } catch {}
     for (const n of ['calm', 'fight', 'boss', 'finale']) if (aidx.includes(n)) loadMusic(n, `./audio/${n}.mp3`);

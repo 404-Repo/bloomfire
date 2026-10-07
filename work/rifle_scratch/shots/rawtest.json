@@ -1,0 +1,36 @@
+[
+ {
+  "slug": "prism_rifle",
+  "raw": {
+   "tris": 3368,
+   "meshes": 50,
+   "size": [
+    0.137,
+    0.237,
+    0.964
+   ]
+  },
+  "merged": {
+   "tris": 3368,
+   "meshes": 7,
+   "size": [
+    0.137,
+    0.237,
+    0.964
+   ]
+  },
+  "tree": {
+   "tris": 3368,
+   "meshes": 50,
+   "size": [
+    0.139,
+    0.263,
+    0.964
+   ]
+  },
+  "jointsDeclared": 2,
+  "jointsResolved": 2,
+  "jointMovesGeometry": true,
+  "scaledHeight": 1
+ }
+]

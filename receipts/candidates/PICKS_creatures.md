@@ -24,3 +24,21 @@ No text/glyphs. Joints are Groups at the pivot with geometry offset inside; ever
 Loader regression (game/assetlib.js, unmodified): raw vs merged and raw vs keepHierarchy both 100.0%
 triangle retention on all 8; every declared joint resolves on a keepHierarchy instance and rotating
 it moves geometry. Merged loads collapse to 3-4 meshes; keepHierarchy keeps 25-52 meshes (bake per joint).
+
+## prism_rifle v2 (rifle agent, 2026-10-07)
+
+Three new candidates in `prism_rifle_v2/` (c1 profiles: bevelled extruded stock + hex frames + lathes; c2 primitives,
+lantern-cage reading: hex torus rings + bars; c3 hand-built lofts: lofted stock/grip/forend, r01 hex side frames with
+arched TubeGeometry straps). All 3 clean in verify.mjs (2844 / 3016 / 3368 tris). Picked **by the eye view**, not the
+sheet: `work/rifle_scratch/eye.html` loads through game/assetlib.js keepHierarchy, scales to 0.95 m, places as
+weapon.js (holder 0.2,-0.19,-0.46; gun 0,-0.06,-0.17; rot.y 0.05), vmScene lights, ACES, prism emissive 1.4 as the game sets it.
+
+| winner | tris | joints | why | others |
+|---|---|---|---|---|
+| c3 lofts | 3368 | prism, muzzle | rounded stock with a brass comb inlay nearest the eye, rear receiver kept below the gem so the whole crystal shows, open top with two arched straps, faceted gem reads gold | c1 close second, flatter slab stock, rear block clipped the gem; c2 rear cone collar hid the gem from the eye, blocky stock |
+
+Changes vs v1 that fixed "brass box + white block": brass metalness 0.35 (0.8 rendered dark brown: vmScene has no env map);
+gem is hand-built facets split into `prism` (bright, the material the game pulses) and `prism_facet` (amber 0xe0962e,
+emissive 0xc8741c x0.9, static), so it reads as cut stone under ACES instead of a cream blob. Loader regression
+(rifle_scratch/regress.py): raw 3368, merged 100.0%, keepHierarchy 100.0%, joints 2/2 resolve and move geometry. PASS.
+Eye view: `work/rifle_scratch/shots/eye_final.png`.

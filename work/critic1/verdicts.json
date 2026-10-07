@@ -1,0 +1,29 @@
+{
+ "note": "Written before any KEY.json was opened. Identity was not blind in practice: one set is always the landscape lantern-gun shooter; the podium frames are portrait third-person or a racer. Judged on look anyway.",
+ "podium": {
+  "pair_01": {"pick": "right", "margin": "slight", "why": "R: warm textured boardwalk and cobbles, even with a pole across camera. L: one flat-black spiked blob in lilac fog, a huge NODES OPEN banner, no world visible."},
+  "pair_02": {"pick": "left", "margin": "slight", "why": "L: a real valley with sketch-hatched cypresses and houses and a painted tree, a concept you can read. R: cohesive but a flat floor and a tutorial-era framing. L loses points for a muddy smeared ground and faceted octahedron foliage."},
+  "pair_03": {"pick": "right", "margin": "clear", "why": "R: one committed style (toon, halftone, LED HUD, sunset). L: decent bridge and flowers, but a black camera-clip wedge on the left edge and a washed grey sky."},
+  "pair_04": {"pick": "right", "margin": "decisive", "why": "R: dense, composed, one-palette village square with NPCs. L: a flat-black untextured giant fills 60% of the frame, no shading, no edge, looks like a missing material."},
+  "pair_05": {"pick": "left", "margin": "slight", "why": "L: authored wood and costume materials, though cropped hero and text panel. R: almost entirely white snow-like plane with a brown patch and a shouty BLOOMSTORM banner; sketch buildings far off are the only detail."},
+  "pair_06": {"pick": "right", "margin": "slight", "why": "R: a distinct ink-sketch world with tower, arcade and hatched cypresses; reads as an idea. L: a tutorial panel over the hero. R's foreground cypresses are giant flat grey slabs though."},
+  "pair_07": {"pick": "right", "margin": "decisive", "why": "R: SUNDRIFT's committed grade and chrome. L: blank white slope, a title card as the main content, nothing to look at."},
+  "pair_08": {"pick": "left", "margin": "clear", "why": "L: textured stone and a well-dressed hero. R: same black blob in fog, banner text, bottom caption bar; no environment."}
+ },
+ "floor": {
+  "pair_01": {"pick": "left", "margin": "clear", "why": "L: houses, hatched trees, painted-vs-sketch contrast. R: bare purple dune, wooden 2x4 block for a gun."},
+  "pair_02": {"pick": "left", "margin": "clear", "why": "L: bridge, flowers, depth. R: grey blob trees, blue slabs, block gun."},
+  "pair_03": {"pick": "left", "margin": "slight", "why": "Both weak. L: flat-black giant is cheap. R: black square z-fight/particle artifacts, block gun, untextured enemy. L's ground and gun at least read authored."},
+  "pair_04": {"pick": "left", "margin": "clear", "why": "L: sketch town with a painted patch. R: empty green field and a block gun."},
+  "pair_05": {"pick": "left", "margin": "clear", "why": "L: tower, arcade, hatching. R: empty pink dune with distant boxes."},
+  "pair_06": {"pick": "right", "margin": "clear", "why": "R: sparse, but the lantern gun and hatched chalk read made. L: flat grey wall at point blank, block gun."}
+ },
+ "bar": {
+  "pair_01": {"pick": "right", "margin": "decisive", "why": "R: inked linework, warm light, layered vista. L: soft grey 3D with blurry ground, no linework at all."},
+  "pair_02": {"pick": "right", "margin": "decisive", "why": "R: paint bursting from a kill into ink, stone walls, lineart. L: no visible kill colour, generic 3D."},
+  "pair_03": {"pick": "left", "margin": "decisive", "why": "L: bridge, mill, readable skull creature. R: black untextured giant."},
+  "pair_04": {"pick": "right", "margin": "decisive", "why": "R: arcaded market with ink spire. L: empty white plane."},
+  "pair_05": {"pick": "right", "margin": "decisive", "why": "R: windmills, flyers, golden hour. L: grey hill, slab cypresses."},
+  "pair_06": {"pick": "right", "margin": "decisive", "why": "R: chapel and horned boss. L: blank chalk slope and title."}
+ }
+}
