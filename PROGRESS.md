@@ -81,3 +81,51 @@ headless. The frame rate the gate reads (60) is a desktop GPU, not a phone. Fram
 - The boss, finale and end card exist in code but no gate has reached them yet.
 - No critic round yet; no human has played it; nobody has listened to the music (the Atlas service
   returned 17 to 26 s cues for 70 to 80 s requests, so they loop short).
+
+## Milestone 3: content complete (2026-10-07)
+
+The whole game exists and plays from the title to the end card. Serving at **http://localhost:8797/**.
+
+**Content**
+- Eight places, each dressed and announced on arrival: Lampwright's Rise, the Olive Terraces, Millbrook,
+  Vell Market, Windmill Ridge, the Chalk Quarry, the Pilgrim Stair, the Sun Chapel.
+- Five inkwells, each a three-node fight (a wave seals the nodes, clear it, break a node, the next wave
+  comes), the first one taught, the next four in any order. Each one floods its place with colour, lights
+  its lantern (checkpoint) and gives a rifle lens: Split, Arc, Burst, Rapid, Sun.
+- Eight optional ink nests off the roads (one node, a pack, a burst of colour, 1,500 points): the reason to
+  explore and the "nests x of 8" line on the end card.
+- Old Inkhorn at the summit: slam rings you dash through, a roar that opens the chest core (the only real
+  damage window), lobbed ink from phase 2, summons, a charge in phase 3. Then the finale: the whole valley
+  floods with colour, and an end card with score, time, kills, best chain, nests, the restored percentage,
+  a map of what you painted, and a best score kept on the device.
+- Five ink kinds (Blotling, Smear, Spitter, Quill, Inkhorn), with telegraphs, glowing cores worth double,
+  and a fairness rule: ink outside your view waits before it strikes.
+- A director that sends packs to meet you in grey country, scaled by how many inkwells you have broken.
+- Title slideshow from three Atlas story paintings, story captions, tutorial captions, a gold waypoint with
+  distance, compass, damage arcs, combo tiers, pause menu with sound, aim assist and look speed.
+- 4 Atlas music cues (calm, fight, boss, finale) and synthesised effects whose kill note rises with the combo.
+- 37 asset modules through the 404 loop plus the rebuilt rifle; Atlas spend so far 2,066 credits (ledger;
+  PATINA counted at an estimate).
+
+**Measured: the whole campaign by my gate in one run** (real multi-touch, 844x390, `work/gate/full2/`):
+title to end card in **1,471 s (24.5 min)**, 797 kills, 5 of 5 inkwells, the boss, the end card;
+2 deaths; 29 BLOOMs; peak 642 draws and 1.01 M triangles (jam caps 900 and 1.5 M). The bot walks straight
+lines and fights everything it meets, so a human's time will differ; unmeasured.
+
+**Critic rounds so far** (fresh harsh critic each, blind pairs, keys withheld until verdicts were written):
+
+| round | vs podium | vs floor | vs concept bar | first property named |
+|---|---|---|---|---|
+| 1 | 2 of 8 | 6 of 6 | 0 of 6 | ink linework on everything |
+| 2 | 3 of 8 (all slight) | 6 of 6 | 0 of 6 | bare shaded slopes fill 40 to 60% of frame |
+
+After round 1: crease outlines from reconstructed normals, indigo rim-lit ink, path-side dressing, the
+rifle rebuilt. After round 2: texture edges drawn as pen strokes on the ink side, a near-field ring of
+grass and stones that follows you, core glows, warmer paper, ridge rows.
+
+**First blind tester session** (s01, casual persona, BLOOMFIRE first, then SUNDRIFT, 540 s each):
+SUNDRIFT won keep-playing (decisive) and better-made (clear). BLOOMFIRE scored looks 8, fun 4: the tester
+died in the first minute to attackers it could not see, could not find the gold mark, and saw little hit
+feedback. Fixed since (on the working tree, not yet re-tested): ink outside your view waits before it
+strikes, regeneration out of combat, a world-space waypoint, a hit flash on the core glow, a wider touch
+assist (lock 11 degrees, auto-fire 9, magnetism 7), a softer first tier, a smaller death penalty.
