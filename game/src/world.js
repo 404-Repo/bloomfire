@@ -12,7 +12,7 @@ import { waterLevelAt } from './ground.js';
 
 let T = null, have = new Set();
 const A = (n) => `./assets/${n}.js`;
-export const W = { lanterns: [], animated: [], blocks: [], plumes: [], veg: [] };
+export const W = { lanterns: [], animated: [], blocks: [], plumes: [], veg: [], stairLamps: [] };
 
 // deterministic random
 function rng(seed) { return () => { seed |= 0; seed = seed + 0x6D2B79F5 | 0; let t = Math.imul(seed ^ seed >>> 15, 1 | seed); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
@@ -164,6 +164,16 @@ async function dressQuarry() {
 }
 
 async function dressStairAndChapel() {
+  // lanterns up the Pilgrim Stair, one at every switchback; they light when the stair opens
+  const { PATHS } = await import('./layout.js');
+  const st = PATHS.find((p) => p.id === 'stair').pts;
+  for (let i = 1; i < st.length - 1; i++) {
+    const [x, z] = st[i], [px, pz] = st[i - 1], dx = x - px, dz = z - pz, l = Math.hypot(dx, dz) || 1;
+    const lx = x + dz / l * 3.4, lz = z - dx / l * 3.4;
+    const obj = await put('lantern_post', lx, lz, 0, { keep: true, circle: 0.3 });
+    const glass = []; if (obj) obj.traverse((o) => { if (o.material && o.material.name === 'lamp_glass') { o.material = o.material.clone(); o.material.userData.noPaint = true; glass.push(o.material); } });
+    W.stairLamps.push({ obj, glass, at: [lx, lz] });
+  }
   await put('chapel', 40, -305, 0, { cscale: 0.95 });
   for (const [x, z] of [[24, -298], [56, -298], [22, -280], [58, -280]]) plant('cypress', x, z, 0.9);
   for (let i = 0; i < 26; i++) plant('cypress', 40 + (R() - 0.5) * 120, -240 + (R() - 0.5) * 70, 0.7 + R() * 0.3);
@@ -283,6 +293,7 @@ function updateRing(cam) {
 
 // far vegetation chunks are hidden and only near ones cast shadows
 const _c = new THREE.Vector3();
+export function lightStair() { for (const l of W.stairLamps) for (const m of l.glass) m.emissiveIntensity = 2.6; }
 export function updateWorld(dt, t, cam) {
   if (cam) updateRing(cam);
   if (cam) for (const im of W.veg) { const s = im.boundingSphere; _c.copy(s.center); const d = _c.distanceTo(cam.position) - s.radius; im.visible = d < im.userData.far; im.castShadow = im.userData.cast && d < 40; }

@@ -53,7 +53,7 @@ try {
     const dx = tgt[0] - g.pos[0], dz = tgt[1] - g.pos[1], d = Math.hypot(dx, dz) || 1;
     const fx = -Math.sin(g.yaw), fz = -Math.cos(g.yaw), rx = Math.cos(g.yaw), rz = -Math.sin(g.yaw);
     let my = (dx * fx + dz * fz) / d, mx = (dx * rx + dz * rz) / d;
-    const fighting = (g.near && g.near[2] < 45) && g.enemies > 0;
+    const fighting = g.aim && g.near && g.near[2] < 30 && g.enemies > 0;   // only strafe when something is actually in the sights
     if (fighting) { my *= 0.25; mx = Math.sin(Date.now() / 700) * 0.6; }   // strafe while fighting
     if (d < 6 && !fighting) { my = 0.2; }
     await move(1, SX + mx * 48, SY - my * 48);

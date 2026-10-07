@@ -12,7 +12,7 @@ import { HUD, compass, hitMarker, updateHud, floater, callout, banner, caption, 
 import { sfx, unlockAudio, setSound, soundOn, loadMusic, playMusic, musicIntensity } from './audio.js';
 import { addCircle } from './collide.js';
 import { INKWELLS, PLACES, LANTERNS, SPAWN, NESTS, PATHS } from './layout.js';
-import { litLantern, W } from './world.js';
+import { litLantern, W, lightStair } from './world.js';
 
 const $ = (id) => document.getElementById(id);
 let T = null, have = new Set();
@@ -155,7 +155,7 @@ function cleanse(w) {
   mine.forEach((e, i) => setTimeout(() => { if (e.alive) { e.alive = false; onKill(e, { chain: true }); } }, 250 + i * 110));
   for (let i = 0; i < 60; i++) { const a = Math.random() * Math.PI * 2, r = 3 + Math.random() * 40; const x = w.at[0] + Math.cos(a) * r, z = w.at[1] + Math.sin(a) * r; bloomAt(x, T.height(x, z), z, Math.random() * 6, 0.8 + Math.random() * 0.6); }
   const left = LENS_ORDER.filter((l) => !WPN.lenses.includes(l)); const lens = null;
-  if (left.length) setTimeout(() => offerLens(left), 1600);
+  if (left.length && !S.skipping) setTimeout(() => offerLens(left), 1600);
   const place = PLACES.find((p) => p.id === w.place);
   addScore(3000, new THREE.Vector3(w.at[0], w.y + 4, w.at[1]), 'CLEANSED +3000', 'big');
   banner(place.name + ' restored', 'the lantern is lit', 3.5);
@@ -355,6 +355,7 @@ function director(dt) {
   if (alive === 0 && S.roamT > 3.5) S.roamT = 3.5;   // a cleared pack calls the next one soon
   const grey = maskAt(pp.x, pp.z) < 0.5;
   const climbing = S.stage === 3, nearArena = Math.hypot(pp.x - ARENA[0], pp.z - ARENA[1]) < 60;
+  if (climbing) { const st = PATHS.find((p) => p.id === 'stair').pts; if (st.some((q) => Math.hypot(q[0] - pp.x, q[1] - pp.z) < 22)) return; }   // the climb itself is quiet
   if (!nearWell && !nearArena && S.roamT <= 0 && alive < (climbing ? 4 : 5 + wellTier())) {
     S.roamT = climbing ? 9 + Math.random() * 3 : grey ? 5 + Math.random() * 3 : 10 + Math.random() * 4;
     const tier = wellTier(), comp = [];
@@ -405,7 +406,7 @@ function setStage(n) {
   S.stage = n;
   if (n === 1) { HUD.objective('Break the inkwell in the Olive Terraces', 'follow the gold mark'); }
   if (n === 2) { const left = WELLS.filter((w) => w.alive && !w.nest).map((w) => PLACES.find((p) => p.id === w.place).name); HUD.objective(`Break the inkwells: ${left.length} left`, left.join(' · ') + ' · any order'); }
-  if (n === 3) { S.respawn = 'stair'; HUD.objective('Climb the Pilgrim Stair to the Sun Chapel', 'the blot waits at the summit'); litLantern('stair'); banner('The valley is answering', 'the Pilgrim Stair is open', 4); }
+  if (n === 3) { S.respawn = 'stair'; lightStair(); HUD.objective('Climb the Pilgrim Stair to the Sun Chapel', 'the blot waits at the summit'); litLantern('stair'); banner('The valley is answering', 'the Pilgrim Stair is open', 4); }
   if (n === 4) { S.respawn = 'chapel'; litLantern('chapel'); }
   if (n === 4) HUD.objective('Break Old Inkhorn', 'shoot the core when its chest opens');
 }
@@ -413,11 +414,18 @@ function objectiveTarget() {
   if (S.stage === 0 || S.rush) return null;
   if (S.stage === 1) return INKWELLS[0].at;
   if (S.stage === 2) { const w = nearestWell(); return w ? w.at : null; }
-  if (S.stage === 3) {   // lead along the Pilgrim Stair, not straight at a cliff
+  if (S.stage === 3) {   // lead along the Pilgrim Stair, not straight at a cliff: aim at the end of the segment you are on
     const st = PATHS.find((p) => p.id === 'stair').pts, px = P.pos.x, pz = P.pos.z;
-    let bi = 0, bd = 1e9; st.forEach((q, i) => { const d = Math.hypot(q[0] - px, q[1] - pz); if (d < bd) { bd = d; bi = i; } });
-    if (bd > 18) return st[0];
-    return bi >= st.length - 2 ? ARENA : st[bi + 1];
+    let bi = 0, bd = 1e9;
+    for (let i = 1; i < st.length; i++) {
+      const [ax, az] = st[i - 1], [bx, bz] = st[i], abx = bx - ax, abz = bz - az;
+      const t = Math.max(0, Math.min(1, ((px - ax) * abx + (pz - az) * abz) / (abx * abx + abz * abz)));
+      const d = Math.hypot(px - (ax + abx * t), pz - (az + abz * t));
+      if (d < bd - 0.01) { bd = d; bi = i; }
+    }
+    if (bd > 16) return Math.hypot(px - st[0][0], pz - st[0][1]) < Math.hypot(px - st[bi][0], pz - st[bi][1]) + 30 ? st[0] : st[bi];
+    const tgt = st[bi]; if (Math.hypot(px - tgt[0], pz - tgt[1]) < 4 && bi + 1 < st.length) return st[bi + 1];
+    return bi >= st.length - 1 ? ARENA : tgt;
   }
   if (S.stage === 4 && BOSS) return [BOSS.pos.x, BOSS.pos.z];
   return null;
@@ -458,7 +466,9 @@ export const Game = {
     litLantern('rise');
     // dev and capture only: ?skip=n breaks the first n inkwells at once
     const skip = +new URLSearchParams(location.search).get('skip') || 0;
+    S.skipping = true;
     for (let i = 0; i < Math.min(5, skip); i++) { const w = WELLS[i]; w.awake = true; for (const nd of w.nodes) nd.alive = false; cleanse(w); }
+    S.skipping = false;
     if (skip) { setStage(skip >= 5 ? 3 : 2); WPN.lenses = LENS_ORDER.slice(0, Math.min(5, skip)); }
     try { S.best = +localStorage.getItem('bloomfire_best') || 0; } catch {}
     let aidx = []; try { aidx = await (await fetch('./audio/index.json')).json(); } catch {}
