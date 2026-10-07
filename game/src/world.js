@@ -247,7 +247,7 @@ export function litLantern(id, on = true) {
 // the near field: a ring of grass and stones that follows you, so the ground within 30 m is never bare
 const RING = { mesh: [], cell: 2.3, n: 26, cx: 1e9, cz: 1e9 };
 async function makeRing() {
-  for (const [name, h, per] of [['grass_tuft', 0.55, 1], ['boulder', 0.5, 0.06], ['lavender_bush', 0.6, 0.05]]) {
+  for (const [name, h, per] of [['grass_tuft', 0.38, 0.75], ['boulder', 0.5, 0.06], ['lavender_bush', 0.6, 0.05]]) {
     if (!have.has(name)) continue;
     const proto = await ASSET(A(name), { height: h }); proto.updateMatrixWorld(true);
     const geos = []; let rough = 0, n = 0;

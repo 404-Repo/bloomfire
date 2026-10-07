@@ -1,0 +1,22 @@
+{
+  "label": "Game B",
+  "persona": "competitive",
+  "play_seconds": 540.1,
+  "fun": 6,
+  "nuance": 6,
+  "nuance_found": "Score is a chain multiplier (x2 to x4, labels like DOUBLE, VIVID, BLOOMSTORM, BRILLIANT) that decays if you stop killing, so you keep moving and chain. BLOOM is a crowd-clear you hold until a pack gathers, then pop for a burst (+300, +200 popups). Dash makes you untouchable, so dashing through a pack is the escape. Dying costs only a tenth of the score (it dropped 63,909 to 57,518) and sends you back to a lantern, so risk is cheap. Inkwells need clearing before their glowing nodes open, so aggro first and then break nodes.",
+  "pace": 5,
+  "pace_word": "a bit slow",
+  "feedback_juice": 7,
+  "looks": 8,
+  "audio": "A looping music bed the whole time plus small square-wave blips on kills; I never heard distinct gun or hit effects reported, so shots and deaths felt quiet.",
+  "would_replay": "maybe",
+  "would_quit_at_s": 330,
+  "understood_goal_by_s": 35,
+  "furthest_progress": "Score 74,286 at 540 s, 2.6% restored; Olive Terraces first inkwell broken, nodes broken, nest 1 of 8 done, then Millbrook village inkwell area entered; second inkwell not finished. Died about 6 times.",
+  "used_movement_assist": "not offered",
+  "control_trouble": "Two-thumb aiming with a 0.5 s view is rough: I overshot turns, lost the gold marker, got wedged in trees, and looked at sky or ground often. Auto-fire only helps once ink is in the crosshair. The long walks between fights are partly my bad steering.",
+  "best_moment": "Bloom pop into a x4 chain at 5,990 with the grey valley flooding to colour around me.",
+  "worst_moment": "Long empty walks across grey snow between fights, then getting killed by something I never saw while the screen turned pink.",
+  "verdict": "Looks like a real product. The ink-to-colour reveal is the best visual trick I have seen on a phone game this session, and the multiplier chain gave me a score to chase within 35 seconds. It does let me play like an expert, because I can dash through and bloom a crowd. But the stretches between fights are dead, enemies drag, and I could not see my hits land with sound. Cheap deaths remove the tension. I would play a few more runs this week, so a 6 and a half, not a 7."
+}

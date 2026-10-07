@@ -111,6 +111,8 @@ body.playing.touchdev #touch { display: block; }
   padding: 6px 12px; border-radius: 8px; display: none; pointer-events: none; white-space: nowrap; }
 @media (orientation: portrait) {
   body.playing.touchdev #rotate.show { display: block; }
+  #rotate { bottom: auto; top: calc(130px + var(--sat)); }
+  #caption { bottom: calc(196px + var(--sab)); max-width: 86vw; }
   #stick { width: 50%; height: 46%; }
   #look { width: 100%; height: 100%; }
   #stickb { left: calc(84px + var(--sal)); bottom: calc(60px + var(--sab)); }

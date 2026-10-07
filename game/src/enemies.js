@@ -60,10 +60,10 @@ async function loadProto(type) {
 const glowTex = (() => { const c = document.createElement('canvas'); c.width = c.height = 64; const x = c.getContext('2d'); const g = x.createRadialGradient(32, 32, 0, 32, 32, 32);
   g.addColorStop(0, 'rgba(255,220,240,1)'); g.addColorStop(0.25, 'rgba(255,61,139,0.9)'); g.addColorStop(1, 'rgba(255,61,139,0)'); x.fillStyle = g; x.fillRect(0, 0, 64, 64);
   const t = new THREE.CanvasTexture(c); return t; })();
-const glowMat = new THREE.SpriteMaterial({ map: glowTex, blending: THREE.AdditiveBlending, depthWrite: false, transparent: true, toneMapped: false }); glowMat.userData.noPaint = true;
+const glowMat = new THREE.SpriteMaterial({ map: glowTex, blending: THREE.AdditiveBlending, depthWrite: false, transparent: true, toneMapped: false, opacity: 0.75 }); glowMat.userData.noPaint = true;
 function instance(type) {
   const p = PROTO[type], o = p.obj.clone(true), joints = {};
-  const t = TYPES[type], gl = new THREE.Sprite(glowMat); gl.name = 'glow'; gl.scale.setScalar(t.coreR * 4.5); gl.position.set(0, t.coreY, t.bodyR * 0.75); gl.renderOrder = 4; o.add(gl);
+  const t = TYPES[type], gl = new THREE.Sprite(glowMat); gl.name = 'glow'; gl.scale.setScalar(t.coreR * 2.6); gl.position.set(0, t.coreY, t.bodyR * 0.75); gl.renderOrder = 4; o.add(gl);
   const by = new Map(); o.traverse((n) => { if (n.name) by.set(n.name, n); });
   for (const [k, name] of Object.entries(p.names)) { const n = by.get(name); if (n) joints[k] = { node: n, rx: n.rotation.x, ry: n.rotation.y, rz: n.rotation.z, sy: n.scale.y, py: n.position.y }; }
   return { o, joints };
@@ -185,7 +185,7 @@ export function updateEnemies(dt, now, cam) {
     // yaw smoothing, hit pop
     let dy = e.yaw - e.o.rotation.y; dy = Math.atan2(Math.sin(dy), Math.cos(dy)); e.o.rotation.y += dy * Math.min(1, dt * 10);
     if (!e.glow) e.glow = e.o.getObjectByName('glow');
-    if (e.glow) e.glow.scale.setScalar(e.t.coreR * (4.5 + e.hitT * 30));
+    if (e.glow) e.glow.scale.setScalar(e.t.coreR * (2.6 + e.hitT * 18));
     if (e.state !== 'rise') { const pop = 1 + e.hitT * 1.2; e.o.scale.set(pop, e.stagger > 0 ? 0.92 : pop, pop); }
     if (e.stagger > 0) e.o.rotation.z = Math.sin(now * 30) * 0.08; else e.o.rotation.z = 0;
     animate(e, dt, moving);
