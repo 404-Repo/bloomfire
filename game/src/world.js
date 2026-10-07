@@ -88,7 +88,7 @@ async function growSpecies(name, cast = true) {
     im.castShadow = cast; im.receiveShadow = true; im.computeBoundingSphere();
     im.userData.cast = cast; im.userData.far = FAR[name] || 260; scene.add(im); W.veg.push(im);
   }
-  if (name === 'olive_tree' || name === 'cypress' || name === 'lemon_tree_pot') for (const p of list) addCircle(p.x, p.z, name === 'cypress' ? 0.6 : 0.45, T.height(p.x, p.z), T.height(p.x, p.z) + 3);
+  if (name === 'olive_tree' || name === 'cypress' || name === 'lemon_tree_pot') for (const p of list) addCircle(p.x, p.z, (name === 'cypress' ? 0.75 : name === 'olive_tree' ? 0.85 : 0.5) * p.s, T.height(p.x, p.z), T.height(p.x, p.z) + 3);
 }
 
 // ---- the places -----------------------------------------------------------------------------------

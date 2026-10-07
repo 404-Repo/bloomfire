@@ -34,7 +34,7 @@ function placeholder(type) {
 function inkLook(m) {
   if (m.userData.inked) return; m.userData.inked = true; m.userData.noPaint = true;
   const isCore = m.emissive && m.emissive.getHex() > 0x400000 && m.emissiveIntensity > 0.5;
-  if (isCore) { m.emissiveIntensity = 3.2; m.toneMapped = false; return; }
+  if (isCore) { m.emissiveIntensity = 2.4; return; }
   if (m.color && m.color.getHSL({}).l < 0.12) { m.color.lerp(new THREE.Color(0x2c2950), 0.55); m.roughness = Math.min(m.roughness ?? 0.3, 0.32); }
   m.onBeforeCompile = (sh) => {
     sh.fragmentShader = sh.fragmentShader.replace('#include <opaque_fragment>', `

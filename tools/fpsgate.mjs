@@ -80,6 +80,7 @@ try {
     await sleep(110);
   }
   await up(2); await up(1);
+  await sleep(800); await page.screenshot({ path: `${OUT}/end.jpg`, type: 'jpeg', quality: 80 });
   const g = await G();
   fs.writeFileSync(`${OUT}/series.json`, JSON.stringify(series));
   const moved = Math.hypot(g.pos[0] - g0.pos[0], g.pos[1] - g0.pos[1]);

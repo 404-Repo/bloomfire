@@ -75,7 +75,12 @@ export function updatePlayer(dt, mx, my) {
   // ground, gravity, slopes too steep to walk up push you back
   const g = groundAt(p.x, p.z, p.y);
   const ng = T.normal(p.x, p.z);
-  if (ng[1] < 0.62 && g > p.y + 0.05 && g === T.height(p.x, p.z)) { p.x = ox; p.z = oz; P.vel.x *= 0.3; P.vel.z *= 0.3; }
+  if (ng[1] < 0.62 && g > p.y + 0.05 && g === T.height(p.x, p.z)) {
+    // too steep to climb: keep only the motion across the slope, so you slide along it instead of sticking
+    const gx = -ng[0], gz = -ng[2], gl = Math.hypot(gx, gz) || 1, ux = gx / gl, uz = gz / gl;   // uphill direction
+    const mx2 = p.x - ox, mz2 = p.z - oz, up = mx2 * ux + mz2 * uz;
+    if (up > 0) { p.x -= ux * up; p.z -= uz * up; const vu = P.vel.x * ux + P.vel.z * uz; if (vu > 0) { P.vel.x -= ux * vu; P.vel.z -= uz * vu; } }
+  }
   const g2 = groundAt(p.x, p.z, p.y);
   if (p.y <= g2 + 0.06 || (P.onGround && p.y - g2 < 0.7 && P.vel.y <= 0)) {
     if (!P.onGround && P.vel.y < -6) P.landDip = Math.min(0.25, -P.vel.y * 0.015);

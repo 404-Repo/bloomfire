@@ -70,7 +70,7 @@ body.playing #hud { display: block; }
   text-shadow: 0 2px 0 rgba(10,12,20,0.75); transform: translate(-50%, -50%); animation: flu 0.9s ease-out forwards; }
 .fl.big { font-size: 24px; color: var(--gold); } .fl.mag { color: #ff9ac2; }
 @keyframes flu { 0% { opacity: 0; transform: translate(-50%, -30%) scale(0.6); } 15% { opacity: 1; transform: translate(-50%, -50%) scale(1.15); } 100% { opacity: 0; transform: translate(-50%, -160%) scale(1); } }
-#callout { position: absolute; left: 50%; top: 24%; transform: translateX(-50%); font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 28px; letter-spacing: 0.06em;
+#callout { position: absolute; left: 50%; top: 35%; transform: translateX(-50%); font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 28px; letter-spacing: 0.06em;
   color: var(--gold); text-shadow: 0 3px 0 rgba(10,12,20,0.8), 0 0 22px rgba(255,160,80,0.6); opacity: 0; white-space: nowrap; }
 #callout.on { animation: co 1.1s ease-out forwards; }
 @keyframes co { 0% { opacity: 0; transform: translateX(-50%) scale(1.6); } 12% { opacity: 1; transform: translateX(-50%) scale(1); } 75% { opacity: 1; } 100% { opacity: 0; transform: translateX(-50%) translateY(-18px); } }
@@ -127,3 +127,6 @@ body.playing.touchdev #touch { display: block; }
 #overs b { color: var(--gold); font-family: 'Bricolage Grotesque', sans-serif; font-size: 22px; }
 #over { background: rgba(12,14,22,0.72); }
 #pause { background: rgba(12,14,22,0.8); }
+#slidecap { position: absolute; left: 50%; top: calc(14px + var(--sat)); transform: translateX(-50%); width: min(620px, 86vw); z-index: 3; font-size: 14px; line-height: 1.4; color: #f7efe0;
+  text-shadow: 0 1px 4px #000; opacity: 0; transition: opacity 0.8s; text-align: center; }
+#slidecap.on { opacity: 1; }

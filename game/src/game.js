@@ -130,7 +130,7 @@ function cleanse(w) {
   addScore(3000, new THREE.Vector3(w.at[0], w.y + 4, w.at[1]), 'CLEANSED +3000', 'big');
   banner(place.name + ' restored', lens ? LENS_TEXT[lens][0] + ': ' + LENS_TEXT[lens][1] : 'the prism burns brighter', 4.5);
   const l = litLantern(w.place); if (l) { S.respawn = w.place; setTimeout(() => sfx.lantern(), 900); }
-  post.uFlash.value = 0.6;
+  post.uFlash.value = 0.3;
   if (S.stage === 1) setStage(2); else if (S.cleansed.length >= 5) setStage(3); else setStage(2);
 }
 
@@ -346,7 +346,8 @@ function setStage(n) {
   S.stage = n;
   if (n === 1) { HUD.objective('Break the inkwell in the Olive Terraces', 'follow the gold mark'); }
   if (n === 2) { const left = WELLS.filter((w) => w.alive).map((w) => PLACES.find((p) => p.id === w.place).name); HUD.objective(`Break the inkwells: ${left.length} left`, left.join(' · ') + ' · any order'); }
-  if (n === 3) { HUD.objective('Climb the Pilgrim Stair to the Sun Chapel', 'the blot waits at the summit'); litLantern('stair'); banner('The valley is answering', 'the Pilgrim Stair is open', 4); }
+  if (n === 3) { S.respawn = 'stair'; HUD.objective('Climb the Pilgrim Stair to the Sun Chapel', 'the blot waits at the summit'); litLantern('stair'); banner('The valley is answering', 'the Pilgrim Stair is open', 4); }
+  if (n === 4) { S.respawn = 'chapel'; litLantern('chapel'); }
   if (n === 4) HUD.objective('Break Old Inkhorn', 'shoot the core when its chest opens');
 }
 function objectiveTarget() {
@@ -394,7 +395,7 @@ export const Game = {
     // dev and capture only: ?skip=n breaks the first n inkwells at once
     const skip = +new URLSearchParams(location.search).get('skip') || 0;
     for (let i = 0; i < Math.min(5, skip); i++) { const w = WELLS[i]; w.awake = true; for (const nd of w.nodes) nd.alive = false; cleanse(w); }
-    if (skip) { S.stage = skip >= 5 ? 3 : 2; }
+    if (skip) setStage(skip >= 5 ? 3 : 2);
     try { S.best = +localStorage.getItem('bloomfire_best') || 0; } catch {}
     let aidx = []; try { aidx = await (await fetch('./audio/index.json')).json(); } catch {}
     for (const n of ['calm', 'fight', 'boss', 'finale']) if (aidx.includes(n)) loadMusic(n, `./audio/${n}.mp3`);
@@ -413,6 +414,11 @@ export const Game = {
   },
   showTitle() {
     $('title').classList.add('on');
+    const slides = [['title', ''], ['p1', 'The night the blot cracked open on the summit, ink ran down into Vell and drew everything grey.'], ['p2', 'The old lampwright kept one prism full of sunlight. It is yours now.']];
+    const box = $('slides'); box.innerHTML = slides.map(([n]) => `<div class="sl" style="background-image:url(./img/${n}.jpg)"></div>`).join('') + '<div id="slidecap"></div>';
+    let si = 0; const els = box.querySelectorAll('.sl'), cap = $('slidecap');
+    const show = () => { els.forEach((e, i) => e.classList.toggle('on', i === si)); cap.textContent = slides[si][1]; cap.classList.toggle('on', !!slides[si][1]); si = (si + 1) % slides.length; };
+    show(); S.slideTimer = setInterval(() => { if (S.mode === 'title') show(); else clearInterval(S.slideTimer); }, 6000);
     if (S.best) $('best').textContent = 'best ' + S.best.toLocaleString('en-US');
     if (new URLSearchParams(location.search).has('again')) {} // the title is one tap either way
   },
