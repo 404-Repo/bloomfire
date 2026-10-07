@@ -7,8 +7,9 @@ import { scene } from './render.js';
 import { patchTree, patchMaterial } from './paint.js';
 import { bakeJoints } from './fx.js';
 import { addBox, addCircle, addDeck } from './collide.js';
-import { PLACES, BRIDGES, LANTERNS } from './layout.js';
+import { PLACES, BRIDGES, LANTERNS, PATHS as ALLPATHS } from './layout.js';
 import { waterLevelAt } from './ground.js';
+import { polyDist } from './terrain.js';
 
 let T = null, have = new Set();
 const A = (n) => `./assets/${n}.js`;
@@ -176,7 +177,9 @@ async function dressStairAndChapel() {
   }
   await put('chapel', 40, -305, 0, { cscale: 0.95 });
   for (const [x, z] of [[24, -298], [56, -298], [22, -280], [58, -280]]) plant('cypress', x, z, 0.9);
-  for (let i = 0; i < 26; i++) plant('cypress', 40 + (R() - 0.5) * 120, -240 + (R() - 0.5) * 70, 0.7 + R() * 0.3);
+  for (let i = 0; i < 26; i++) { const x = 40 + (R() - 0.5) * 120, z = -240 + (R() - 0.5) * 70;
+    if (polyDist(x, z, st)[0] < 11) continue;   // keep the stair clear
+    plant('cypress', x, z, 0.7 + R() * 0.3); }
 }
 
 // the near field along every path: lavender, stones, grass clumps, the odd wall or fence
@@ -210,6 +213,7 @@ async function dressCountry() {
     const x = (R() - 0.5) * 560, z = (R() - 0.5) * 560;
     if (waterLevelAt(x, z) > -50) continue;
     const near = PLACES.some((p) => Math.hypot(x - p.at[0], z - p.at[1]) < p.r * 0.75); if (near) continue;
+    if (ALLPATHS.some((p) => polyDist(x, z, p.pts)[0] < p.w + 2)) continue;   // nothing growing in the road
     const n = T.normal(x, z); const h = T.height(x, z);
     if (n[1] < 0.8) { if (R() < 0.3) plant('boulder', x, z, 0.7 + R() * 1.2); continue; }
     const r = R(); plant(r < 0.55 ? 'olive_tree' : r < 0.8 ? 'cypress' : 'lavender_bush', x, z, 0.75 + R() * 0.4);

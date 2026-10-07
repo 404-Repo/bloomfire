@@ -424,7 +424,7 @@ function objectiveTarget() {
       if (d < bd - 0.01) { bd = d; bi = i; }
     }
     if (bd > 16) return Math.hypot(px - st[0][0], pz - st[0][1]) < Math.hypot(px - st[bi][0], pz - st[bi][1]) + 30 ? st[0] : st[bi];
-    const tgt = st[bi]; if (Math.hypot(px - tgt[0], pz - tgt[1]) < 4 && bi + 1 < st.length) return st[bi + 1];
+    const tgt = st[bi]; if (Math.hypot(px - tgt[0], pz - tgt[1]) < 9 && bi + 1 < st.length) return st[bi + 1];
     return bi >= st.length - 1 ? ARENA : tgt;
   }
   if (S.stage === 4 && BOSS) return [BOSS.pos.x, BOSS.pos.z];
