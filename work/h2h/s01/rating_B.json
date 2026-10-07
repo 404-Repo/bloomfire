@@ -1,0 +1,22 @@
+{
+  "label": "Game B",
+  "persona": "casual",
+  "play_seconds": 541.5,
+  "fun": 6,
+  "nuance": 5,
+  "nuance_found": "Handbrake tap into a corner starts a slide that pays angle and speed points, and chaining drifts and smashing bollards, signs and lights multiplies the score. Going off road still scores smashes but costs time to a magnet rescue, so the best line is stay on the road and drift; no real trade-off beyond that.",
+  "pace": 6,
+  "pace_word": "right",
+  "feedback_juice": 8,
+  "looks": 9,
+  "audio": "Synth music and engine drone starting at the Start tap, a rev tone, smash and drift stingers; it felt like an arcade racer.",
+  "would_replay": "yes",
+  "would_quit_at_s": 270,
+  "understood_goal_by_s": 15,
+  "furthest_progress": "Mile 45, in-game clock 01:42 (dawn at 06:00 not reached), score 7,750, through golden hour, blue hour, night, rain, a tunnel and a convenience store, many crashes and magnet rescues on the way.",
+  "used_movement_assist": "not offered",
+  "control_trouble": "Steering by sliding the left thumb is very twitchy for me, with a few pixels turning the car a lot, so I went off road most of the session; a real thumb would be smoother. The magnet rescue wait (about 8 s) ate a lot of my time.",
+  "best_moment": "A clean handbrake slide round a night corner in the rain, with +270 popping up and the lights streaking.",
+  "worst_moment": "Plowing into trees at 80 mph again and again and then sitting through the magnet rescue each time.",
+  "verdict": "This feels like a real finished arcade racer: lovely sunset to night to rain, great tunnel and sound, and the drift and smash pop-ups tell you straight away you are scoring. The goal (drift until dawn) was clear in the first 15 seconds. Steering was fiddly for me and the crash and rescue loop gets slow, which is where I would drift away, but it is the kind of game I would open again on the bus for a couple of runs."
+}

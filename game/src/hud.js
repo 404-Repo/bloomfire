@@ -53,3 +53,19 @@ export function caption(html, secs = 4.5) { el.caption.innerHTML = html; el.capt
 // where the hurt came from, as an arc around the reticle
 const dd = document.getElementById('dmgdir'); let ddT = 0;
 export function hurtFrom(angleRel) { dd.style.transform = `rotate(${(-angleRel * 180 / Math.PI).toFixed(1)}deg)`; dd.classList.add('on'); clearTimeout(ddT); ddT = setTimeout(() => dd.classList.remove('on'), 700); }
+
+// the waypoint: a gold diamond over the objective with its distance, pinned to the screen edge when off screen
+const wp = document.getElementById('wp'), wpd = document.getElementById('wpd'), _w = new THREE.Vector3();
+export function waypoint(t) {
+  if (!t || !document.body.classList.contains('playing')) { wp.style.display = 'none'; return; }
+  const x = t[0], z = t[1]; _w.set(x, camera.position.y, z);
+  const d = Math.hypot(x - camera.position.x, z - camera.position.z);
+  if (d < 12) { wp.style.display = 'none'; return; }
+  _w.y = camera.position.y + Math.min(14, 3 + d * 0.05);
+  const v = _w.clone().project(camera); const behind = v.z > 1;
+  let sx = v.x, sy = v.y; if (behind) { sx = -sx; sy = -sy; }
+  const edge = behind || Math.abs(sx) > 0.9 || Math.abs(sy) > 0.85;
+  if (edge) { const k = Math.max(Math.abs(sx) / 0.9, Math.abs(sy) / 0.85, 1e-3); sx /= k; sy /= k; if (behind) sy = Math.min(sy, -0.3); }
+  wp.style.display = 'block'; wp.style.left = ((sx * 0.5 + 0.5) * 100) + '%'; wp.style.top = ((-sy * 0.5 + 0.5) * 100) + '%';
+  wp.classList.toggle('edge', edge); wpd.textContent = Math.round(d) + ' m';
+}

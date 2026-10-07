@@ -35,6 +35,8 @@ export function dash(mx, my) {
 }
 
 export function updatePlayer(dt, mx, my) {
+  // out of the fight for a few seconds, you heal
+  P.calm = P.hurtT > 0 ? 0 : (P.calm || 0) + dt; if (P.calm > 4 && P.hp < P.maxHp && P.alive) P.hp = Math.min(P.maxHp, P.hp + 9 * dt);
   P.invuln = Math.max(0, P.invuln - dt); P.hurtT = Math.max(0, P.hurtT - dt);
   if (P.dashCharges < 2) { P.dashRecharge += dt; if (P.dashRecharge >= DASH_RECHARGE) { P.dashRecharge = 0; P.dashCharges += 1; } }
   const p = P.pos;

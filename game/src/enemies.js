@@ -12,7 +12,7 @@ let T = null, have = new Set();
 export const ENEMIES = [], SHOTS = [];
 
 export const TYPES = {
-  blotling: { hp: 18, speed: 7.6, r: 0.55, height: 0.9, score: 100, splat: 4.5, dmg: 8, reach: 1.7, cd: 0.9, coreY: 0.5, coreR: 0.3, bodyR: 0.58 },
+  blotling: { hp: 18, speed: 7.0, r: 0.55, height: 0.9, score: 100, splat: 4.5, dmg: 6, reach: 1.7, cd: 0.9, coreY: 0.5, coreR: 0.3, bodyR: 0.58 },
   smear: { hp: 62, speed: 3.6, r: 0.65, height: 2.3, score: 200, splat: 6.5, dmg: 14, reach: 2.5, cd: 1.6, windup: 0.55, coreY: 1.25, coreR: 0.26, bodyR: 0.62 },
   spitter: { hp: 46, speed: 2.6, r: 0.75, height: 1.6, score: 250, splat: 6.5, dmg: 15, range: [11, 26], cd: 2.6, windup: 0.7, coreY: 0.8, coreR: 0.3, bodyR: 0.8 },
   quill: { hp: 22, speed: 9.5, r: 0.7, height: 0.95, fly: 4.2, score: 200, splat: 4.5, dmg: 10, reach: 1.4, cd: 1.4, coreY: 0.4, coreR: 0.28, bodyR: 0.7 },
@@ -63,7 +63,7 @@ const glowTex = (() => { const c = document.createElement('canvas'); c.width = c
 const glowMat = new THREE.SpriteMaterial({ map: glowTex, blending: THREE.AdditiveBlending, depthWrite: false, transparent: true, toneMapped: false }); glowMat.userData.noPaint = true;
 function instance(type) {
   const p = PROTO[type], o = p.obj.clone(true), joints = {};
-  const t = TYPES[type], gl = new THREE.Sprite(glowMat); gl.scale.setScalar(t.coreR * 4.5); gl.position.set(0, t.coreY, t.bodyR * 0.75); gl.renderOrder = 4; o.add(gl);
+  const t = TYPES[type], gl = new THREE.Sprite(glowMat); gl.name = 'glow'; gl.scale.setScalar(t.coreR * 4.5); gl.position.set(0, t.coreY, t.bodyR * 0.75); gl.renderOrder = 4; o.add(gl);
   const by = new Map(); o.traverse((n) => { if (n.name) by.set(n.name, n); });
   for (const [k, name] of Object.entries(p.names)) { const n = by.get(name); if (n) joints[k] = { node: n, rx: n.rotation.x, ry: n.rotation.y, rz: n.rotation.z, sy: n.scale.y, py: n.position.y }; }
   return { o, joints };
@@ -138,8 +138,13 @@ export function updateEnemies(dt, now, cam) {
         if (e.type === 'quill' || e.type === 'blotling') { const s = Math.sin(now * 1.7 + e.id) * 0.5; mx += -dz / d * s; mz += dx / d * s; }
         e.dir.set(mx, 0, mz);
       }
+      // fairness: ink outside your view does not strike until it has waited, so you are never killed by what you cannot see
+      const ang = Math.atan2(-dx, -dz), rel = Math.atan2(Math.sin(ang + Math.PI - P.yaw), Math.cos(ang + Math.PI - P.yaw));
+      const seen = Math.abs(rel) < 0.95;
+      e.unseen = seen ? 0 : (e.unseen || 0) + dt;
+      if (!seen && e.unseen < 2.6 && d < 6 && e.type !== 'spitter') { moving = true; e.dir.set(-dz / d, 0, dx / d); speed *= 0.6; }
       // attacks
-      if (e.cd <= 0) {
+      if (e.cd <= 0 && (seen || e.unseen > 2.6)) {
         if (e.type === 'spitter' && d < t.range[1] + 4) { e.state = 'windup'; e.st = 0; sfx.telegraph(); }
         else if (t.reach && d < t.reach + (e.type === 'blotling' ? 1.2 : 0.4)) { e.state = t.windup ? 'windup' : 'strike'; e.st = 0; if (t.windup) sfx.telegraph(); }
         else if (e.type === 'inkhorn' && d < 16 && d > 6 && Math.random() < 0.012) { e.state = 'charge_wind'; e.st = 0; sfx.roar(); }
@@ -150,7 +155,7 @@ export function updateEnemies(dt, now, cam) {
         else { e.state = 'strike'; e.st = 0; }
       }
     } else if (e.state === 'strike') {
-      if (e.st < 0.05 && d < t.reach + 0.6) { if (hurt(Math.round(t.dmg * (e.tier < 0 ? 0.5 : 1)), e.pos.x, e.pos.z)) sfx.hurt(); }
+      if (e.st < 0.05 && d < t.reach + 0.6) { if (hurt(Math.round(t.dmg * (e.tier < 0 ? 0.5 : e.tier === 0 ? 0.75 : 1)), e.pos.x, e.pos.z)) sfx.hurt(); }
       if (e.type === 'blotling' && e.st < 0.25) { moving = true; e.dir.set(dx / d, 0, dz / d); speed = 12; }
       if (e.st > 0.35) { e.state = 'chase'; e.cd = t.cd; e.st = 0; }
     } else if (e.state === 'charge_wind') {
@@ -179,6 +184,8 @@ export function updateEnemies(dt, now, cam) {
     else e.pos.y += (gy - e.pos.y) * Math.min(1, dt * 14);
     // yaw smoothing, hit pop
     let dy = e.yaw - e.o.rotation.y; dy = Math.atan2(Math.sin(dy), Math.cos(dy)); e.o.rotation.y += dy * Math.min(1, dt * 10);
+    if (!e.glow) e.glow = e.o.getObjectByName('glow');
+    if (e.glow) e.glow.scale.setScalar(e.t.coreR * (4.5 + e.hitT * 30));
     if (e.state !== 'rise') { const pop = 1 + e.hitT * 1.2; e.o.scale.set(pop, e.stagger > 0 ? 0.92 : pop, pop); }
     if (e.stagger > 0) e.o.rotation.z = Math.sin(now * 30) * 0.08; else e.o.rotation.z = 0;
     animate(e, dt, moving);

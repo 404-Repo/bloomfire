@@ -1,0 +1,22 @@
+{
+  "label": "Game A",
+  "persona": "competitive",
+  "play_seconds": 551.4,
+  "fun": 5,
+  "nuance": 5,
+  "nuance_found": "Score mostly comes from wrecking roadside props in a chain (bollard, lights out, flattened, clip near-misses with a SMASH x2 to x5 multiplier, one chain paid +600 and +700), so leaving the road at speed beats clean driving. The cost is a car-recovery magnet that parks you for about 10 s. Drifting past props also paid +270 once. Nothing told me this; I found it by crashing.",
+  "pace": 4,
+  "pace_word": "a bit slow",
+  "feedback_juice": 7,
+  "looks": 8,
+  "audio": "Generated ambient loop plus sequenced synth music the whole time; almost no distinct effect sounds were reported (EFFECTS none in many stretches), so crashes and smashes did not sound punchy.",
+  "would_replay": "maybe",
+  "would_quit_at_s": 200,
+  "understood_goal_by_s": 122,
+  "furthest_progress": "Score 8933 at 551 s, in-game clock 01:47 after midnight, two tunnels and a rain section passed, no level or end screen reached.",
+  "used_movement_assist": "not offered",
+  "control_trouble": "Steering is the horizontal offset of the gas slider and I only see the screen every 0.5 s, so I overshot corners and left the road a lot; part of the many recoveries is my clumsiness. Dead time after each crash is the game's own design, not my hands.",
+  "best_moment": "Chain smash through bollards and a tree, SMASH x5 popping +700 with flying fireflies and the score ticking up.",
+  "worst_moment": "Sitting at 0 mph for 8 to 13 s under the recovery magnet after nearly every crash, with the score frozen.",
+  "verdict": "It looks like a real game: night road, rain, tunnels, lanterns, a chunky car, a proper HUD with combo and MI counters. But as a score chaser I spent the first two minutes not knowing how points work. Clean driving pays nearly nothing (+5, +12 drift crumbs) while wrecking props in a chain pays hundreds, and that is the only real decision I found: risk the shoulder for a multiplier, then pay for it with a long dead recovery. The recovery wait kills the run's tension and there is no goal, timer, rank or target to chase, so I would drop it after a few minutes. Visuals 8, game loop about a 5."
+}

@@ -70,7 +70,7 @@ function loop(now) {
   if (playing && !Game.paused) {
     simTime += dt;
     const [lx, ly] = readLookAssisted(dt);
-    P.yaw -= lx; P.pitch = THREE.MathUtils.clamp(P.pitch - ly, -1.35, 1.3);
+    P.yaw -= lx; P.pitch = THREE.MathUtils.clamp(P.pitch - ly, -1.05, 1.0);
     Game.preUpdate(dt);
     if (P.alive) updatePlayer(dt, IN.mx, IN.my);
     Game.update(dt, simTime);

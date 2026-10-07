@@ -55,7 +55,7 @@ export function worldRay(o, d, maxT) { return Math.min(rayGround(o, d, maxT), ra
 // The best target near the crosshair: smallest angle, in range, in sight.
 function findLock() {
   camera.getWorldDirection(_d); _o.copy(camera.position);
-  const cone = THREE.MathUtils.degToRad(isTouch ? 9 : 3.2);
+  const cone = THREE.MathUtils.degToRad(isTouch ? 11 : 3.2);
   let best = null, bestA = cone;
   for (const tg of targetsFn()) {
     _t.copy(tg.pos).sub(_o); const dist = _t.length(); if (dist > RANGE || dist < 0.5) continue;
@@ -82,7 +82,7 @@ export function assistLook(lx, ly, dt, moving) {
     const wantYaw = Math.atan2(-_t.x, -_t.z), wantPitch = Math.asin(THREE.MathUtils.clamp(_t.y, -1, 1));
     let dy = wantYaw - P.yaw; dy = Math.atan2(Math.sin(dy), Math.cos(dy));
     const dp = wantPitch - P.pitch;
-    const rate = (isTouch ? (active ? 2.6 : 0.9) : 1.2) * dt;
+    const rate = (isTouch ? (active ? 2.8 : 1.6) : 1.2) * dt;
     lx -= THREE.MathUtils.clamp(dy, -rate, rate); ly -= THREE.MathUtils.clamp(dp, -rate, rate);
   }
   return [lx, ly];
@@ -91,7 +91,7 @@ export function assistLook(lx, ly, dt, moving) {
 export function updateWeapon(dt, wantFire, now) {
   WPN.fireT -= dt; WPN.kick *= Math.exp(-dt * 16);
   WPN.lock = findLock();
-  const auto = isTouch && WPN.assist && WPN.lock && WPN.lockAngle < THREE.MathUtils.degToRad(5.5);
+  const auto = isTouch && WPN.assist && WPN.lock && WPN.lockAngle < THREE.MathUtils.degToRad(9);
   WPN.firing = (wantFire || auto) && P.alive;
   const rate = WPN.rate * (WPN.lenses.includes('rapid') ? 1.4 : 1);
   while (WPN.firing && WPN.fireT <= 0) { WPN.fireT += 1 / rate; fire(); }
@@ -136,7 +136,7 @@ function shoot(o, dir, primary) {
     _c.copy(o).addScaledVector(d, proj); const miss = _c.distanceTo(tg.pos);
     if (miss < tg.r && proj < hitT) { hit = tg; hitT = proj; }
   }
-  if (primary && !hit && WPN.lock && WPN.assist && WPN.lockAngle < THREE.MathUtils.degToRad(isTouch ? 4.5 : 1.6)) { hit = WPN.lock; hitT = WPN.lock.pos.distanceTo(o); d.copy(WPN.lock.pos).sub(o).normalize(); }
+  if (primary && !hit && WPN.lock && WPN.assist && WPN.lockAngle < THREE.MathUtils.degToRad(isTouch ? 7 : 1.6)) { hit = WPN.lock; hitT = WPN.lock.pos.distanceTo(o); d.copy(WPN.lock.pos).sub(o).normalize(); }
   const wall = worldRay(o, d, Math.min(hitT, RANGE));
   const from = muzzleWorld(new THREE.Vector3());
   if (hit && wall >= hitT - 0.2) {

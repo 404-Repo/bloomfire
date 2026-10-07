@@ -8,7 +8,7 @@ import { P, placePlayer, dash, heal, EYE } from './player.js';
 import { ENEMIES, TYPES, initEnemies, spawn, damage, updateEnemies, lob, clearEnemies } from './enemies.js';
 import { WPN, initWeapon, updateWeapon, assistLook, swayFromLook, arcFrom, layoutViewmodel } from './weapon.js';
 import { emit, updateParticles, updateTracers, updateBlooms, bloomAt, setBloomProto, bakeJoints, setParticleScale } from './fx.js';
-import { HUD, compass, hitMarker, updateHud, floater, callout, banner, caption, hurtFrom } from './hud.js';
+import { HUD, compass, hitMarker, updateHud, floater, callout, banner, caption, hurtFrom, waypoint } from './hud.js';
 import { sfx, unlockAudio, setSound, soundOn, loadMusic, playMusic, musicIntensity } from './audio.js';
 import { addCircle } from './collide.js';
 import { INKWELLS, PLACES, LANTERNS, SPAWN, NESTS } from './layout.js';
@@ -490,9 +490,9 @@ export const Game = {
         S.deadT = 0; let l = LANTERNS[0], bd = 1e9; // wake at the nearest lit lantern
         for (const q of W.lanterns) if (q.lit) { const d = Math.hypot(q.at[0] - P.pos.x, q.at[1] - P.pos.z); if (d < bd) { bd = d; l = q; } }
         placePlayer(l.at[0] + 2, l.at[1] + 2, P.yaw); P.hp = P.maxHp; P.alive = true; P.invuln = 2;
-        S.score = Math.round(S.score * 0.9);
+        if (S.stage >= 2) S.score = Math.round(S.score * 0.95);
         for (const e of ENEMIES) if (e.pos.distanceTo(P.pos) < 28) e.alive = false;
-        caption('You wake by the lantern. The ink kept <b>a tenth of your score</b>.', 4);
+        caption(S.stage >= 2 ? 'You wake by the lantern. The ink kept <b>a little of your score</b>.' : 'You wake by the lantern. Keep the ink <b>in front of you</b>.', 4);
       }
     }
     if (S.mode === 'play' && P.hurtT > 0.45 && !S.tutorial.dashTold) { S.tutorial.dashTold = true; caption('Hurt? <b>DASH</b>. Nothing touches you mid-dash.', 4.5); }
@@ -516,7 +516,7 @@ export const Game = {
     HUD.score(S.score); HUD.combo(S.mult, S.combo); HUD.hp(P.hp / P.maxHp); HUD.restored(rf);
     HUD.lock(!!WPN.lock); HUD.bloom(WPN.bloom, WPN.bloom >= 1); HUD.dash(P.dashCharges);
     if (S.stage === 2) { const left = WELLS.filter((w) => w.alive && !w.nest).length; HUD.objective(`Break the inkwells: ${left} left`, WELLS.filter((w) => w.alive && !w.nest).map((w) => PLACES.find((p) => p.id === w.place).name).join(' · ') + ' · any order'); }
-    compass(objectiveTarget(), P.yaw);
+    compass(objectiveTarget(), P.yaw); waypoint(objectiveTarget());
     updateHud(rdt);
     if (P.hurtSeq !== S.hurtSeen) { S.hurtSeen = P.hurtSeq; // attacker bearing relative to the view: 0 ahead, + to the left
       const ang = Math.atan2(-Math.sin(P.lastHurtDir), -Math.cos(P.lastHurtDir)); let rel = ang - P.yaw; rel = Math.atan2(Math.sin(rel), Math.cos(rel)); hurtFrom(rel); }
