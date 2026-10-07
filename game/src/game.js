@@ -336,9 +336,10 @@ function director(dt) {
   const nearWell = WELLS.some((w) => w.alive && w.awake);
   S.roamT -= dt;
   const alive = ENEMIES.filter((e) => e.alive && !e.owner).length;
+  if (alive === 0 && S.roamT > 3.5) S.roamT = 3.5;   // a cleared pack calls the next one soon
   const grey = maskAt(pp.x, pp.z) < 0.5;
   if (!nearWell && S.roamT <= 0 && alive < 5 + wellTier()) {
-    S.roamT = grey ? 9 + Math.random() * 5 : 16 + Math.random() * 6;
+    S.roamT = grey ? 5 + Math.random() * 3 : 10 + Math.random() * 4;
     const tier = wellTier(), comp = [];
     const n = 3 + Math.floor(Math.random() * 3) + tier;
     for (let i = 0; i < n; i++) comp.push('blotling');

@@ -8,7 +8,7 @@ export function unlockAudio() {
       ctx = new (window.AudioContext || window.webkitAudioContext)();
       master = ctx.createGain(); master.gain.value = enabled ? 0.9 : 0; master.connect(ctx.destination);
       const comp = ctx.createDynamicsCompressor(); comp.threshold.value = -14; comp.ratio.value = 4; comp.connect(master);
-      sfxBus = ctx.createGain(); sfxBus.gain.value = 0.7; sfxBus.connect(comp);
+      sfxBus = ctx.createGain(); sfxBus.gain.value = 0.85; sfxBus.connect(comp);
       musicBus = ctx.createGain(); musicBus.gain.value = 0.42; musicBus.connect(comp);
       noiseBuf = ctx.createBuffer(1, ctx.sampleRate, ctx.sampleRate); const d = noiseBuf.getChannelData(0); for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
       try { if (navigator.audioSession) navigator.audioSession.type = 'playback'; } catch {}
@@ -40,10 +40,11 @@ function tone(t, f0, f1, dur, type, peak, pan = 0) {
 let lastShot = 0;
 export const sfx = {
   shot(rapid) { if (!ok()) return; const t = now(); if (t - lastShot < 0.05) return; lastShot = t;
-    tone(t, 1900 + Math.random() * 200, 700, 0.07, 'triangle', 0.16); noise(t, 0.05, 3800, 1.2, 0.18); tone(t, 220, 90, 0.06, 'sine', 0.22); },
-  hit(core) { if (!ok()) return; const t = now(); tone(t, core ? 2600 : 1600, core ? 2200 : 1300, 0.04, 'square', 0.06); },
+    tone(t, 1500 + Math.random() * 150, 260, 0.09, 'sawtooth', 0.12); tone(t, 2400, 900, 0.05, 'triangle', 0.12); noise(t, 0.06, 2600, 0.9, 0.22); tone(t, 140, 55, 0.08, 'sine', 0.32); },
+  hit(core) { if (!ok()) return; const t = now(); tone(t, core ? 3200 : 2100, core ? 2600 : 1700, 0.035, 'square', 0.1); noise(t, 0.03, 5000, 2, 0.12, 'highpass'); },
   kill(combo) { if (!ok()) return; const t = now(); const st = Math.min(combo, 24); const base = 440 * Math.pow(2, (st % 12) / 12) * (st >= 12 ? 2 : 1);
-    tone(t, base, base * 1.02, 0.16, 'triangle', 0.2); tone(t + 0.04, base * 1.5, base * 1.5, 0.18, 'sine', 0.12); noise(t, 0.18, 900, 0.8, 0.22, 'lowpass'); },
+    tone(t, base, base * 1.02, 0.18, 'triangle', 0.26); tone(t + 0.04, base * 1.5, base * 1.5, 0.2, 'sine', 0.16); tone(t + 0.08, base * 2, base * 2, 0.16, 'sine', 0.1);
+    noise(t, 0.22, 700, 0.8, 0.34, 'lowpass'); tone(t, 180, 60, 0.18, 'sine', 0.3); },
   splat() { if (!ok()) return; const t = now(); noise(t, 0.22, 500, 0.7, 0.3, 'lowpass'); tone(t, 140, 60, 0.18, 'sine', 0.2); },
   hurt() { if (!ok()) return; const t = now(); tone(t, 180, 70, 0.22, 'sawtooth', 0.18); noise(t, 0.2, 400, 1, 0.25, 'lowpass'); },
   dash() { if (!ok()) return; const t = now(); const f = noise(t, 0.28, 600, 1.4, 0.3); f.frequency.exponentialRampToValueAtTime(3200, t + 0.25); },
