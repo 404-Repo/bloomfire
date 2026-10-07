@@ -121,7 +121,8 @@ export function updateEnemies(dt, now, cam) {
     e.st += dt; e.cd -= dt; e.hitT = Math.max(0, e.hitT - dt); e.stagger = Math.max(0, e.stagger - dt);
     const dx = pp.x - e.pos.x, dz = pp.z - e.pos.z, d = Math.hypot(dx, dz) || 0.001;
     const t = e.t;
-    let moving = false, speed = t.speed * (maskAt(e.pos.x, e.pos.z) > 0.5 ? 0.85 : 1);   // ink is slower on painted ground
+    const onPaint = maskAt(e.pos.x, e.pos.z) > 0.5; e.onPaint = onPaint;
+    let moving = false, speed = t.speed * (onPaint ? 0.72 : 1);   // ink is slow on painted ground
     if (e.state === 'rise') {
       const k = Math.min(1, e.st / 0.6); e.o.scale.set(1, Math.max(0.01, k), 1);
       if (k >= 1) { e.state = 'chase'; e.st = 0; }
@@ -155,7 +156,7 @@ export function updateEnemies(dt, now, cam) {
         else { e.state = 'strike'; e.st = 0; }
       }
     } else if (e.state === 'strike') {
-      if (e.st < 0.05 && d < t.reach + 0.6) { if (hurt(Math.round(t.dmg * (e.tier < 0 ? 0.5 : e.tier === 0 ? 0.75 : 1)), e.pos.x, e.pos.z)) sfx.hurt(); }
+      if (e.st < 0.05 && d < t.reach + 0.6) { if (hurt(Math.round(t.dmg * (e.tier < 0 ? 0.5 : e.tier === 0 ? 0.75 : 1) * (e.onPaint ? 0.7 : 1)), e.pos.x, e.pos.z)) sfx.hurt(); }
       if (e.type === 'blotling' && e.st < 0.25) { moving = true; e.dir.set(dx / d, 0, dz / d); speed = 12; }
       if (e.st > 0.35) { e.state = 'chase'; e.cd = t.cd; e.st = 0; }
     } else if (e.state === 'charge_wind') {
@@ -170,6 +171,9 @@ export function updateEnemies(dt, now, cam) {
     if (moving) {
       let sx = 0, sz = 0;
       for (const o of ENEMIES) { if (o === e || !o.alive) continue; const ox = e.pos.x - o.pos.x, oz = e.pos.z - o.pos.z, od = Math.hypot(ox, oz), m = e.t.r + o.t.r + 0.3; if (od < m && od > 0.001) { sx += ox / od * (m - od); sz += oz / od * (m - od); } }
+      // never walk into the camera: hold at arm's length from the player
+      const toP = (e.dir.x * dx + e.dir.z * dz) / d;
+      if (d < e.t.r + 1.0 && toP > 0 && !e.fly) { e.dir.x -= dx / d * toP; e.dir.z -= dz / d * toP; }
       const vx = e.dir.x * speed + sx * 3, vz = e.dir.z * speed + sz * 3;
       e.pos.x += vx * dt; e.pos.z += vz * dt;
       if (!e.fly) pushOut(e.pos, t.r, e.pos.y + 1.4, e.pos.y + t.height, res);

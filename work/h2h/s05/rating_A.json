@@ -1,0 +1,22 @@
+{
+  "label": "Game A",
+  "persona": "indie",
+  "play_seconds": 540.3,
+  "fun": 5,
+  "nuance": 5,
+  "nuance_found": "Real but thin: BLOOM is a charge-and-spend move (charges from kill chains, then it restores colour, kills a cluster and is what cracked the inkwell nodes at range), DASH doubles as a damage-free dodge that also kills things on contact, colour-restored ground seems to be the safe zone while grey ink ground drains you, and dying costs a slice of score. Inkwells need a cleared wave ('NODES OPEN') before their glowing nodes can be broken, and the first one rewarded a perk (Split Lens). But in practice the obvious line (stand in colour, let auto-aim work, bloom when full) was always right; I did not find a decision where the obvious move lost.",
+  "pace": 5,
+  "pace_word": "a bit slow",
+  "feedback_juice": 7,
+  "looks": 8,
+  "audio": "A looping music bed plus sequenced stingers, chunky pitch-varied kill and bloom chimes, a clear sawtooth hurt sound, and thuds on the inkwell; the hurt sound is the main thing telling you something is wrong, so it reads, but it fires constantly.",
+  "would_replay": "maybe",
+  "would_quit_at_s": 150,
+  "understood_goal_by_s": 25,
+  "furthest_progress": "Broke all three nodes and restored the first inkwell (Olive Terraces, 'restored' banner at about 376 s, Split Lens perk, 4 inkwells left); reached about 13 m from the second inkwell at about 510 s but died before breaking it; score about 102,600 at x4 peak, 5.1% restored.",
+  "used_movement_assist": "not offered",
+  "control_trouble": "Camera look is very sensitive and drifts in pitch and roll, so I repeatedly stared at sky or ground and lost the marker; I could not easily put a specific enemy under the crosshair. A real thumb would do much better, but the roll/pitch drift and a few black screens from clipping into trees and the inkwell are the game's, not mine.",
+  "best_moment": "Bloom at full charge: a BLOOMSTORM chain wiped a pack, the ground burst into colour in a circle and the score jumped by about 10k at x6.",
+  "worst_moment": "Dying again and again on the 100 m run back to the inkwell from the lantern, hurt by something I could not see, with no clear read on where damage came from.",
+  "verdict": "It is the best-looking thing I have played this week: the grey ink-sketch world blooming into painterly colour under your gun is a lovely idea and the juice sells it. The play underneath is a stand-and-auto-aim shooter with a charge-up smart bomb, which is the plain genre template with one good wrinkle (colour as safe ground, death taxing score). Damage is murky, the camera fights you, and the run between lantern and inkwell is mostly dead time that kills you. I understood it in under half a minute and by minute nine I was playing the same way as in minute one. I would keep it for a day for the look, not for the decisions."
+}

@@ -3,10 +3,10 @@ import * as THREE from 'three';
 import { renderer, scene, camera, resize, draw, followShadow, skyFollow, isTouch, post, setSkyTexture } from './render.js';
 import { buildTerrain } from './terrain.js';
 import { makeGround, makeWater, waterLevelAt, waterU } from './ground.js';
-import { updatePaint, setLandMask, loadDetail, splatNow } from './paint.js';
+import { updatePaint, setLandMask, loadDetail, splatNow, maskAt } from './paint.js';
 import { groundU } from './ground.js';
 import { IN, readLook } from './input.js';
-import { P, initPlayer, placePlayer, updatePlayer, applyCamera } from './player.js';
+import { P, initPlayer, placePlayer, updatePlayer, applyCamera, setPaintProbe } from './player.js';
 import { SPAWN } from './layout.js';
 import { buildWorld, updateWorld } from './world.js';
 import { Game, readLookAssisted } from './game.js';
@@ -17,7 +17,7 @@ const bar = document.getElementById('barf'), loadmsg = document.getElementById('
 const progress = (f, msg) => { bar.style.width = Math.round(f * 100) + '%'; if (msg) loadmsg.textContent = msg; };
 
 const T = buildTerrain();
-initPlayer(T, waterLevelAt);
+initPlayer(T, waterLevelAt); setPaintProbe(maskAt);
 setLandMask((x, z) => waterLevelAt(x, z) < -50);
 scene.add(makeGround(T));
 scene.add(makeWater());

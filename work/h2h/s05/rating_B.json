@@ -1,0 +1,22 @@
+{
+  "label": "Game B",
+  "persona": "indie",
+  "play_seconds": 541.3,
+  "fun": 6,
+  "nuance": 7,
+  "nuance_found": "A real systems puzzle: a block sits in the sunbeam and has to be pulled out (pull, not push, because of the statue behind it and the floor edge), then a bronze mirror is turned by hand so the beam hits a stele's lens face-on (the first one lit and stayed lit), and lit mirrors relay light to the next mirror. Mirror geometry matters: a mirror only reflects on its front face, so there is a dead zone near edge-on, and to reach mirror 2 I had to sweep mirror 1 the long way round through north, west and south to a south-east aim. The second stele only woke when its lens was hit from the south via the relay, not grazing from the west. Two of three steles lit; the third needs the island mirror, which I did not crack.",
+  "pace": 4,
+  "pace_word": "a bit slow",
+  "feedback_juice": 7,
+  "looks": 8,
+  "audio": "Silent through the 15 s load and menu; then a slow ambient bed with sequenced stingers, stone-scrape noises on push and pull, a clear chime each time a stele lit, and a soft tick as mirrors turn.",
+  "would_replay": "maybe",
+  "would_quit_at_s": 225,
+  "understood_goal_by_s": 316,
+  "furthest_progress": "Level 1 The Sunken Court: cleared the block from the sunbeam, lit stele 1 of 3 (infinity glyph) with mirror 1, then relayed mirror 1 to mirror 2 and lit stele 2 (triangle glyph), 'Stelae lit: 2 of 3' at about 458 s. The third stele (spiral, via the island mirror) and the gate were not reached. I also restarted once at about 225 s after getting wedged.",
+  "used_movement_assist": "yes, about 40 times",
+  "control_trouble": "Heavy. The camera hugs the character and clips through walls and the gate (several blank or dark frames), a pull drags you backwards off the court edge into a pit where the assist reported 'stuck', and the first grab press after any walk often did not register, so I walked off the mirror instead of turning it. Most of the first 300 s was lost to that. A thumb on a live screen would manage the grab, but the camera clipping and the walk-off-the-edge pull are the game's.",
+  "best_moment": "Sweeping the beam across the court, hitting the stele lens and hearing the chime with the infinity glyph lighting, then 'Stelae lit: 2 of 3' after relaying through a second mirror.",
+  "worst_moment": "Being dragged off the court by a block pull into a pit, then losing minutes to camera clipping and a grab that would not take, before the objective text even changed.",
+  "verdict": "This is the one with an actual idea in it: light as the resource, blocks that obstruct it, mirrors with a real geometry you have to reason about, relays that chain. I changed how I played inside nine minutes (pull the block, sweep the long way round the dead zone, aim from the south so the lens is hit face-on). The hint prompts are clear and the look is lovely. But the first level is slow to load, slow to teach, and fights you: the camera clips, the pull can walk you off the map, and grabbing was flaky. I would keep going with it on a phone for the puzzle, if the camera and grab were fixed. As it stands it is a good puzzle in a rough shell."
+}

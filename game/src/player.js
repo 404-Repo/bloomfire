@@ -14,7 +14,8 @@ export const P = {
   mantle: null, bob: 0, landDip: 0, recoil: 0, kick: 0, speed: 0, travelled: 0,
   hurtT: 0, lastHurtDir: 0, inWater: false,
 };
-let T = null; let waterAt = () => -99;
+let T = null; let waterAt = () => -99; let paintAtFeet = null;
+export function setPaintProbe(fn) { paintAtFeet = fn; }
 export function initPlayer(terrain, waterFn) { T = terrain; waterAt = waterFn; }
 
 const res = {};
@@ -35,6 +36,8 @@ export function dash(mx, my) {
 }
 
 export function updatePlayer(dt, mx, my) {
+  P.onPaint = paintAtFeet ? paintAtFeet(P.pos.x, P.pos.z) > 0.5 : false;
+  if (P.onPaint && P.hurtT <= 0 && P.hp < P.maxHp && P.alive) P.hp = Math.min(P.maxHp, P.hp + 4 * dt);   // your colour heals you
   // out of the fight for a few seconds, you heal
   P.calm = P.hurtT > 0 ? 0 : (P.calm || 0) + dt; if (P.calm > 4 && P.hp < P.maxHp && P.alive) P.hp = Math.min(P.maxHp, P.hp + 9 * dt);
   P.invuln = Math.max(0, P.invuln - dt); P.hurtT = Math.max(0, P.hurtT - dt);
@@ -51,7 +54,7 @@ export function updatePlayer(dt, mx, my) {
   const fx = mx, fz = -my;
   const wx = (fx * c + fz * s) * SPEED, wz = (-fx * s + fz * c) * SPEED;
   const water = waterAt(p.x, p.z); P.inWater = water > p.y + 0.4;
-  const slow = P.inWater ? 0.6 : 1;
+  const slow = (P.inWater ? 0.6 : 1) * (P.onPaint ? 1.15 : 1);
   if (P.dashT > 0) {
     P.dashT -= dt; P.vel.x = P.dashDir.x * DASH_SPEED; P.vel.z = P.dashDir.z * DASH_SPEED;
   } else {

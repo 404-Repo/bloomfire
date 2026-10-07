@@ -55,6 +55,20 @@ async function makeWells() {
 
 function wellTier() { return S.cleansed.length; }
 
+// a choice at every inkwell: two lenses on offer, take one (the other may come back later)
+function offerLens(left) {
+  if (S.mode !== 'play') return;
+  const opts = left.length <= 2 ? left : left.sort(() => Math.random() - 0.5).slice(0, 2);
+  if (opts.length === 1) { takeLens(opts[0]); return; }
+  Game.paused = true; S.picking = true;
+  $('lensopts').innerHTML = opts.map((l) => `<button class="lensb" data-l="${l}">${LENS_TEXT[l][0]}<small>${LENS_TEXT[l][1]}</small></button>`).join('');
+  $('lenspick').classList.add('on'); if (document.pointerLockElement) document.exitPointerLock();
+  // touchend as well as click: with a thumb still on the stick, a tap produces no click
+  const pick = (b) => { if (!S.picking) return; $('lenspick').classList.remove('on'); Game.paused = false; S.picking = false; takeLens(b.dataset.l); };
+  $('lensopts').querySelectorAll('.lensb').forEach((b) => { b.addEventListener('click', () => pick(b)); b.addEventListener('touchend', (e) => { e.preventDefault(); pick(b); }); });
+}
+function takeLens(l) { WPN.lenses.push(l); banner(LENS_TEXT[l][0], LENS_TEXT[l][1], 3); sfx.lantern(); }
+
 function updateWells(dt) {
   const pp = P.pos;
   for (const w of WELLS) {
@@ -139,10 +153,11 @@ function cleanse(w) {
   const mine = ENEMIES.filter((e) => e.owner === w && e.alive);
   mine.forEach((e, i) => setTimeout(() => { if (e.alive) { e.alive = false; onKill(e, { chain: true }); } }, 250 + i * 110));
   for (let i = 0; i < 60; i++) { const a = Math.random() * Math.PI * 2, r = 3 + Math.random() * 40; const x = w.at[0] + Math.cos(a) * r, z = w.at[1] + Math.sin(a) * r; bloomAt(x, T.height(x, z), z, Math.random() * 6, 0.8 + Math.random() * 0.6); }
-  const lens = LENS_ORDER[S.cleansed.length - 1]; if (lens) WPN.lenses.push(lens);
+  const left = LENS_ORDER.filter((l) => !WPN.lenses.includes(l)); const lens = null;
+  if (left.length) setTimeout(() => offerLens(left), 1600);
   const place = PLACES.find((p) => p.id === w.place);
   addScore(3000, new THREE.Vector3(w.at[0], w.y + 4, w.at[1]), 'CLEANSED +3000', 'big');
-  banner(place.name + ' restored', lens ? LENS_TEXT[lens][0] + ': ' + LENS_TEXT[lens][1] : 'the prism burns brighter', 4.5);
+  banner(place.name + ' restored', 'the lantern is lit', 3.5);
   const l = litLantern(w.place); if (l) { S.respawn = w.place; setTimeout(() => sfx.lantern(), 900); }
   post.uFlash.value = 0.3;
   if (S.stage === 1) setStage(2); else if (S.cleansed.length >= 5) setStage(3); else setStage(2);
@@ -309,7 +324,7 @@ function onKill(e, o = {}) {
   for (let i = 0; i < nm; i++) emit('add', p.x, p.y, p.z, 1, { speed: 4, up: 3, life: 3, size: 0.35, color: [1.6, 1.2, 0.5], home: { onArrive: () => { heal(2); S.score += 10; sfx.pickup(); } } });
   sfx.kill(S.combo); hitMarker(true);
   WPN.bloom = Math.min(1, WPN.bloom + (WPN.lenses.includes('sun') ? 0.075 : 0.05));
-  if (!S.tutorial.firstKill) { S.tutorial.firstKill = true; caption('Every kill gives the colour back. <b>Chain kills</b> for a bigger multiplier.', 5); }
+  if (!S.tutorial.firstKill) { S.tutorial.firstKill = true; caption('Every kill gives the colour back. <b>Chain kills</b> for a bigger multiplier.', 5); setTimeout(() => caption('Fight from your colour: on painted ground <b>you heal and the ink is slow</b>.', 5), 6500); }
   if (WPN.lenses.includes('arc') && !o.arc && !o.chain) arcFrom(p, e);
   if (WPN.lenses.includes('burst') && !o.chain) for (const q of ENEMIES) if (q.alive && q !== e && q.pos.distanceTo(e.pos) < 3.6) { if (damage(q, 25)) onKill(q, { chain: true }); }
 }
@@ -437,7 +452,7 @@ export const Game = {
     // dev and capture only: ?skip=n breaks the first n inkwells at once
     const skip = +new URLSearchParams(location.search).get('skip') || 0;
     for (let i = 0; i < Math.min(5, skip); i++) { const w = WELLS[i]; w.awake = true; for (const nd of w.nodes) nd.alive = false; cleanse(w); }
-    if (skip) setStage(skip >= 5 ? 3 : 2);
+    if (skip) { setStage(skip >= 5 ? 3 : 2); WPN.lenses = LENS_ORDER.slice(0, Math.min(5, skip)); }
     try { S.best = +localStorage.getItem('bloomfire_best') || 0; } catch {}
     let aidx = []; try { aidx = await (await fetch('./audio/index.json')).json(); } catch {}
     for (const n of ['calm', 'fight', 'boss', 'finale']) if (aidx.includes(n)) loadMusic(n, `./audio/${n}.mp3`);
@@ -572,7 +587,7 @@ export const Game = {
   telemetry(g) {
     g.score = S.score; g.over = S.mode === 'over'; g.hp = Math.round(P.hp); g.shots = WPN.shots; g.kills = S.kills; g.alive = P.alive;
     g.combo = S.combo; g.mult = S.mult; g.stage = S.stage; g.cleansed = S.cleansed.length; g.restored = +(restoredFraction() * 100).toFixed(2);
-    g.enemies = ENEMIES.length; g.lock = !!WPN.lock; g.mode = S.mode; g.bloom = +WPN.bloom.toFixed(2); g.lenses = WPN.lenses.length;
+    g.enemies = ENEMIES.length; g.lock = !!WPN.lock; g.mode = S.mode; g.picking = !!S.picking; g.bloom = +WPN.bloom.toFixed(2); g.lenses = WPN.lenses.length;
     g.boss = BOSS ? Math.round(BOSS.hp) : null; g.deaths = S.deaths; g.nests = S.nests;
     // the screen position of the nearest visible target, for a gate that wants to aim
     const tg = WPN.lock; if (tg) { const v = tg.pos.clone().project(camera); g.aim = [+(v.x * 0.5 + 0.5).toFixed(3), +(-v.y * 0.5 + 0.5).toFixed(3), 1]; } else g.aim = null;

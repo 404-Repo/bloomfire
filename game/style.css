@@ -147,3 +147,7 @@ body.playing.touchdev #touch { display: block; }
   #overmap { grid-area: m; width: 170px; height: 170px; margin: 6px 0; }
   #againb { grid-area: a; } #keepb { grid-area: k; justify-self: center; }
 }
+#lenspick { background: rgba(12,14,22,0.55); z-index: 45; }
+#lensopts { display: flex; gap: 14px; margin-top: 12px; flex-wrap: wrap; justify-content: center; }
+.lensb { width: min(240px, 40vw); padding: 16px 14px; border-radius: 16px; border: 0; background: linear-gradient(160deg, #fff1c8, #ffc061); color: #26160a; font: 800 17px 'Nunito Sans', sans-serif; box-shadow: 0 6px 0 #8a4a2a; }
+.lensb small { display: block; font-weight: 600; font-size: 13px; margin-top: 6px; color: #4a3020; }

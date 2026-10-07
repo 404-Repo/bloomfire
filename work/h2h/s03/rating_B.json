@@ -1,0 +1,22 @@
+{
+  "label": "Game B",
+  "persona": "casual",
+  "play_seconds": 542.0,
+  "fun": 6,
+  "nuance": 6,
+  "nuance_found": "BLOOM is a screen-clearing button that charges up, so you save it for a crowd instead of firing it at once; it also broke inkwell nodes. DASH makes you untouchable, so it works as a dodge. The prism auto-locks the inkwell once you are close, which stops you shooting the enemies hitting you, so you have to step away to break the lock and kill the adds first. Kills build a score multiplier, and the perks (Split Lens, Arc Lens) arrive after you restore a village.",
+  "pace": 5,
+  "pace_word": "a bit slow",
+  "feedback_juice": 8,
+  "looks": 7,
+  "audio": "Short bleeps and chimes for hits, kills, BLOOM and broken nodes, plus a harsh buzzer each time I was hurt. I never heard a real music loop; the soundtrack was thin and often just effects.",
+  "would_replay": "maybe",
+  "would_quit_at_s": 145,
+  "understood_goal_by_s": 45,
+  "furthest_progress": "Valley of Vell, Rush run: restored The Olive Terraces (86 s) and Millbrook (190 s), 2 of 5 inkwells, 9.4% restored, best score about 189,950. At 542 s I was at Windmill Ridge with 1 node broken (Vell Market half done, then lost to a death). Died 7 times.",
+  "used_movement_assist": "not offered",
+  "control_trouble": "Aiming is a drag on the right half of the screen. It turned far more than I meant to and tilted the view up or down on its own, so I kept staring at the ground or the sky and lost the objective marker. Enemies came from off screen and I could not see them in time at 0.5 s per look. A real thumb would turn faster and see more. The game's own camera also clipped into houses and stalls, giving black screens and wall-in-your-face views, and that is not on me.",
+  "best_moment": "Pressing BLOOM in a crowd and watching the score jump x4 while the grey ground burst into colour, and the first 'Olive Terraces restored' banner.",
+  "worst_moment": "Dying within 3 seconds from full health to a brute while the prism kept shooting the inkwell, then respawning 150 m away and walking back for 30 seconds, over and over.",
+  "verdict": "This feels like a real game with real moments. The big numbers, the grey valley turning to colour and the BLOOM button are the kind of payoff I like, and the goal (break 5 inkwells) is clear once you read it at the top. But I was lost for the first 40 seconds, I could not see what was killing me, and I died seven times, each with a long walk back. The camera sticking inside buildings and the black screens made it feel unfinished. I would give it one more go on a quiet evening, but on the bus I would probably put it down after the second death."
+}

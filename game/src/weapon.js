@@ -82,8 +82,8 @@ export function assistLook(lx, ly, dt, moving) {
     const wantYaw = Math.atan2(-_t.x, -_t.z), wantPitch = Math.asin(THREE.MathUtils.clamp(_t.y, -1, 1));
     let dy = wantYaw - P.yaw; dy = Math.atan2(Math.sin(dy), Math.cos(dy));
     const dp = wantPitch - P.pitch;
-    const rate = (isTouch ? (active ? 2.8 : 1.6) : 1.2) * dt;
-    lx -= THREE.MathUtils.clamp(dy, -rate, rate); ly -= THREE.MathUtils.clamp(dp, -rate, rate);
+    const rate = (isTouch ? (active ? 2.6 : 1.1) : 1.2) * dt;
+    lx -= THREE.MathUtils.clamp(dy, -rate, rate); if (active) ly -= THREE.MathUtils.clamp(dp, -rate * 0.7, rate * 0.7);   // no vertical drift while your thumb is still
   }
   return [lx, ly];
 }
