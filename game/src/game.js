@@ -357,14 +357,15 @@ function director(dt) {
   const climbing = S.stage === 3, nearArena = Math.hypot(pp.x - ARENA[0], pp.z - ARENA[1]) < 60;
   if (climbing) { const st = PATHS.find((p) => p.id === 'stair').pts; if (st.some((q) => Math.hypot(q[0] - pp.x, q[1] - pp.z) < 22)) return; }   // the climb itself is quiet
   if (!nearWell && !nearArena && S.roamT <= 0 && alive < (climbing ? 4 : 5 + wellTier())) {
-    S.roamT = climbing ? 9 + Math.random() * 3 : grey ? 5 + Math.random() * 3 : 10 + Math.random() * 4;
+    S.roamT = climbing ? 18 + Math.random() * 6 : grey ? 5 + Math.random() * 3 : 10 + Math.random() * 4;
     const tier = wellTier(), comp = [];
     const n = climbing ? 3 + Math.floor(Math.random() * 2) : 3 + Math.floor(Math.random() * 3) + tier;
     for (let i = 0; i < n; i++) comp.push('blotling');
-    if (tier >= 1 && Math.random() < 0.7) comp.push('smear');
-    if (tier >= 1 && Math.random() < 0.6) comp.push('quill', 'quill');
+    if (climbing) comp.push('quill');
+    else if (tier >= 1 && Math.random() < 0.7) comp.push('smear');
+    if (!climbing) { if (tier >= 1 && Math.random() < 0.6) comp.push('quill', 'quill');
     if (tier >= 2 && Math.random() < 0.6) comp.push('spitter');
-    if (tier >= 3 && Math.random() < 0.35) comp.push('inkhorn');
+    if (tier >= 3 && Math.random() < 0.35) comp.push('inkhorn'); }
     // ahead of the player, so the fight comes to meet you
     const a0 = P.yaw + Math.PI + (Math.random() - 0.5) * 1.6;   // yaw looks along -z; ahead is (-sin, -cos)
     const r = 14 + Math.random() * 9;
