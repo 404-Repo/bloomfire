@@ -44,7 +44,7 @@ export function floater(pos, text, cls = '') {
   el.floaters.appendChild(d); setTimeout(() => d.remove(), 950);
   while (el.floaters.childElementCount > 14) el.floaters.firstChild.remove();
 }
-export function callout(text) { el.callout.textContent = text; el.callout.classList.remove('on'); void el.callout.offsetWidth; el.callout.classList.add('on'); }
+export function callout(text) { el.callout.style.top = el.banner.classList.contains('on') ? '33%' : ''; el.callout.textContent = text; el.callout.classList.remove('on'); void el.callout.offsetWidth; el.callout.classList.add('on'); }
 let bannerTimer = 0;
 export function banner(t, s, secs = 3.2) { el.bannert.textContent = t; el.banners.textContent = s; el.banner.classList.add('on'); clearTimeout(bannerTimer); bannerTimer = setTimeout(() => el.banner.classList.remove('on'), secs * 1000); }
 let capTimer = 0;

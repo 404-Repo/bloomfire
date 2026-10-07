@@ -1,0 +1,42 @@
+{
+ "pair_01.png": {
+  "build": "left",
+  "build_file": "f0.jpg",
+  "ref_file": "05_play.jpg"
+ },
+ "pair_02.png": {
+  "build": "left",
+  "build_file": "f1.jpg",
+  "ref_file": "03_play.jpg"
+ },
+ "pair_03.png": {
+  "build": "right",
+  "build_file": "f2.jpg",
+  "ref_file": "05_play.jpg"
+ },
+ "pair_04.png": {
+  "build": "left",
+  "build_file": "f3.jpg",
+  "ref_file": "desktop-05-explore.jpg"
+ },
+ "pair_05.png": {
+  "build": "left",
+  "build_file": "f4.jpg",
+  "ref_file": "07_play.jpg"
+ },
+ "pair_06.png": {
+  "build": "left",
+  "build_file": "f5.jpg",
+  "ref_file": "07_play.jpg"
+ },
+ "pair_07.png": {
+  "build": "right",
+  "build_file": "f6.jpg",
+  "ref_file": "06_play.jpg"
+ },
+ "pair_08.png": {
+  "build": "right",
+  "build_file": "f7.jpg",
+  "ref_file": "13_play.jpg"
+ }
+}

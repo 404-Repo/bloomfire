@@ -1,0 +1,29 @@
+{
+ "note": "Written before any critic4 KEY.json was opened. Seed 13. Not truly blind: the landscape lantern-gun HUD frames are recognisable. Podium refs: bellkeeper/05,07,13; farseek/03,07; sundrift/05,06; jam evidence/27 desktop-05-explore.",
+ "podium": {
+  "pair_01.png": {"side":"right","margin":"clear","why":"right is a warm, authored town with a character; left is a grey hatched slope with grey faceted rock-trees, colour only in one strip"},
+  "pair_02.png": {"side":"right","margin":"slight","why":"right is clean and finished if plain; left has a real village and hatching but is a grey wash with overlapping '+100 CORE' and 'MULTI' text garbling the centre"},
+  "pair_03.png": {"side":"left","margin":"clear","why":"left has a confident dusk palette; right is a bleached grey plain with three titles stacked on top of each other"},
+  "pair_04.png": {"side":"right","margin":"clear","why":"right is a dense lit town; left has a good hatched arcade and warm roofs but a washed-out sky and blank grey ground"},
+  "pair_05.png": {"side":"left","margin":"clear","why":"left is a coherent sunlit village square with arcade, roofs, crates and depth; right is an occluded close-up under a text card"},
+  "pair_06.png": {"side":"left","margin":"slight","why":"left has houses, cypresses, warm field, pink creatures and a slash arc; right is a clean character under a tutorial card. Left's grey half still reads unfinished"},
+  "pair_07.png": {"side":"left","margin":"clear","why":"left is a strong stylised dusk road; right is a warm field under bald grey hills with stacked fading score text"},
+  "pair_08.png": {"side":"left","margin":"clear","why":"left is a solid character shot; right is a grey hatched slope with 'Ink nest broken' and 'INKWELL BROKEN' overprinting each other"}
+ },
+ "floor": {
+  "pair_01.png": {"side":"left","margin":"decisive","why":"left has trees, creatures, ink plumes, a gun with design; right is an empty dune and a wooden block gun"},
+  "pair_02.png": {"side":"left","margin":"clear","why":"left village with hatching and props; right sparse dune, grey blocks, plank gun"},
+  "pair_03.png": {"side":"right","margin":"clear","why":"right village, tower and a big creature; left primitive blob creature, box gun, flat hills"},
+  "pair_04.png": {"side":"left","margin":"decisive","why":"left hatched arcade and houses; right empty green plane and box gun"},
+  "pair_05.png": {"side":"left","margin":"decisive","why":"left sunlit village square; right empty lilac plain"},
+  "pair_06.png": {"side":"left","margin":"decisive","why":"left dressed village with enemies; right flat grey road and box gun"}
+ },
+ "bar": {
+  "pair_01.png": {"side":"right","margin":"decisive","why":"right has line weight, warm/cool split and a lit foreground; left is grey haze with stacked titles"},
+  "pair_02.png": {"side":"right","margin":"decisive","why":"right is dense ink with a colour bloom around the enemy; left is an empty grey foreground"},
+  "pair_03.png": {"side":"left","margin":"clear","why":"left concept has line, water, creature and focal light; right restored square is the closest our game gets but reads generic-3D, no ink"},
+  "pair_04.png": {"side":"right","margin":"decisive","why":"right enclosed market with spire and enemy; left open field with grey half"},
+  "pair_05.png": {"side":"right","margin":"decisive","why":"right windmill vista with sunset and fliers; left warm field under blank grey hills, score text"},
+  "pair_06.png": {"side":"right","margin":"decisive","why":"right chapel, muzzle flash, big demon; left grey slope and overprinted text"}
+ }
+}

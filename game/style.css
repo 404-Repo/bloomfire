@@ -99,9 +99,9 @@ body.playing.touchdev #touch { display: block; }
 #look { position: absolute; right: 0; top: 0; width: 58%; height: 100%; }
 .tb { position: absolute; border: 0; border-radius: 50%; font: 800 12px 'Nunito Sans', sans-serif; letter-spacing: 0.06em; color: #1b1420;
   box-shadow: 0 4px 12px rgba(0,0,0,0.4); overflow: hidden; }
-#bfire { right: calc(26px + var(--sar)); bottom: calc(30px + var(--sab)); width: 84px; height: 84px; background: rgba(255,214,130,0.78); }
+#bfire { right: calc(26px + var(--sar)); bottom: calc(30px + var(--sab)); width: 84px; height: 84px; background: rgba(255,214,130,0.55); }
 #bfire.on { background: rgba(255,170,90,0.95); }
-#bdash { right: calc(124px + var(--sar)); bottom: calc(26px + var(--sab)); width: 62px; height: 62px; background: rgba(205,225,255,0.7); }
+#bdash { right: calc(124px + var(--sar)); bottom: calc(26px + var(--sab)); width: 62px; height: 62px; background: rgba(205,225,255,0.5); }
 #bdash.cd { opacity: 0.4; }
 #bbloom { right: calc(40px + var(--sar)); bottom: calc(128px + var(--sab)); width: 68px; height: 68px; background: rgba(60,50,80,0.6); color: #ffe7b0; }
 #bbloom.ready { background: radial-gradient(circle, #fff3c4 0%, #ffb347 55%, #ff3d8b 100%); color: #2a1020; animation: pulse 0.9s ease-in-out infinite; }

@@ -129,12 +129,17 @@ vec3 inkWash(vec3 lit, vec3 alb, vec3 p, vec3 n){
   l += (la - 0.32) * 0.55;   // keep the surface's own texture as a wash
   float grain = pnoise(p.xz*3.0 + p.y*2.0)*0.07 - 0.035;
   vec3 b = abs(n); vec2 hp = b.y > 0.6 ? p.xz : (b.x > b.z ? p.zy : p.xy);
-  float u = dot(hp, vec2(0.71, 0.71)) * 3.0;
-  float w = fwidth(u), h = abs(fract(u) - 0.5);
+  // hand-drawn hatching: wobbly lines broken into strokes, a second crossing set in the darks
+  float wob = pnoise(hp * 0.45) * 0.7;
+  float u = dot(hp, vec2(0.71, 0.71)) * 3.2 + wob, u2 = dot(hp, vec2(-0.71, 0.71)) * 3.2 + wob;
+  float w = fwidth(u), h = abs(fract(u) - 0.5), h2 = abs(fract(u2) - 0.5);
   float fade = 1.0 - smoothstep(0.18, 0.45, w);
-  float hatch = (1.0 - smoothstep(0.0, 0.06 + w, h - 0.41)) * smoothstep(0.7, 0.45, l) * 0.55 * fade * (1.0 - smoothstep(0.5, 0.8, b.y));
-  // ground: ink stipple instead of ruled lines
-  float st = step(0.9, ph21(floor(p.xz * 6.0))) * smoothstep(0.75, 0.4, l) * smoothstep(0.5, 0.8, b.y) * 0.35 * fade;
+  float strokes = smoothstep(0.3, 0.45, pnoise(vec2(dot(hp, vec2(-0.71, 0.71)) * 0.9, floor(u) * 1.7)));
+  float strokes2 = smoothstep(0.35, 0.5, pnoise(vec2(dot(hp, vec2(0.71, 0.71)) * 0.9, floor(u2) * 1.3)));
+  float hatch = (1.0 - smoothstep(0.0, 0.07 + w, h - 0.40)) * smoothstep(0.78, 0.5, l) * 0.6 * strokes;
+  hatch += (1.0 - smoothstep(0.0, 0.07 + w, h2 - 0.40)) * smoothstep(0.55, 0.3, l) * 0.55 * strokes2;
+  hatch *= fade * mix(1.0, 0.4, smoothstep(0.6, 0.85, b.y));   // flat ground gets a lighter hand
+  float st = step(0.92, ph21(floor(p.xz * 6.0))) * smoothstep(0.8, 0.45, l) * smoothstep(0.5, 0.8, b.y) * 0.3 * fade;
   hatch += st;
   vec3 ink = mix(uInkTint, uPaper, clamp(l + grain, 0.0, 1.0));
   return mix(ink, uInkTint * 0.35, clamp(hatch, 0.0, 0.7));
