@@ -5,3 +5,6 @@ _playtest/
 _jam/
 *.log
 .DS_Store
+research/fps_field/src/
+floor/_scratch/
+work/*/_scratch/
