@@ -139,3 +139,9 @@ body.playing.touchdev #touch { display: block; }
 #wp b { display: block; width: 16px; height: 16px; margin: 0 auto 3px; transform: rotate(45deg); background: var(--gold); box-shadow: 0 0 10px var(--sun), 0 0 0 2px rgba(20,16,10,0.6); }
 #wp span { font-weight: 800; font-size: 12px; color: #fff3d6; text-shadow: 0 1px 3px #000; }
 #wp.edge { opacity: 0.85; } #wp.edge b { width: 13px; height: 13px; }
+@media (max-height: 520px) {
+  #over .tcol { display: grid; grid-template-columns: auto auto; grid-template-areas: "t t" "s m" "a m" "k m"; column-gap: 22px; align-items: center; max-width: 760px; }
+  #overt { grid-area: t; } #overs { grid-area: s; font-size: 13px; } #overs b { font-size: 20px; }
+  #overmap { grid-area: m; width: 170px; height: 170px; margin: 6px 0; }
+  #againb { grid-area: a; } #keepb { grid-area: k; justify-self: center; }
+}
