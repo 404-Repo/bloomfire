@@ -129,3 +129,99 @@ died in the first minute to attackers it could not see, could not find the gold 
 feedback. Fixed since (on the working tree, not yet re-tested): ink outside your view waits before it
 strikes, regeneration out of combat, a world-space waypoint, a hit flash on the core glow, a wider touch
 assist (lock 11 degrees, auto-fire 9, magnetism 7), a softer first tier, a smaller death penalty.
+
+## Milestone 4: jam gate PASS and blind comparison against the winners (2026-10-07)
+
+Final build: commit **134b5cc** (main). Serving at **http://localhost:8797/**; a cloudflared quick tunnel
+to it is running for phone play (URL in `work/tunnel.log`; ephemeral). No GitHub repo was created.
+
+### Jam gate (recipe @ 4effad3, 390x844 @3x, real touch, 4G, CPU 2x slower)
+
+| | tunnel | localhost:8797 |
+|---|---|---|
+| ready | 9.4 s (budget 20) | 8.2 s |
+| weight | 5.5 MB (budget 10) | 5.5 MB |
+| started / moved | real tap / 38.6 m | real tap |
+| peak draws / tris | 462 / 870,210 | 430 / 862,776 |
+| errors / 404s / outside folder | 0 / 0 / none | 0 / 0 / none |
+| RESULT | **PASS** | **PASS** |
+
+Verdict blocks: `work/jam_verdict_final_tunnel.txt`, `work/jam_verdict_final_local.txt`. `harness/ship.mjs`:
+56 modules parse, no path leaves the folder. `harness/live.mjs` on the tunnel: ready 4.4 s, moved 28.8 m.
+The 60 fps the gate prints is an M4's Metal GPU, not a phone.
+
+### Blind look critic, five rounds (fresh harsh critic each; keys moved out before judging)
+
+| round | vs podium frames | vs floor | vs concept bar | what decided the losses |
+|---|---|---|---|---|
+| 1 | 2 of 8 | 6 of 6 | 0 of 6 | ink linework missing |
+| 2 | 3 of 8 (all slight) | 6 of 6 | 0 of 6 | bare shaded slopes |
+| 3 | 1 of 8 | 6 of 6 | 0 of 6 | hazy grey under a white sky (my round-2 tweak thinned the lines; reverted) |
+| 4 | 2 of 8 | 6 of 6 | 0 of 6 | grey areas read as unrendered |
+| 5 | 1 of 8 | 6 of 6 | 0 of 6 | palette unity: the grey half against fully coloured games |
+
+Every claim measure moved the right way from round 4 to 5 (warm share of highlights 0.48 to 0.57, ink-line
+coverage 4.3% to 6.1%, near-field density 0.28 to 0.40) and the podium count did not. The round-5 critic
+called the remaining gap **mostly the subject, not execution**: the game starts grey by design, and
+every early-play frame is half grey; its only podium wins are frames that are coloured edge to edge. Two
+critics in a row named the same structural cause, so by GAME.md's stopping rule I stopped look rounds
+there. Caveats: the pairs are not truly blind (ours are landscape with an FPS HUD, the podium set is
+portrait), and 8 pairs is coarse.
+
+### Blind head-to-head play, 8 sessions (fresh Sonnet testers, MOONPULL's panel harness)
+
+Each tester played two games blind ("Game A", "Game B") for at least 540 s each on an emulated phone with
+real multi-touch on a virtual clock, then made a forced choice. BLOOMFIRE was served from frozen worktree
+snapshots so later edits could not leak into a session.
+
+| # | persona | opponent | BF played | build | keep playing | better made |
+|---|---|---|---|---|---|---|
+| s01 | casual | SUNDRIFT | 1st | cea98c0 | SUNDRIFT decisive | SUNDRIFT clear |
+| s02 | competitive | SUNDRIFT | 2nd | cea98c0 | **BLOOMFIRE clear** | **BLOOMFIRE clear** |
+| s03 | casual | SUNDRIFT | 2nd | b5e4bce | **BLOOMFIRE slight** | SUNDRIFT slight |
+| s04 | casual | Bellkeeper | 2nd | b5e4bce | **BLOOMFIRE clear** | **BLOOMFIRE slight** |
+| s05 | indie | Farseek | 1st | b5e4bce | Farseek clear | **BLOOMFIRE slight** |
+| s06 | competitive | SUNDRIFT | 1st | bebb10c | SUNDRIFT slight | SUNDRIFT clear |
+| s07 | casual | Farseek | 1st | bebb10c | **BLOOMFIRE clear** | Farseek slight |
+| s08 | indie | Bellkeeper | 2nd | bebb10c | **BLOOMFIRE clear** | **BLOOMFIRE clear** |
+
+- **Keep playing: BLOOMFIRE 5 of 8** (vs Bellkeeper 2 of 2, vs Farseek 1 of 2, vs SUNDRIFT 2 of 4).
+- **Better made: BLOOMFIRE 4 of 8** (vs Bellkeeper 2 of 2, vs Farseek 1 of 2, vs SUNDRIFT 1 of 4).
+- For comparison, MOONPULL's panel had it at 6 of 9 on keep-playing but 0 of 2 against the sticky score game;
+  here the score-loop rival (SUNDRIFT) is split 2 to 2.
+- **Order effect, unbalanced:** BLOOMFIRE won keep-playing in 4 of 4 sessions where it was played second
+  and 1 of 4 where it was played first. Treat the totals as soft.
+- What testers praised (their words): "something happening every few seconds", "the grey valley flooding to
+  colour", the BLOOM crowd-clear, "a score to chase within 35 seconds", "stay on painted ground changed how I
+  moved", punchy layered kill audio (from s03 on).
+- What they held against it, and what I changed between sessions: deaths to attackers they could not see
+  (fairness rule, damage arcs, off-screen threat chevrons, softer bites, regeneration), hard to find the goal
+  (a gold waypoint with distance, then routing it along the Pilgrim Stair), thin hit and gun sound (rebuilt),
+  long walks (packs come sooner, respawn at most 40 m back), "same loop at minute nine" from the indie
+  persona (a choice of two lenses at every inkwell; colour heals you and slows the ink), camera clipping and
+  black frames from ink at point blank and tree canopies (ink holds at arm's length, bigger tree colliders).
+  The last three of those changes (threat chevrons, stair routing, the endless-nest fix) landed after the
+  last session and are not tester-verified.
+- Harness caveats: Bellkeeper's movement assist hung twice in s08 and its phone was restarted (it cost that
+  tester time on Bellkeeper, not play time); in s04 the same assist hung once. Testers see a frame every
+  0.5 s, so aiming and every "could not see what hit me" are worse for them than for a thumb.
+
+### Whole game, final build, my gate
+
+See the final row of the table below once the run finishes (title to end card, real touch, one run).
+
+### What is measured, what is not
+
+Measured: the jam gate (twice), the whole campaign end to end by my real-touch gate (four full runs),
+eight blind tester sessions, five blind critic rounds, draw and triangle peaks under every route.
+Not measured: a real phone (frame rate, heat, iOS audio, the notch), a human first play and its length,
+whether a human dies as often as the testers did, whether the music loops sound good (nobody has listened;
+the cues are 17 to 26 s), and the final build's changes with testers.
+
+### What I would do next
+
+1. Put it in Ben's hands on a phone through the tunnel: the real questions now are feel and difficulty.
+2. Start the valley less grey: let each place keep a little colour (lanterns, doors, flowers) so early frames
+   are not half grey. That is the one lever the critic says would move the look comparison.
+3. Re-run 4 tester sessions on the final build with the order balanced (BLOOMFIRE first in two, second in two).
+4. Longer music cues (ask for 3 x 25 s and stitch), and a phone performance pass if frames drop.

@@ -1,0 +1,19 @@
+=== 404 JAM VERDICT ===
+url             https://occupation-discover-electronic-termination.trycloudflare.com/
+utc             2026-10-07T19:11:02.347Z
+commit          134b5cc7
+viewport        390x844 @3x phone, real touch, Android Chrome UA
+network         4G: 4 Mbps down, 1 Mbps up, 60 ms latency, CPU 2x slower
+ready           9.4 s   budget 20 s   PASS
+weight          5.5 MB   budget 10 MB   PASS
+started         yes (tap on #startb)
+moved           38.6 m   needs 1 m   PASS
+peak draws      462   budget 900   PASS
+peak tris       870,210   budget 1,500,000   PASS
+median fps      60 (ANGLE (Apple, ANGLE Metal Renderer: Apple M4, Unspecified Version))
+errors          0   PASS
+404s            0   PASS
+external deps   none   cdn: fonts.googleapis.com, cdn.jsdelivr.net, fonts.gstatic.com
+outside folder  none, every file came from the game folder
+RESULT: PASS
+=== END ===
