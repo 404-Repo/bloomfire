@@ -15,7 +15,7 @@ export const U = {
   uTime: { value: 0 },
   uGlobal: { value: 0 },        // 0..1 how much of the whole world is forced painted (the finale)
   uInkTint: { value: new THREE.Color(0x4a5268) },
-  uPaper: { value: new THREE.Color(0xf6eedf) },
+  uPaper: { value: new THREE.Color(0xece0ca) },
 };
 
 let dirty = false;
@@ -125,7 +125,7 @@ vec3 inkWash(vec3 lit, vec3 alb, vec3 p, vec3 n){
   float la = max(dot(alb, vec3(0.299, 0.587, 0.114)), 0.04);
   float shade = dot(lit, vec3(0.299, 0.587, 0.114)) / la;            // how much light lands here
   float l = clamp(shade * 0.42, 0.0, 1.2) * mix(0.72, 1.08, smoothstep(0.05, 0.6, la));
-  l = 0.38 + 0.62 * smoothstep(0.04, 0.95, l);
+  l = 0.3 + 0.68 * smoothstep(0.04, 0.95, l);
   l += (la - 0.32) * 0.55;   // keep the surface's own texture as a wash
   float grain = pnoise(p.xz*3.0 + p.y*2.0)*0.07 - 0.035;
   vec3 b = abs(n); vec2 hp = b.y > 0.6 ? p.xz : (b.x > b.z ? p.zy : p.xy);
@@ -137,7 +137,7 @@ vec3 inkWash(vec3 lit, vec3 alb, vec3 p, vec3 n){
   float st = step(0.9, ph21(floor(p.xz * 6.0))) * smoothstep(0.75, 0.4, l) * smoothstep(0.5, 0.8, b.y) * 0.35 * fade;
   hatch += st;
   vec3 ink = mix(uInkTint, uPaper, clamp(l + grain, 0.0, 1.0));
-  return mix(ink, uInkTint * 0.7, clamp(hatch, 0.0, 0.6));
+  return mix(ink, uInkTint * 0.35, clamp(hatch, 0.0, 0.7));
 }
 `;
 const FRAG_BODY = `

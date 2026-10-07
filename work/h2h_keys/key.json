@@ -43,5 +43,14 @@
    "A": 8864,
    "B": 8865
   }
+ },
+ "s06": {
+  "A": "bloomfire2",
+  "B": "sundrift",
+  "persona": "competitive",
+  "ports": {
+   "A": 8870,
+   "B": 8871
+  }
  }
 }

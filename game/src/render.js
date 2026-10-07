@@ -29,7 +29,7 @@ sun.shadow.bias = -0.0006; sun.shadow.normalBias = 0.04;
 scene.add(sun, sun.target);
 export const hemi = new THREE.HemisphereLight(0x8eaee0, 0x5e4c3a, 1.05);
 scene.add(hemi);
-export const fog = new THREE.Fog(new THREE.Color().setHex(0xd9cdbb, THREE.SRGBColorSpace), 140, 950);
+export const fog = new THREE.Fog(new THREE.Color().setHex(0xe0c9a8, THREE.SRGBColorSpace), 220, 1400);
 scene.fog = fog;
 
 export function followShadow(p) {
@@ -54,11 +54,12 @@ const sky = new THREE.Mesh(new THREE.SphereGeometry(720, 32, 16), new THREE.Shad
     if (h < 0.0) c = mix(hor, low, clamp(-h*4.0,0.0,1.0));
     if (uHasTex > 0.5) { float u = atan(d.x, -d.z)/6.2831853 + 0.5; float v = clamp(asin(clamp(h,-1.0,1.0))/3.14159 + 0.5, 0.0, 1.0); vec3 t = texture2D(uTex, vec2(u, v)).rgb; t = pow(t, vec3(2.2)); c = mix(c, t*1.15, smoothstep(-0.02, 0.04, h)); }
     float s = max(dot(d, uSun), 0.0);
-    c += vec3(1.0,0.72,0.4)*pow(s, 8.0)*0.55 + vec3(1.0,0.9,0.7)*pow(s, 600.0)*6.0;
+    c += vec3(1.0,0.62,0.3)*pow(s, 6.0)*0.45 + vec3(1.0,0.85,0.6)*pow(s, 500.0)*4.0;
     // the ink: a cold paper wash over the sky until the valley is restored
     float l = dot(c, vec3(0.3,0.59,0.11));
     vec3 ink = mix(vec3(0.16,0.2,0.3), vec3(0.85,0.87,0.9), clamp(l*0.9,0.0,1.0));
-    c = mix(ink, c, 0.35 + 0.65*uWarm);
+    c = mix(ink, c, 0.7 + 0.3*uWarm);
+    c *= 0.9;
     gl_FragColor = vec4(c, 1.0);
     #include <tonemapping_fragment>
     #include <colorspace_fragment>
@@ -100,7 +101,7 @@ const postMat = new THREE.ShaderMaterial({
       vec3 nL = normalize(cross(C - L, UL - DL)), nR = normalize(cross(Rr - C, UR - DR)), nU = normalize(cross(UR - UL, Uu - C)), nD = normalize(cross(DR - DL, C - D));
       float crease = max(max(1.0 - dot(nC, nL), 1.0 - dot(nC, nR)), max(1.0 - dot(nC, nU), 1.0 - dot(nC, nD)));
       float sil = max(max(abs(L.z - C.z), abs(Rr.z - C.z)), max(abs(Uu.z - C.z), abs(D.z - C.z))) / max(z, 0.5);
-      float line = smoothstep(0.2, 0.45, crease) * 0.85 + smoothstep(0.04, 0.12, sil);
+      float line = smoothstep(0.13, 0.36, crease) * 0.95 + smoothstep(0.03, 0.1, sil) * 1.2;
       line = clamp(line, 0.0, 1.0) * (1.0 - smoothstep(70.0, 260.0, z) * 0.7);
       vec4 ndc = vec4(vUv*2.0-1.0, d0*2.0-1.0, 1.0); vec4 vp = uProjInv * ndc; vp /= vp.w; vec3 wp = (uCamWorld * vp).xyz;
       float e; float pk = paintAmount(wp, e);
@@ -111,11 +112,10 @@ const postMat = new THREE.ShaderMaterial({
       float ly = dot(texture2D(tColor, vUv + vec2(0.0,tp.y)).rgb - texture2D(tColor, vUv - vec2(0.0,tp.y)).rgb, vec3(0.3,0.59,0.11));
       float le = length(vec2(lx, ly)) / max(lC, 0.15);
       line = max(line, smoothstep(0.10, 0.32, le) * 0.55 * (1.0 - pk) * (1.0 - smoothstep(40.0, 140.0, z)));
-      vec3 inkC = mix(vec3(0.05,0.06,0.11), vec3(0.20,0.11,0.06), pk);
-      col = mix(col, inkC, line * mix(0.9, 0.55, pk));
+      vec3 inkC = mix(vec3(0.025,0.03,0.06), vec3(0.16,0.08,0.04), pk);
+      col = mix(col, inkC, clamp(line, 0.0, 1.0) * mix(0.97, 0.6, pk));
+      { float lum = dot(col, vec3(0.3,0.59,0.11)); col += vec3(0.10,0.05,-0.02) * smoothstep(0.55, 1.2, lum) * pk; }
     }
-    // warm the highlights a touch: the brightest things in frame are sunlit, not paper
-    { float lum = dot(col, vec3(0.3,0.59,0.11)); col += vec3(0.10,0.05,-0.02) * smoothstep(0.55, 1.2, lum); }
     col += vec3(1.0,0.78,0.45) * uFlash;
     vec2 q = vUv - 0.5; float vig = 1.0 - dot(q, q) * 0.55; col *= vig;
     col = mix(col, col * vec3(1.25, 0.55, 0.75), uHurt * smoothstep(0.15, 0.55, length(q)));

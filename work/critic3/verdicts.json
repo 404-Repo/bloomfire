@@ -1,0 +1,28 @@
+{
+ "podium": {
+  "pair_01.png": {"side":"right","margin":"clear","why":"right is warm, lit, one coherent palette with a character; left is a grey wash with faceted untextured tree blobs and a white-glare sky"},
+  "pair_02.png": {"side":"left","margin":"slight","why":"left is a clean, composed character shot; right has real houses but drowns them in grey ink haze, floating text and clutter"},
+  "pair_03.png": {"side":"left","margin":"decisive","why":"left has a confident sunset palette and graded light; right is a flat bleached grey plain under a smoke column"},
+  "pair_04.png": {"side":"left","margin":"clear","why":"left is a dense, authored town with consistent shading; right meadow has real light and shadows but is sparse and generic"},
+  "pair_05.png": {"side":"left","margin":"clear","why":"left is cramped but fully rendered; right is a grey hatched wall filling the frame over a blown-out sky"},
+  "pair_06.png": {"side":"left","margin":"clear","why":"left stone arcade with warm sun, shadow and depth reads as a made place; right is a close occluded character under a tutorial card"},
+  "pair_07.png": {"side":"left","margin":"decisive","why":"left has a strong stylised dusk scene; right is grey faceted trees on a white field with one yellow patch"},
+  "pair_08.png": {"side":"right","margin":"clear","why":"right is a solid lit character close-up; left is grey low-poly blobs and a bleached sky"}
+ },
+ "floor": {
+  "pair_01.png": {"side":"left","margin":"clear","why":"left has houses, props and density; right is an empty dune with a wooden block gun"},
+  "pair_02.png": {"side":"right","margin":"clear","why":"right has hills, cypresses and buildings; left is an empty lilac plane and a plank gun"},
+  "pair_03.png": {"side":"right","margin":"clear","why":"right meadow with shadows and flowers; left is a blocky tree and a black box creature"},
+  "pair_04.png": {"side":"right","margin":"slight","why":"right has textured stone and a good weapon; left has colour but primitive blocky tree and gun; right still grey and flat"},
+  "pair_05.png": {"side":"right","margin":"decisive","why":"right stone arcade village with sun; left empty lilac void"},
+  "pair_06.png": {"side":"left","margin":"clear","why":"left has authored trees and enemies; right is a flat grey road and box gun"}
+ },
+ "bar": {
+  "pair_01.png": {"side":"right","margin":"decisive","why":"right is rich ink-and-wash with warm/cool split; left is grey faceted blobs"},
+  "pair_02.png": {"side":"left","margin":"decisive","why":"left has line weight, warm colour bleeding into grey; right is a flat grey wash"},
+  "pair_03.png": {"side":"left","margin":"decisive","why":"left has a focal bridge, mill and warm sun; right is a blank plain"},
+  "pair_04.png": {"side":"left","margin":"decisive","why":"left market square with enclosure and focal spire; right is an open generic meadow"},
+  "pair_05.png": {"side":"left","margin":"decisive","why":"left windmill vista with sunset; right is a grey wall"},
+  "pair_06.png": {"side":"right","margin":"clear","why":"right concept wins on line, colour and creature; left arcade is the closest any frame gets"}
+ }
+}

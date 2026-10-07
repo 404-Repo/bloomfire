@@ -44,5 +44,12 @@
   "h": 390,
   "src": "~/astrocade-game5-snap (git worktree, frozen commit)",
   "min": 540
+ },
+ "bloomfire2": {
+  "url": "http://localhost:8798/",
+  "w": 844,
+  "h": 390,
+  "src": "~/astrocade-game5-snap2 (worktree at the lens-choice commit)",
+  "min": 540
  }
 }

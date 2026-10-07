@@ -1,0 +1,190 @@
+{
+ "podium": {
+  "wins": 1,
+  "n": 8,
+  "rows": [
+   [
+    "pair_01.png",
+    "f0.jpg",
+    "05_play.jpg",
+    "loss",
+    "clear"
+   ],
+   [
+    "pair_02.png",
+    "f1.jpg",
+    "03_play.jpg",
+    "loss",
+    "slight"
+   ],
+   [
+    "pair_03.png",
+    "f2.jpg",
+    "05_play.jpg",
+    "loss",
+    "decisive"
+   ],
+   [
+    "pair_04.png",
+    "f3.jpg",
+    "desktop-05-explore.jpg",
+    "loss",
+    "clear"
+   ],
+   [
+    "pair_05.png",
+    "f4.jpg",
+    "07_play.jpg",
+    "loss",
+    "clear"
+   ],
+   [
+    "pair_06.png",
+    "f5.jpg",
+    "07_play.jpg",
+    "WIN",
+    "clear"
+   ],
+   [
+    "pair_07.png",
+    "f6.jpg",
+    "06_play.jpg",
+    "loss",
+    "decisive"
+   ],
+   [
+    "pair_08.png",
+    "f0.jpg",
+    "13_play.jpg",
+    "loss",
+    "clear"
+   ]
+  ]
+ },
+ "floor": {
+  "wins": 6,
+  "n": 6,
+  "rows": [
+   [
+    "pair_01.png",
+    "f1.jpg",
+    "f1.png",
+    "WIN",
+    "clear"
+   ],
+   [
+    "pair_02.png",
+    "f2.jpg",
+    "f2.png",
+    "WIN",
+    "clear"
+   ],
+   [
+    "pair_03.png",
+    "f3.jpg",
+    "f3.png",
+    "WIN",
+    "clear"
+   ],
+   [
+    "pair_04.png",
+    "f4.jpg",
+    "f4.png",
+    "WIN",
+    "slight"
+   ],
+   [
+    "pair_05.png",
+    "f5.jpg",
+    "f5.png",
+    "WIN",
+    "decisive"
+   ],
+   [
+    "pair_06.png",
+    "f6.jpg",
+    "f6.png",
+    "WIN",
+    "clear"
+   ]
+  ]
+ },
+ "bar": {
+  "wins": 0,
+  "n": 6,
+  "rows": [
+   [
+    "pair_01.png",
+    "f0.jpg",
+    "01_lampwrights_rise.png",
+    "loss",
+    "decisive"
+   ],
+   [
+    "pair_02.png",
+    "f1.jpg",
+    "02_olive_terraces.png",
+    "loss",
+    "decisive"
+   ],
+   [
+    "pair_03.png",
+    "f2.jpg",
+    "03_millbrook_bridge.png",
+    "loss",
+    "decisive"
+   ],
+   [
+    "pair_04.png",
+    "f3.jpg",
+    "04_vell_market.png",
+    "loss",
+    "decisive"
+   ],
+   [
+    "pair_05.png",
+    "f4.jpg",
+    "05_windmill_ridge.png",
+    "loss",
+    "decisive"
+   ],
+   [
+    "pair_06.png",
+    "f5.jpg",
+    "06_sun_chapel.png",
+    "loss",
+    "clear"
+   ]
+  ]
+ },
+ "compare": {
+  "r1": {
+   "podium": "2/8",
+   "floor": "6/6",
+   "bar": "0/6"
+  },
+  "r2": {
+   "podium": "3/8 all slight",
+   "floor": "6/6",
+   "bar": "0/6"
+  },
+  "r3": {
+   "podium": "1/8 (win clear f5 arcade; losses 1 slight, 4 clear, 2 decisive)",
+   "floor": "6/6 (1 slight, 4 clear, 1 decisive)",
+   "bar": "0/6 (5 decisive, 1 clear)"
+  }
+ },
+ "hud_mask": "8 rects (objective, score, restored, pause, BLOOM, FIRE, DASH, joystick) inpainted cv2 TELEA r5; centre banners left in; no bottom caption in r4 frames so pause used as 8th",
+ "claims_masked": {
+  "C1": "4/7 (f2,f4 warm<8; f3 cold 28<35)",
+  "C2": "0/7 (median p98 213, top2 warm 0.18)",
+  "C3": "0/7 (median 0.30 vs bar 0.585; r2 0.108)",
+  "C4": "0/7 (median 2.3 vs bar 15.2)",
+  "C5": "fail: magenta 0 with enemy in view f6",
+  "C6": "1/7 (f2 0.128, likely smoke column not a creature)"
+ },
+ "defects": [
+  "CONTACT.png renders blank (all three sets, same as r1)",
+  "not truly blind: ours landscape with full HUD vs portrait podium; 7% bottom crop does not remove our HUD"
+ ]
+}
