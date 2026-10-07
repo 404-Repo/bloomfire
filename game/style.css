@@ -130,3 +130,8 @@ body.playing.touchdev #touch { display: block; }
 #slidecap { position: absolute; left: 50%; top: calc(14px + var(--sat)); transform: translateX(-50%); width: min(620px, 86vw); z-index: 3; font-size: 14px; line-height: 1.4; color: #f7efe0;
   text-shadow: 0 1px 4px #000; opacity: 0; transition: opacity 0.8s; text-align: center; }
 #slidecap.on { opacity: 1; }
+#dmgdir { position: absolute; left: 50%; top: 50%; width: 0; height: 0; opacity: 0; transition: opacity 0.5s; }
+#dmgdir.on { opacity: 1; transition: opacity 0.05s; }
+#dmgdir i { position: absolute; left: -60px; top: -150px; width: 120px; height: 34px; border-radius: 50% 50% 0 0 / 100% 100% 0 0;
+  border-top: 7px solid rgba(255, 61, 139, 0.9); filter: drop-shadow(0 0 6px rgba(255,61,139,0.8)); }
+@media (orientation: portrait) { #dmgdir i { top: -210px; } }

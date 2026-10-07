@@ -77,7 +77,7 @@ export function spawn(type, x, z, { owner = null, rise = true, tier = 0 } = {}) 
   const hpMul = 1 + tier * 0.18;
   const e = { id: uid++, type, t, o, joints, pos: o.position, vel: new THREE.Vector3(), hp: t.hp * hpMul, maxHp: t.hp * hpMul, alive: true, owner,
     state: rise ? 'rise' : 'chase', st: 0, cd: 0.6 + Math.random() * 0.8, phase: Math.random() * 6, stuck: 0, lastD: 1e9, yaw: 0, hitT: 0,
-    fly: t.fly || 0, flyY: 0, stagger: 0, dir: new THREE.Vector3() };
+    fly: t.fly || 0, flyY: 0, stagger: 0, dir: new THREE.Vector3(), tier, hold: 0 };
   if (rise) { o.scale.set(1, 0.01, 1); emit('ink', x, y + 0.2, z, 14, { speed: 3, up: 4, life: 0.8, size: 0.35, color: [0.08, 0.07, 0.12], grav: 12 }); }
   ENEMIES.push(e); return e;
 }
@@ -121,6 +121,8 @@ export function updateEnemies(dt, now, cam) {
       if (k >= 1) { e.state = 'chase'; e.st = 0; }
     } else if (e.stagger > 0) {
       // reeling
+    } else if (e.hold > 0) {
+      e.hold -= dt; e.yaw = Math.atan2(dx, dz); e.phase += dt * 6;
     } else if (e.state === 'chase') {
       let want = 0;
       if (e.type === 'spitter') { want = d > t.range[1] ? 1 : d < t.range[0] ? -0.8 : 0.15 * Math.sin(now + e.id); }
@@ -142,7 +144,7 @@ export function updateEnemies(dt, now, cam) {
         else { e.state = 'strike'; e.st = 0; }
       }
     } else if (e.state === 'strike') {
-      if (e.st < 0.05 && d < t.reach + 0.6) { if (hurt(t.dmg, e.pos.x, e.pos.z)) sfx.hurt(); }
+      if (e.st < 0.05 && d < t.reach + 0.6) { if (hurt(Math.round(t.dmg * (e.tier < 0 ? 0.5 : 1)), e.pos.x, e.pos.z)) sfx.hurt(); }
       if (e.type === 'blotling' && e.st < 0.25) { moving = true; e.dir.set(dx / d, 0, dz / d); speed = 12; }
       if (e.st > 0.35) { e.state = 'chase'; e.cd = t.cd; e.st = 0; }
     } else if (e.state === 'charge_wind') {

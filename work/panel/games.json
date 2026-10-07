@@ -1,0 +1,48 @@
+{
+ "_note": "Calibration set. local builds need their server running (see PANEL.md). w x h is the starting phone screen; testers may /rotate. Optional: \"assist\" loads panel/assist/<name>.mjs (movement assist), \"min\" is the session minimum in s (default PANEL_MIN or 180).",
+ "bellkeeper": {
+  "url": "https://tylerdurdeth.github.io/the-last-bellkeeper/",
+  "w": 390,
+  "h": 844,
+  "src": "online",
+  "assist": "bellkeeper",
+  "min": 540
+ },
+ "sundrift": {
+  "url": "https://lkruer.github.io/sundrift/game/",
+  "w": 390,
+  "h": 844,
+  "src": "online",
+  "min": 540
+ },
+ "farseek": {
+  "url": "https://farseek.rapidoai.dev/",
+  "w": 390,
+  "h": 844,
+  "src": "online",
+  "assist": "farseek",
+  "min": 540
+ },
+ "moonpull": {
+  "url": "http://localhost:8796/",
+  "w": 390,
+  "h": 844,
+  "src": "~/astrocade-game4/game",
+  "assist": "moonpull",
+  "min": 540
+ },
+ "timber": {
+  "url": "http://localhost:8792/",
+  "w": 844,
+  "h": 390,
+  "src": "~/astrocade-game3/proto v9.3",
+  "min": 540
+ },
+ "bloomfire": {
+  "url": "http://localhost:8797/",
+  "w": 844,
+  "h": 390,
+  "src": "~/astrocade-game5/game",
+  "min": 540
+ }
+}

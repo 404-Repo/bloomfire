@@ -49,3 +49,7 @@ let bannerTimer = 0;
 export function banner(t, s, secs = 3.2) { el.bannert.textContent = t; el.banners.textContent = s; el.banner.classList.add('on'); clearTimeout(bannerTimer); bannerTimer = setTimeout(() => el.banner.classList.remove('on'), secs * 1000); }
 let capTimer = 0;
 export function caption(html, secs = 4.5) { el.caption.innerHTML = html; el.caption.classList.add('on'); clearTimeout(capTimer); capTimer = setTimeout(() => el.caption.classList.remove('on'), secs * 1000); }
+
+// where the hurt came from, as an arc around the reticle
+const dd = document.getElementById('dmgdir'); let ddT = 0;
+export function hurtFrom(angleRel) { dd.style.transform = `rotate(${(-angleRel * 180 / Math.PI).toFixed(1)}deg)`; dd.classList.add('on'); clearTimeout(ddT); ddT = setTimeout(() => dd.classList.remove('on'), 700); }

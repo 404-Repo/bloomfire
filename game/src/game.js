@@ -8,7 +8,7 @@ import { P, placePlayer, dash, heal, EYE } from './player.js';
 import { ENEMIES, TYPES, initEnemies, spawn, damage, updateEnemies, lob, clearEnemies } from './enemies.js';
 import { WPN, initWeapon, updateWeapon, assistLook, swayFromLook, arcFrom, layoutViewmodel } from './weapon.js';
 import { emit, updateParticles, updateTracers, updateBlooms, bloomAt, setBloomProto, bakeJoints, setParticleScale } from './fx.js';
-import { HUD, compass, hitMarker, updateHud, floater, callout, banner, caption } from './hud.js';
+import { HUD, compass, hitMarker, updateHud, floater, callout, banner, caption, hurtFrom } from './hud.js';
 import { sfx, unlockAudio, setSound, soundOn, loadMusic, playMusic, musicIntensity } from './audio.js';
 import { addCircle } from './collide.js';
 import { INKWELLS, PLACES, LANTERNS, SPAWN, NESTS } from './layout.js';
@@ -223,7 +223,7 @@ function updateBoss(dt) {
   B.body.set(B.pos.x, B.pos.y + 7, B.pos.z);
   HUD.boss('Old Inkhorn', B.hp / B.maxHp);
 }
-function hurtP(n, from) { const h = P.invuln <= 0; if (h) { P.hp = Math.max(0, P.hp - n); P.hurtT = 0.5; P.invuln = 0.3; if (P.hp <= 0) P.alive = false; sfx.hurt(); } return h; }
+function hurtP(n, from) { const h = P.invuln <= 0; if (h) { P.hp = Math.max(0, P.hp - n); P.hurtT = 0.5; P.invuln = 0.3; P.lastHurtDir = Math.atan2(from.x - P.pos.x, from.z - P.pos.z); P.hurtSeq = (P.hurtSeq || 0) + 1; if (P.hp <= 0) P.alive = false; sfx.hurt(); } return h; }
 function bossHit(dmg, core, point) {
   const B = BOSS; const mult = core && B.open > 0.3 ? 1 : 0.18;
   B.hp -= dmg * mult;
@@ -462,8 +462,8 @@ export const Game = {
     // tutorial pack
     if (S.mode === 'play' && !S.tutorial.packed && S.t - S.startT > 4.5) {
       S.tutorial.packed = true;
-      const cx = P.pos.x - Math.sin(P.yaw) * 17, cz = P.pos.z - Math.cos(P.yaw) * 17;
-      for (let i = 0; i < 3; i++) spawn('blotling', cx + (i - 1) * 3, cz + (Math.random() - 0.5) * 3, { tier: -2 });
+      const cx = P.pos.x - Math.sin(P.yaw) * 15, cz = P.pos.z - Math.cos(P.yaw) * 15;
+      for (let i = 0; i < 3; i++) { const e = spawn('blotling', cx + (i - 1) * 3, cz + (Math.random() - 0.5) * 3, { tier: -2 }); e.cd = 5 + i; e.hold = 4 + i * 0.8; }
       caption(isTouch ? 'Drag your <b>right thumb</b> to aim. On ink, the prism <b>fires by itself</b>.' : '<b>Mouse</b> to aim, <b>click</b> to fire, <b>Shift</b> to dash.', 6);
       S.roamT = 14;
     }
@@ -517,6 +517,8 @@ export const Game = {
     if (S.stage === 2) { const left = WELLS.filter((w) => w.alive && !w.nest).length; HUD.objective(`Break the inkwells: ${left} left`, WELLS.filter((w) => w.alive && !w.nest).map((w) => PLACES.find((p) => p.id === w.place).name).join(' · ') + ' · any order'); }
     compass(objectiveTarget(), P.yaw);
     updateHud(rdt);
+    if (P.hurtSeq !== S.hurtSeen) { S.hurtSeen = P.hurtSeq; // attacker bearing relative to the view: 0 ahead, + to the left
+      const ang = Math.atan2(-Math.sin(P.lastHurtDir), -Math.cos(P.lastHurtDir)); let rel = ang - P.yaw; rel = Math.atan2(Math.sin(rel), Math.cos(rel)); hurtFrom(rel); }
   },
   postCamera() {},
   telemetry(g) {

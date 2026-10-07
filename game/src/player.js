@@ -97,7 +97,7 @@ export function updatePlayer(dt, mx, my) {
 export function hurt(amount, fromX, fromZ) {
   if (P.invuln > 0 || !P.alive) return false;
   P.hp = Math.max(0, P.hp - amount); P.hurtT = 0.5; P.invuln = 0.25;
-  P.lastHurtDir = Math.atan2(fromX - P.pos.x, fromZ - P.pos.z);
+  P.lastHurtDir = Math.atan2(fromX - P.pos.x, fromZ - P.pos.z); P.hurtSeq = (P.hurtSeq || 0) + 1;
   if (P.hp <= 0) P.alive = false;
   return true;
 }
