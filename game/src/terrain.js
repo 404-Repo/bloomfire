@@ -64,7 +64,8 @@ function rawHeight(x, z) {
   pad(-160, -140, 22, 14, 33.0);                 // ridge saddle with the inkwell
   // quarry pit: cut into the hill, two ledges and a floor
   { const d = Math.hypot(x - 166, z - 162 * -1); const m = sstep(50, 40, d);
-    if (m > 0) { const ledge = d > 33 ? 20 : d > 24 ? 13 : 7; h = lerp(h, Math.min(h, ledge), m); } }
+    // stepped benches you can walk up: an amphitheatre of chalk, not a well
+    if (m > 0) { const k = Math.max(0, d - 22) * 0.62, q = 1.6, fl = Math.floor(k / q), fr = k / q - fl; const ledge = 7 + (fl + sstep(0.55, 1.0, fr)) * q; h = lerp(h, Math.min(h, ledge), m); } }
   // river channel and lake basin
   { const [d, s] = polyDist(x, z, RIVER.pts); const wl = riverLevel(s);
     const bank = Math.max(wl + 1.4, h);

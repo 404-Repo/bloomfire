@@ -487,7 +487,8 @@ export const Game = {
       if (S.deadT === 0) { S.deaths++; post.uFlash.value = 0; callout('THE INK TOOK YOU'); S.combo = 0; S.mult = 1; }
       S.deadT += rdt;
       if (S.deadT > 2.2) {
-        S.deadT = 0; const l = LANTERNS.find((q) => q.id === S.respawn) || LANTERNS[0];
+        S.deadT = 0; let l = LANTERNS[0], bd = 1e9; // wake at the nearest lit lantern
+        for (const q of W.lanterns) if (q.lit) { const d = Math.hypot(q.at[0] - P.pos.x, q.at[1] - P.pos.z); if (d < bd) { bd = d; l = q; } }
         placePlayer(l.at[0] + 2, l.at[1] + 2, P.yaw); P.hp = P.maxHp; P.alive = true; P.invuln = 2;
         S.score = Math.round(S.score * 0.9);
         for (const e of ENEMIES) if (e.pos.distanceTo(P.pos) < 28) e.alive = false;
