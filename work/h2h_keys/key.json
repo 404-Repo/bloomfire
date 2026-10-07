@@ -52,5 +52,23 @@
    "A": 8870,
    "B": 8871
   }
+ },
+ "s07": {
+  "A": "bloomfire2",
+  "B": "farseek",
+  "persona": "casual",
+  "ports": {
+   "A": 8880,
+   "B": 8881
+  }
+ },
+ "s08": {
+  "A": "bellkeeper",
+  "B": "bloomfire2",
+  "persona": "indie",
+  "ports": {
+   "A": 8882,
+   "B": 8883
+  }
  }
 }

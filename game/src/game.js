@@ -551,7 +551,10 @@ export const Game = {
         S.deadT = 0; let l = LANTERNS[0], bd = 1e9; // wake at the nearest lit lantern
         if (S.rush) { l = { at: [110, 32] }; bd = -1; }
         if (bd > 0) for (const q of W.lanterns) if (q.lit) { const d = Math.hypot(q.at[0] - P.pos.x, q.at[1] - P.pos.z); if (d < bd) { bd = d; l = q; } }
-        placePlayer(l.at[0] + 2, l.at[1] + 2, P.yaw); P.hp = P.maxHp; P.alive = true; P.invuln = 2;
+        // wake no more than 40 m back toward that lantern, so a death does not cost a long walk
+        let rx = l.at[0] + 2, rz = l.at[1] + 2;
+        if (!S.rush && bd > 40) { const k = 40 / bd; rx = P.pos.x + (l.at[0] - P.pos.x) * k; rz = P.pos.z + (l.at[1] - P.pos.z) * k; }
+        placePlayer(rx, rz, Math.atan2(-(P.pos.x - rx), -(P.pos.z - rz))); P.hp = P.maxHp; P.alive = true; P.invuln = 2;
         if (S.stage >= 2) S.score = Math.round(S.score * 0.95);
         for (const e of ENEMIES) if (e.pos.distanceTo(P.pos) < 28) e.alive = false;
         caption(S.stage >= 2 ? 'You wake by the lantern. The ink kept <b>a little of your score</b>.' : 'You wake by the lantern. Keep the ink <b>in front of you</b>.', 4);
