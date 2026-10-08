@@ -129,7 +129,7 @@ async function dressMill() {
 }
 
 async function dressMarket() {
-  await put('arcade_section', 97, -5, 0); await put('arcade_section', 90, 20, Math.PI / 2); await put('arcade_section', 124, -4, 0, {});
+  await put('arcade_section', 97, -5, 0); await put('arcade_section', 88, 36, Math.PI / 2); await put('arcade_section', 124, -4, 0, {});
   await put('clock_tower', 134, -6, faceTo(134, -6, 112, 20));
   const ring = [[140, 12], [142, 30], [132, 46], [116, 50], [98, 46], [84, 36], [80, 4], [94, -16], [140, -22], [150, 8], [66, 22], [100, 64], [130, 64]];
   for (const [x, z] of ring) await put(R() < 0.25 ? 'tower_house' : 'village_house', x, z, faceTo(x, z, 112, 20));
