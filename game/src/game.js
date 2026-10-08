@@ -97,18 +97,21 @@ function updateWells(dt) {
     if (S.creepT > 1 && !w.nest) { S.creepT = 0; creep(w.at[0], w.at[1], 24, 7); }
     // waves: the nodes are sealed in ink while a wave lives; clear it and they open; break one and the next wave comes
     w.owned = ENEMIES.filter((e) => e.owner === w && e.alive).length;
-    const wasShield = w.shield; w.shield = w.owned > 2 || w.waveT > 0;
+    // only the main wave seals the nodes; the trickle that follows is pressure, not a lock
+    const sealing = ENEMIES.filter((e) => e.owner === w && e.alive && !e.trickle).length;
+    const wasShield = w.shield; w.shield = sealing > 2 || w.waveT > 0;
     if (wasShield && !w.shield) { callout('NODES OPEN'); sfx.tier(1); }
     for (const nd of w.nodes) if (nd.alive) { const k = w.shield ? 0.45 : 1 + Math.sin(S.t * 6) * 0.08; nd.n.scale.setScalar(nd.n.scale.x + (k - nd.n.scale.x) * Math.min(1, dt * 6)); }
     if (w.waveT > 0) { w.waveT -= dt; if (w.waveT <= 0) spawnWave(w); }
-    else if (!w.shield && !w.nest) { w.trickle = (w.trickle || 0) + dt; if (w.trickle > 16) { w.trickle = 0; spawnWave(w, true); } }
+    else if (!w.shield && !w.nest) { w.trickle = (w.trickle || 0) + dt; if (w.trickle > 22) { w.trickle = 0; spawnWave(w, true); } }
   }
 }
 
 function spawnWave(w, small = false) {
   const tier = wellTier(), k = small ? Math.max(0, w.wave - 2) : w.wave++;
   const comp = [];
-  if (w.nest) { if (small || w.spawnedOnce) return; w.spawnedOnce = true; comp.push('blotling', 'blotling', 'blotling', 'blotling', tier >= 1 ? 'smear' : 'blotling', tier >= 2 ? 'quill' : 'blotling'); }
+  if (small && !w.nest) { comp.push('blotling', 'blotling'); if (tier >= 2) comp.push('quill'); }
+  else if (w.nest) { if (small || w.spawnedOnce) return; w.spawnedOnce = true; comp.push('blotling', 'blotling', 'blotling', 'blotling', tier >= 1 ? 'smear' : 'blotling', tier >= 2 ? 'quill' : 'blotling'); }
   else {
   // the first inkwell teaches: small waves; later ones escalate
   comp.push(...Array(tier === 0 ? 3 + Math.min(1, k) : 3 + Math.min(4, k) + tier).fill('blotling'));
@@ -123,7 +126,7 @@ function spawnWave(w, small = false) {
     const a = Math.random() * Math.PI * 2, r = 7 + Math.random() * 12;
     let x = w.at[0] + Math.cos(a) * r, z = w.at[1] + Math.sin(a) * r;
     if (Math.hypot(x - pp.x, z - pp.z) < 6) { x = w.at[0] - Math.cos(a) * r; z = w.at[1] - Math.sin(a) * r; }
-    setTimeout(() => { if (w.alive && S.mode === 'play') spawn(type, x, z, { owner: w, tier }); }, i * 140);
+    setTimeout(() => { if (w.alive && S.mode === 'play') { const e = spawn(type, x, z, { owner: w, tier }); e.trickle = small; } }, i * 140);
   });
 }
 
@@ -474,6 +477,7 @@ export const Game = {
     S.skipping = true;
     for (let i = 0; i < Math.min(5, skip); i++) { const w = WELLS[i]; w.awake = true; for (const nd of w.nodes) nd.alive = false; cleanse(w); }
     S.skipping = false;
+    if (new URLSearchParams(location.search).has('stage1')) { S.stage = 1; S.tutorial.packed = true; }
     if (skip) { setStage(skip >= 5 ? 3 : 2); WPN.lenses = LENS_ORDER.slice(0, Math.min(5, skip)); }
     try { S.best = +localStorage.getItem('bloomfire_best') || 0; } catch {}
     let aidx = []; try { aidx = await (await fetch('./audio/index.json')).json(); } catch {}
@@ -624,6 +628,8 @@ export const Game = {
     let nn = null, nnd = 80; for (const t of targets()) if (t.kind === 'node' || (t.kind === 'boss' && t.core)) { const d = t.pos.distanceTo(camera.position); if (d < nnd) { nnd = d; nn = t; } }
     if (nn) { const v = nn.pos.clone().sub(camera.position).normalize(); let dyaw = Math.atan2(-v.x, -v.z) - P.yaw; dyaw = Math.atan2(Math.sin(dyaw), Math.cos(dyaw)); g.nearNode = [+dyaw.toFixed(3), +(Math.asin(v.y) - P.pitch).toFixed(3), +nnd.toFixed(1)]; } else g.nearNode = null;
     if (nb) { const v = nb.pos.clone().sub(camera.position).normalize(); let dyaw = Math.atan2(-v.x, -v.z) - P.yaw; dyaw = Math.atan2(Math.sin(dyaw), Math.cos(dyaw)); g.near = [+dyaw.toFixed(3), +(Math.asin(v.y) - P.pitch).toFixed(3), +nd.toFixed(1)]; } else g.near = null;
+    g.nodesOpen = WELLS.some((w) => w.alive && w.awake && !w.shield);
+    { const aw = WELLS.find((w) => w.alive && w.awake && !w.nest); g.wellState = aw ? { shield: aw.shield, nodes: aw.nodes.map((n) => n.alive ? Math.round(n.hp) : 0), owned: aw.owned, waveT: +aw.waveT.toFixed(1), wave: aw.wave } : null; }
     const near = nearestWell(); g.well = near ? [near.at[0], near.at[1]] : null; g.objective = objectiveTarget();
   },
 };
