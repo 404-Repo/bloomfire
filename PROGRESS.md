@@ -132,17 +132,17 @@ assist (lock 11 degrees, auto-fire 9, magnetism 7), a softer first tier, a small
 
 ## Milestone 4: jam gate PASS and blind comparison against the winners (2026-10-07)
 
-Final build: commit **134b5cc** (main). Serving at **http://localhost:8797/**; a cloudflared quick tunnel
+Final build: commit **76a9279** (main). Serving at **http://localhost:8797/**; a cloudflared quick tunnel
 to it is running for phone play (URL in `work/tunnel.log`; ephemeral). No GitHub repo was created.
 
 ### Jam gate (recipe @ 4effad3, 390x844 @3x, real touch, 4G, CPU 2x slower)
 
 | | tunnel | localhost:8797 |
 |---|---|---|
-| ready | 9.4 s (budget 20) | 8.2 s |
+| ready | 8.7 s (budget 20) | 8.2 s |
 | weight | 5.5 MB (budget 10) | 5.5 MB |
-| started / moved | real tap / 38.6 m | real tap |
-| peak draws / tris | 462 / 870,210 | 430 / 862,776 |
+| started / moved | real tap / 38.6 m | real tap / 38.6 m |
+| peak draws / tris | 464 / 852,690 | 463 / 852,738 |
 | errors / 404s / outside folder | 0 / 0 / none | 0 / 0 / none |
 | RESULT | **PASS** | **PASS** |
 
@@ -208,11 +208,21 @@ snapshots so later edits could not leak into a session.
 
 ### Whole game, final build, my gate
 
-See the final row of the table below once the run finishes (title to end card, real touch, one run).
+One run of 76a9279 from the title to the end card with real touch: **1,638 s**, 441 kills, 5 of 5 inkwells,
+4 lens picks, the boss, the end card; 1 death; peak 547 draws and 1.16 M triangles (`work/gate/final8/`).
+That time is inflated by the bot, not the game: it stood at the foot of the first inkwell staring up past
+its look limit for about 15 minutes (the same inkwell took it 65 s and 101 s in two separate runs on the
+same build). Inkwells 2 to 5 took it 302 s, and the climb plus the boss 90 s.
+
+Late fixes found by those long bot runs (after the last tester session, so not tester-verified): the
+Pilgrim Stair rebuilt as a spiral ramp (the switchbacks left cliffs between legs), the boss rises on the
+far side of the arena instead of on top of you, two arcades in Vell Market moved off the roads they were
+blocking, nests spawn once instead of forever, inkwell trickles no longer re-seal the nodes, trees stop
+players but not shots, and the last climb is quiet.
 
 ### What is measured, what is not
 
-Measured: the jam gate (twice), the whole campaign end to end by my real-touch gate (four full runs),
+Measured: the jam gate (on the final commit, tunnel and local), the whole campaign end to end by my real-touch gate (completed on the final commit and on an earlier one; several other long runs stalled on bot navigation and exposed the fixes above),
 eight blind tester sessions, five blind critic rounds, draw and triangle peaks under every route.
 Not measured: a real phone (frame rate, heat, iOS audio, the notch), a human first play and its length,
 whether a human dies as often as the testers did, whether the music loops sound good (nobody has listened;

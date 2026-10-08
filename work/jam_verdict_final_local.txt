@@ -1,15 +1,15 @@
 === 404 JAM VERDICT ===
 url             http://localhost:8797/
-utc             2026-10-07T19:11:27.616Z
-commit          134b5cc7
+utc             2026-10-08T02:05:03.332Z
+commit          76a9279
 viewport        390x844 @3x phone, real touch, Android Chrome UA
 network         4G: 4 Mbps down, 1 Mbps up, 60 ms latency, CPU 2x slower
 ready           8.2 s   budget 20 s   PASS
 weight          5.5 MB   budget 10 MB   PASS
 started         yes (tap on #startb)
 moved           38.6 m   needs 1 m   PASS
-peak draws      430   budget 900   PASS
-peak tris       862,776   budget 1,500,000   PASS
+peak draws      463   budget 900   PASS
+peak tris       852,738   budget 1,500,000   PASS
 median fps      60 (ANGLE (Apple, ANGLE Metal Renderer: Apple M4, Unspecified Version))
 errors          0   PASS
 404s            0   PASS
