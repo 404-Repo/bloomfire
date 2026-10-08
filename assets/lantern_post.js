@@ -1,0 +1,46 @@
+// lantern_post c2: profiles. The whole post is one lathed section (plinth, fluted swell,
+// shaft, collars, ball and spike). The bracket is a tube swept along a scroll curve, and the
+// lantern is a hexagonal lathe: brass cap and base around a glass body.
+export default function (THREE) {
+  const g = new THREE.Group();
+  const M = (color, name, rough = 0.6, extra = {}) => { const mt = new THREE.MeshStandardMaterial({ color, roughness: rough, metalness: 0.5, ...extra }); mt.name = name; return mt; };
+  const iron = M(0x3c3a38, 'metal', 0.55), brass = M(0xb8913a, 'metal', 0.45, { metalness: 0.7 });
+  const glass = new THREE.MeshStandardMaterial({ color: 0xffd27a, emissive: 0xffd27a, emissiveIntensity: 0, roughness: 0.2, metalness: 0 });
+  glass.name = 'lamp_glass';
+  const add = (geo, mat, x, y, z, rx = 0, ry = 0, rz = 0) => { const ms = new THREE.Mesh(geo, mat); ms.position.set(x, y, z); ms.rotation.set(rx, ry, rz); g.add(ms); return ms; };
+  const V = (pts) => pts.map(([a, b]) => new THREE.Vector2(a, b));
+  const post = [[0, 0], [0.24, 0], [0.24, 0.1], [0.19, 0.13], [0.17, 0.2], [0.13, 0.38], [0.11, 0.52], [0.14, 0.56], [0.14, 0.6], [0.075, 0.64],
+    [0.065, 0.8], [0.055, 2.15], [0.085, 2.18], [0.085, 2.24], [0.055, 2.27], [0.05, 2.9], [0.08, 2.93], [0.08, 2.97], [0.06, 3.0],
+    [0.075, 3.04], [0.06, 3.08], [0.02, 3.1], [0.03, 3.12], [0.0, 3.2]];
+  add(new THREE.LatheGeometry(V(post), 10), iron, 0, 0, 0);
+  // scroll bracket: an S curve from the shaft out to the hanging point
+  const curve = new THREE.CatmullRomCurve3([
+    new THREE.Vector3(0.04, 2.55, 0), new THREE.Vector3(0.18, 2.68, 0), new THREE.Vector3(0.38, 2.82, 0),
+    new THREE.Vector3(0.62, 2.86, 0), new THREE.Vector3(0.78, 2.8, 0), new THREE.Vector3(0.76, 2.68, 0), new THREE.Vector3(0.66, 2.7, 0)]);
+  add(new THREE.TubeGeometry(curve, 24, 0.028, 5, false), iron, 0, 0, 0);
+  add(new THREE.BoxGeometry(0.6, 0.05, 0.05), iron, 0.32, 2.9, 0);
+  const curl = new THREE.CatmullRomCurve3([
+    new THREE.Vector3(0.04, 2.3, 0), new THREE.Vector3(0.14, 2.42, 0), new THREE.Vector3(0.15, 2.6, 0), new THREE.Vector3(0.24, 2.7, 0), new THREE.Vector3(0.3, 2.62, 0), new THREE.Vector3(0.24, 2.58, 0)]);
+  add(new THREE.TubeGeometry(curl, 16, 0.022, 5, false), iron, 0, 0, 0);
+  add(new THREE.CylinderGeometry(0.012, 0.012, 0.12, 4), iron, 0.6, 2.82, 0);
+  // hexagonal lantern
+  const lx = 0.6, ly = 2.38;
+  add(new THREE.LatheGeometry(V([[0, -0.3], [0.03, -0.3], [0.05, -0.24], [0.13, -0.2], [0.14, -0.17], [0.11, -0.16]]), 6), brass, lx, ly, 0);
+  add(new THREE.CylinderGeometry(0.13, 0.105, 0.32, 6, 1, false), glass, lx, ly, 0);
+  add(new THREE.LatheGeometry(V([[0.12, 0.15], [0.17, 0.17], [0.17, 0.2], [0.07, 0.3], [0.04, 0.33], [0.05, 0.36], [0.03, 0.4], [0, 0.4]]), 6), brass, lx, ly, 0);
+  for (let i = 0; i < 6; i++) {
+    const a = i / 6 * Math.PI * 2;
+    add(new THREE.BoxGeometry(0.025, 0.33, 0.025), brass, lx + Math.sin(a) * 0.12, ly, Math.cos(a) * 0.12, 0, a, 0);
+  }
+  const box = new THREE.Box3(), v = new THREE.Vector3(), m = new THREE.Matrix4(), im = new THREE.Matrix4();
+  g.updateMatrixWorld(true);
+  g.traverse((n) => {
+    const p = n.isMesh && n.geometry.attributes.position; if (!p) return;
+    const put = (mat) => { for (let i = 0; i < p.count; i++) box.expandByPoint(v.fromBufferAttribute(p, i).applyMatrix4(mat)); };
+    if (n.isInstancedMesh) { for (let c = 0; c < n.count; c++) { n.getMatrixAt(c, im); put(m.multiplyMatrices(n.matrixWorld, im)); } return; }
+    put(n.matrixWorld);
+  });
+  const c = box.getCenter(new THREE.Vector3());
+  g.children.forEach((o) => { o.position.x -= c.x; o.position.y -= box.min.y; o.position.z -= c.z; });
+  return g;
+}

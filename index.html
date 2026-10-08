@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#1b2130">
+<title>BLOOMFIRE</title>
+<script type="importmap">
+{ "imports": {
+  "three": "https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js",
+  "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.169.0/examples/jsm/"
+} }
+</script>
+<link rel="icon" href="data:,">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Nunito+Sans:wght@600;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="./style.css">
+</head>
+<body>
+<canvas id="c"></canvas>
+
+<div id="load">
+  <div class="logo">BLOOMFIRE</div>
+  <div class="tag">shoot the colour back</div>
+  <div id="bar"><div id="barf"></div></div>
+  <div id="loadmsg">grinding the prism</div>
+</div>
+
+<div id="title" class="screen">
+  <div id="slides"></div>
+  <div class="tcol">
+    <div class="logo">BLOOMFIRE</div>
+    <div class="tag">shoot the colour back</div>
+    <p class="blurb">Ink has drowned the valley of Vell. Every wall and tree is a cold sketch, and things made of ink walk in it.
+    Your prism fires stored sunlight. Every kill bursts the colour back.</p>
+    <button id="startb" class="btn">Begin</button>
+    <button id="rushb" class="btn ghost">Rush &middot; 3 minutes for a score</button>
+    <div id="best"></div>
+    <div class="keys desk">WASD move &middot; mouse aim &middot; click fire &middot; Shift dash &middot; E bloom</div>
+    <div class="keys touch">left thumb move &middot; right thumb aim, it fires itself on target &middot; DASH and BLOOM buttons</div>
+  </div>
+</div>
+
+<div id="hud">
+  <div id="hp"><div id="hpf"></div></div>
+  <div id="score"><span id="scoren">0</span><span id="combo"></span></div>
+  <div id="obj"><div id="objt"></div><div id="objs"></div></div>
+  <div id="restored"><span id="restn">0%</span> restored</div>
+  <div id="compass"><div id="cmark"></div></div>
+  <div id="xhair"><i></i><i></i><i></i><i></i></div>
+  <div id="hitm"></div>
+  <div id="floaters"></div>
+  <div id="callout"></div>
+  <div id="banner"><div id="bannert"></div><div id="banners"></div></div>
+  <div id="caption"></div>
+  <div id="dmg"></div>
+  <div id="dmgdir"><i></i></div>
+  <div id="threats"><i></i><i></i><i></i><i></i></div>
+  <div id="wp"><b></b><span id="wpd"></span></div>
+  <div id="bossbar"><div id="bossn"></div><div id="bossf"></div></div>
+  <button id="pauseb" aria-label="pause">II</button>
+</div>
+
+<div id="touch">
+  <div id="stick"><div id="stickb"><div id="stickk"></div></div></div>
+  <div id="look"></div>
+  <button id="bdash" class="tb">DASH</button>
+  <button id="bbloom" class="tb">BLOOM<span id="bloomf"></span></button>
+  <button id="bfire" class="tb">FIRE</button>
+</div>
+
+<div id="lenspick" class="screen">
+  <div class="tcol">
+    <div class="tag">the prism takes a new lens</div>
+    <div id="lensopts"></div>
+  </div>
+</div>
+
+<div id="over" class="screen">
+  <div class="tcol">
+    <div class="logo small" id="overt">The valley blooms</div>
+    <div id="overs"></div>
+    <canvas id="overmap" width="220" height="220"></canvas>
+    <button id="againb" class="btn">Play again</button>
+    <button id="keepb" class="btn ghost">Keep exploring</button>
+  </div>
+</div>
+
+<div id="pause" class="screen">
+  <div class="tcol">
+    <div class="logo small">Paused</div>
+    <button id="resumeb" class="btn">Resume</button>
+    <button id="soundb" class="btn ghost">Sound: on</button>
+    <button id="assistb" class="btn ghost">Aim assist: on</button>
+    <button id="sensb" class="btn ghost">Look speed: normal</button>
+  </div>
+</div>
+
+<div id="rotate">Turn your phone sideways for the widest view</div>
+
+<script type="module" src="./src/main.js"></script>
+</body>
+</html>
